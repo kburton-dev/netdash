@@ -15,6 +15,8 @@ return new class extends Migration
             $table->string('url')->unique();
             $table->text('content');
             $table->string('image')->nullable();
+            $table->dateTime('published_at');
+            $table->foreignId('feed_id')->constrained();
 
             $table->timestamps();
             $table->softDeletes();

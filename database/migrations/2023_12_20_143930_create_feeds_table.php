@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
 
             $table->string('title');
+            $table->string('type');
             $table->string('url')->unique();
             $table->dateTime('last_fetch')->nullable();
 

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * App\Models\Article
@@ -17,6 +18,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string|null $deleted_at
+ * @property int $feed_id
+ * @property-read \App\Models\Feed $feed
  * @method static \Illuminate\Database\Eloquent\Builder|Article newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Article newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Article query()
@@ -28,6 +31,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Article whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Article whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Article whereUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Article whereFeedId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Article wherePublishedAt($value)
  * @mixin \Eloquent
  */
 class Article extends Model
@@ -40,9 +45,15 @@ class Article extends Model
         'content',
         'image',
         'published_at',
+        'feed_id',
     ];
 
     protected $casts = [
         'published_at' => 'datetime',
     ];
+
+    public function feed(): BelongsTo
+    {
+        return $this->belongsTo(Feed::class);
+    }
 }
