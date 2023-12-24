@@ -1,7 +1,12 @@
 # NetDash
 
-## Feeds to follow
-- Laravel News
-- Boot.dev
-- PlanetScale blog
-- muhammedsari.me
+## Initial Setup
+There is some basic data seeding to get you going
+```
+sail artisan migrate:fresh --seed
+```
+
+After which you can fetch the articles with
+```
+sail artisan app:get-feeds
+```
