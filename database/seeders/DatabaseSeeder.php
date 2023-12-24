@@ -41,7 +41,15 @@ class DatabaseSeeder extends Seeder
                 'title' => 'Muhammed Sari',
                 'url' => 'https://muhammedsari.me/feed.atom',
                 'type' => 'atom',
-            ],
+            ], [
+                'title' => 'Frank de Jonge',
+                'url' => 'https://blog.frankdejonge.nl/rss/',
+                'type' => 'rss',
+            ], [
+                'title' => 'Jake Archibald',
+                'url' => 'https://jakearchibald.com/posts.rss',
+                'type' => 'rss',
+            ]
         ]);
     }
 }

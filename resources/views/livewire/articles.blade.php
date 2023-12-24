@@ -37,6 +37,10 @@ new class extends Component
 
                     <div class="text-gray-500 text-sm mb-2">
                         {{ $article->published_at->diffForHumans() }}
+                        |
+                        {{ $article->feed->title }}
+                        |
+                        {{ $article->feed->hostname}}
                     </div>
 
                     <div class="[&>p]:mb-4 [&>hr]:my-4 line-clamp-4">
