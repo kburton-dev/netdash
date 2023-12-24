@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Article> $articles
  * @property-read int|null $articles_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Feed newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Feed newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Feed query()
@@ -31,6 +32,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Feed whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Feed whereUrl($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Feed whereType($value)
+ *
  * @mixin \Eloquent
  */
 class Feed extends Model

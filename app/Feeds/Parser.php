@@ -1,6 +1,9 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Feeds;
+
 use Saloon\XmlWrangler\XmlReader;
 
 interface Parser

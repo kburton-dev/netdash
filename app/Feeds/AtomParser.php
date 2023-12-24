@@ -1,13 +1,16 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Feeds;
+
 use Illuminate\Support\Carbon;
 use Saloon\XmlWrangler\XmlReader;
 
 class AtomParser implements Parser
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function parse(XmlReader $rawFeedData): \Illuminate\Support\Collection
     {

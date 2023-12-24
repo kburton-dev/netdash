@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $deleted_at
  * @property int $feed_id
  * @property-read \App\Models\Feed $feed
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Article newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Article newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Article query()
@@ -33,6 +34,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|Article whereUrl($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Article whereFeedId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Article wherePublishedAt($value)
+ *
  * @mixin \Eloquent
  */
 class Article extends Model

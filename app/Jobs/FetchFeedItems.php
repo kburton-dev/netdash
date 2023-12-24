@@ -6,7 +6,6 @@ use App\Feeds\ParserFactory;
 use App\Models\Article;
 use App\Models\Feed;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -38,7 +37,7 @@ class FetchFeedItems implements ShouldQueue
     }
 
     /**
-     * @param array{title: string, url: string, description: string, published_at: \Carbon\CarbonInterface} $item
+     * @param  array{title: string, url: string, description: string, published_at: \Carbon\CarbonInterface}  $item
      */
     private function saveItem(int $feedId, array $item): void
     {
@@ -56,7 +55,7 @@ class FetchFeedItems implements ShouldQueue
 
         throw_unless($article->save(), new \LogicException('Failed to save article'));
 
-        logger()->info("Saved article ({$article->id}): " . $article->title);
+        logger()->info("Saved article ({$article->id}): ".$article->title);
     }
 
     private function removeImagesFromDescription(string $description): string
@@ -65,7 +64,7 @@ class FetchFeedItems implements ShouldQueue
     }
 
     /**
-     * @param array{title: string, url: string, description: string, published_at: \Carbon\CarbonInterface} $item
+     * @param  array{title: string, url: string, description: string, published_at: \Carbon\CarbonInterface}  $item
      */
     private function getImageUrl(array $item): ?string
     {

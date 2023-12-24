@@ -1,6 +1,9 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Feeds;
+
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Saloon\XmlWrangler\XmlReader;
@@ -8,7 +11,7 @@ use Saloon\XmlWrangler\XmlReader;
 class RssParser implements Parser
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function parse(XmlReader $rawFeedData): Collection
     {
