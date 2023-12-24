@@ -24,30 +24,39 @@ class FetchFeedItems implements ShouldQueue
 
     public function handle(ParserFactory $parser): void
     {
-        $reader = XmlReader::fromString(
+        $dataReader = XmlReader::fromString(
             Http::get($this->feed->url)->body()
         );
 
-        $items = $parser->create($this->feed->type)->parse($reader);
-        $items = array_slice($items, 0, 10);
-
-        foreach ($items as $item) {
-            $article = Article::query()->firstOrNew(['url' => $item['url']]);
-            
-            $article->fill([
-                'title' => $item['title'],
-                'image' => $this->getImageUrl($item),
-                'content' => $this->removeImagesFromDescription($item['description']),
-                'published_at' => $item['published_at'],
-            ]);
-
-            throw_unless($article->save(), new \LogicException('Failed to save article'));
-
-            logger()->info("Saved article ({$article->id}): " . $article->title);
-        }
+        $parser->create($this->feed->type)
+            ->parse($dataReader)
+            ->take(10)
+            ->each(fn (array $item) => $this->saveItem($this->feed->id, $item));
 
         $this->feed->last_fetch = now();
         $this->feed->save();
+    }
+
+    /**
+     * @param array{title: string, url: string, description: string, published_at: \Carbon\CarbonInterface} $item
+     */
+    private function saveItem(int $feedId, array $item): void
+    {
+        $article = Article::query()->firstOrNew([
+            'feed_id' => $feedId,
+            'url' => $item['url'],
+        ]);
+
+        $article->fill([
+            'title' => $item['title'],
+            'image' => $this->getImageUrl($item),
+            'content' => $this->removeImagesFromDescription($item['description']),
+            'published_at' => $item['published_at'],
+        ]);
+
+        throw_unless($article->save(), new \LogicException('Failed to save article'));
+
+        logger()->info("Saved article ({$article->id}): " . $article->title);
     }
 
     private function removeImagesFromDescription(string $description): string

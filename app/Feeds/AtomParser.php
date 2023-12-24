@@ -9,7 +9,7 @@ class AtomParser implements Parser
     /**
      * @inheritDoc
      */
-    public function parse(XmlReader $rawFeedData): array
+    public function parse(XmlReader $rawFeedData): \Illuminate\Support\Collection
     {
         return $rawFeedData->value('feed.entry')->collect()
             ->map(function (array $item): array {
@@ -19,7 +19,6 @@ class AtomParser implements Parser
                     'description' => $item['summary'],
                     'published_at' => Carbon::parse($item['updated']),
                 ];
-            })
-            ->all();
+            });
     }
 }

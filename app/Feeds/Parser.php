@@ -6,7 +6,7 @@ use Saloon\XmlWrangler\XmlReader;
 interface Parser
 {
     /**
-     * @return list<array{title: string, url: string, description: string, published_at: \Carbon\CarbonInterface}>
+     * @return \Illuminate\Support\Collection<array{title: string, url: string, description: string, published_at: \Carbon\CarbonInterface}>
      */
-    public function parse(XmlReader $rawFeedData): array;
+    public function parse(XmlReader $rawFeedData): \Illuminate\Support\Collection;
 }
