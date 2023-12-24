@@ -52,6 +52,9 @@ class Feed extends Model
         'deleted_at' => 'datetime',
     ];
 
+    /**
+     * @return HasMany<Article>
+     */
     public function articles(): HasMany
     {
         return $this->hasMany(Article::class);

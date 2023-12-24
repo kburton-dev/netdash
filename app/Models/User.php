@@ -76,6 +76,9 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    /**
+     * @return Attribute<string, string>
+     */
     protected function password(): Attribute
     {
         return Attribute::make(

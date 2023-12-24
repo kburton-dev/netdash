@@ -11,7 +11,6 @@ class ParserFactory
         return match ($feedType) {
             FeedType::RSS => new RssParser,
             FeedType::ATOM => new AtomParser,
-            default => throw new \LogicException('Invalid feed type'),
         };
     }
 }

@@ -54,6 +54,9 @@ class Article extends Model
         'published_at' => 'datetime',
     ];
 
+    /**
+     * @return BelongsTo<Feed, self>
+     */
     public function feed(): BelongsTo
     {
         return $this->belongsTo(Feed::class);

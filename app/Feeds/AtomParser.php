@@ -17,10 +17,10 @@ class AtomParser implements Parser
         return $rawFeedData->value('feed.entry')->collect()
             ->map(function (array $item): array {
                 return [
-                    'title' => $item['title'],
-                    'url' => $item['id'],
-                    'description' => $item['summary'],
-                    'published_at' => Carbon::parse($item['updated']),
+                    'title' => (string) $item['title'],
+                    'url' => (string) $item['id'],
+                    'description' => (string) $item['summary'],
+                    'published_at' => Carbon::parse((string) $item['updated']),
                 ];
             });
     }

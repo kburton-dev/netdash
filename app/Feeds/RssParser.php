@@ -18,10 +18,10 @@ class RssParser implements Parser
         return $rawFeedData->value('rss.channel.item')->collect()
             ->map(function (array $item): array {
                 return [
-                    'title' => $item['title'],
-                    'url' => $item['link'],
-                    'description' => $item['description'],
-                    'published_at' => Carbon::parse($item['pubDate']),
+                    'title' => (string) $item['title'],
+                    'url' => (string) $item['link'],
+                    'description' => (string) $item['description'],
+                    'published_at' => Carbon::parse((string) $item['pubDate']),
                 ];
             });
     }
