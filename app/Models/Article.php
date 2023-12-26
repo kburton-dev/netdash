@@ -67,6 +67,8 @@ class Article extends Model
 
     /**
      * @param  Builder<self>  $query
+     * @param  list<int>  $tagIds
+     * @return Builder<self>
      */
     public function scopeWhereHasTags(Builder $query, array $tagIds): Builder
     {

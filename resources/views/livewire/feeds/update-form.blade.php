@@ -1,5 +1,6 @@
 <?php
 
+use App\Actions\Feeds\UpdateWithTags;
 use App\Models\Feed;
 use App\Models\Tag;
 use App\Providers\RouteServiceProvider;
@@ -9,6 +10,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Validation\Rule;
 use Livewire\Volt\Component;
 use App\Feeds\FeedType;
+use Illuminate\Support\Facades\DB;
 
 new class extends Component
 {
@@ -59,18 +61,9 @@ new class extends Component
         ];
     }
 
-    public function updateFeed(): void
+    public function updateFeed(UpdateWithTags $updateWithTags): void
     {
-        DB::transaction(
-            function (): void {
-                $validated = $this->validate();
-
-                $this->feed->tags()->sync(
-                    Arr::pull($validated, 'tagIds', [])
-                );
-
-                save_model($this->feed, $validated);
-        });
+        $updateWithTags($this->feed, $this->validate());
 
         $this->dispatch('feed-updated', name: $this->feed->name);
     }

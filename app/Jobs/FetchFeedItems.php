@@ -32,8 +32,9 @@ class FetchFeedItems implements ShouldQueue
             ->take(10)
             ->each(fn (array $item) => $this->saveItem($this->feed->id, $item));
 
-        $this->feed->last_fetch = now();
-        $this->feed->save();
+        save_model($this->feed, [
+            'last_fetch' => now(),
+        ]);
     }
 
     /**
@@ -46,14 +47,12 @@ class FetchFeedItems implements ShouldQueue
             'url' => $item['url'],
         ]);
 
-        $article->fill([
+        save_model($article, [
             'title' => $item['title'],
             'image' => $this->getImageUrl($item),
             'content' => $this->removeImagesFromDescription($item['description']),
             'published_at' => $item['published_at'],
         ]);
-
-        save_model($article);
 
         logger()->info("Saved article ({$article->id}): ".$article->title);
     }
@@ -99,6 +98,6 @@ class FetchFeedItems implements ShouldQueue
 
         $feedUrl = parse_url($this->feed->url);
 
-        return "{$feedUrl['scheme']}://{$feedUrl['host']}{$src}";
+        return "{$feedUrl['scheme']}://{$feedUrl['host']}{$src}"; // @phpstan-ignore-line - the URL should certainly have a schema and host at this point.
     }
 }

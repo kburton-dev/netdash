@@ -22,7 +22,7 @@ Route::view('profile', 'profile')
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Volt::route('dashboard', 'pages.dashboard')->name('dashboard');
-    
+
     Volt::route('feeds', 'pages.feeds.index')->name('feeds');
     Volt::route('feeds/{feed}', 'pages.feeds.view')->name('feeds.view');
 });

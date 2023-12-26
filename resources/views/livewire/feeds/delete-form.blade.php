@@ -1,9 +1,8 @@
 <?php
 
-use App\Livewire\Actions\Logout;
-use Illuminate\Support\Facades\Auth;
 use Livewire\Volt\Component;
 use App\Models\Feed;
+use Illuminate\Support\Facades\DB;
 
 new class extends Component
 {
