@@ -5,6 +5,7 @@ use App\Models\Tag;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Arr;
 use Illuminate\Validation\Rule;
 use Livewire\Volt\Component;
 use App\Feeds\FeedType;
@@ -53,7 +54,7 @@ new class extends Component
             'title' => ['required', 'string'],
             'type' => ['required', Rule::enum(FeedType::class)],
             'url' => ['required', 'string', 'url', Rule::unique(Feed::class)->ignore($this->feed->id)],
-            'tagIds' => ['required', 'array'],
+            'tagIds' => ['array'],
             'tagIds.*' => ['required', 'int', Rule::exists(Tag::class, 'id')],
         ];
     }
@@ -64,7 +65,9 @@ new class extends Component
             function (): void {
                 $validated = $this->validate();
 
-                $this->feed->tags()->sync($validated['tagIds']);
+                $this->feed->tags()->sync(
+                    Arr::pull($validated, 'tagIds', [])
+                );
 
                 save_model($this->feed, $validated);
         });
@@ -108,13 +111,13 @@ new class extends Component
         </div>
 
         <div>
-            <x-input-label for="tags" :value="__('Tags')" />
-            <select wire:model="tagIds" id="tags" name="tags" multiple class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+            <x-input-label for="tagIds" :value="__('Tags')" />
+            <select wire:model="tagIds" id="tagIds" name="tagIds" multiple class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
                 @foreach ($tags as $tag)
                     <option @selected($feed->tags->pluck('id')->contains($tag->id)) value="{{ $tag->id }}">{{ $tag->name }}</option>
                 @endforeach
             </select>
-            <x-input-error class="mt-2" :messages="$errors->get('type')" />
+            <x-input-error class="mt-2" :messages="$errors->get('tagIds')" />
         </div>
 
         <div class="flex items-center gap-4">
