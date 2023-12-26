@@ -19,29 +19,23 @@ new #[Layout('layouts.app')] class extends Component
 
     #[Url]
     public int $limit = self::LIMIT;
-
-    /**
-     * @return Builder<Article>
-     */
-    private function getArticleQuery(): Builder
-    {
-        return Article::query()
-            ->when($this->selectedTagIds,
-                fn (Builder $query) => $query->whereHasTags($this->selectedTagIds)
-            );
-    }
  
     /**
      * @return array<string, mixed>
      */
     public function with(): array
     {
+        $articleQuery = Article::query()
+            ->when($this->selectedTagIds,
+                fn (Builder $query) => $query->whereHasTags($this->selectedTagIds)
+            );
+
         return [
             'tags' => Tag::query()->orderBy('name')->get(),
-            'articleCount' => $this->getArticleQuery()->count(),
-            'articles' => $this->getArticleQuery()
+            'articleCount' => $articleQuery->count(),
+            'articles' => $articleQuery->limit($this->limit)
+                ->with('feed')
                 ->orderByDesc('published_at')
-                ->limit($this->limit)
                 ->get()
         ];
     }
@@ -62,12 +56,6 @@ new #[Layout('layouts.app')] class extends Component
         $this->limit += 10;
     }
 }; ?>
-
-<x-slot name="header">
-    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        {{ __('Dashboard') }}
-    </h2>
-</x-slot>
 
 <div class="py-6">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-4">

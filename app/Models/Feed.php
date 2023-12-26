@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * App\Models\Feed
@@ -42,7 +44,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
  */
 class Feed extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'title',
@@ -57,12 +59,29 @@ class Feed extends Model
         'deleted_at' => 'datetime',
     ];
 
+    public static function boot(): void
+    {
+        parent::boot();
+
+        static::deleting(function (Feed $feed): void {
+            $feed->articles()->delete();
+        });
+    }
+
     /**
      * @return HasMany<Article>
      */
     public function articles(): HasMany
     {
         return $this->hasMany(Article::class);
+    }
+
+    /**
+     * @return HasOne<Article>
+     */
+    public function latestArticle(): HasOne
+    {
+        return $this->hasOne(Article::class)->latestOfMany('published_at');
     }
 
     /**

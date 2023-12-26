@@ -72,7 +72,7 @@ class FetchFeedItems implements ShouldQueue
         preg_match('/<img.+src=[\'"](?P<src>.+?)[\'"].*>/i', $item['description'], $matches);
 
         if (isset($matches['src']) && $matches['src']) {
-            return $matches['src'];
+            return $this->prependHostIfNeeded($matches['src']);
         }
 
         $responseBody = Http::get($item['url'])->body();
@@ -82,10 +82,23 @@ class FetchFeedItems implements ShouldQueue
             preg_match("/<meta property=\"{$tag}\" content=\"(?P<image>.+?)\"/i", $responseBody, $matches);
 
             if (isset($matches['image']) && $matches['image']) {
-                return $matches['image'];
+                return $this->prependHostIfNeeded($matches['image']);
             }
         }
 
         return null;
+    }
+
+    private function prependHostIfNeeded(string $src): string
+    {
+        $host = parse_url($src, PHP_URL_HOST);
+
+        if ($host !== null) {
+            return $src;
+        }
+
+        $feedUrl = parse_url($this->feed->url);
+
+        return "{$feedUrl['scheme']}://{$feedUrl['host']}{$src}";
     }
 }

@@ -16,12 +16,15 @@ use Livewire\Volt\Volt;
 
 Route::view('/', 'welcome');
 
-Volt::route('dashboard', 'pages.dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
-
 Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Volt::route('dashboard', 'pages.dashboard')->name('dashboard');
+    
+    Volt::route('feeds', 'pages.feeds.index')->name('feeds');
+    Volt::route('feeds/{feed}', 'pages.feeds.view')->name('feeds.view');
+});
 
 require __DIR__.'/auth.php';
