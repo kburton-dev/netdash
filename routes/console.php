@@ -41,13 +41,13 @@ Artisan::command('app:add-feed {url} {type}', function (string $url, string $typ
 
     $title = $this->ask('What is the title of the feed?');
 
-    $created = Feed::query()->create([
+    $feed = new Feed([
         'url' => $url,
         'title' => $title,
         'type' => FeedType::from($type),
     ]);
 
-    throw_unless($created, new \LogicException('Failed to create feed'));
+    save_model($feed);
 
     $this->comment('Adding feed... Done!');
 })->purpose('Add feed');

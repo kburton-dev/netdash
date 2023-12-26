@@ -16,12 +16,7 @@ new class extends Component
 
     public function deleteFeed(): void
     {
-        DB::transaction(
-            fn () => throw_unless(
-                $this->feed->delete(),
-                new \LogicException('Failed to delete feed')
-            )
-        );
+        DB::transaction(fn () => delete_model($this->feed));
 
         $this->redirect('/feeds', navigate: true);
     }

@@ -66,10 +66,7 @@ new class extends Component
 
                 $this->feed->tags()->sync($validated['tagIds']);
 
-                throw_unless(
-                    $this->feed->fill($validated)->save(),
-                    new \LogicException('Failed to delete feed')
-                );
+                save_model($this->feed, $validated);
         });
 
         $this->dispatch('feed-updated', name: $this->feed->name);

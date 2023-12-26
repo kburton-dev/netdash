@@ -53,7 +53,7 @@ class FetchFeedItems implements ShouldQueue
             'published_at' => $item['published_at'],
         ]);
 
-        throw_unless($article->save(), new \LogicException('Failed to save article'));
+        save_model($article);
 
         logger()->info("Saved article ({$article->id}): ".$article->title);
     }
