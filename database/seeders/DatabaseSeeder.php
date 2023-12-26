@@ -57,7 +57,7 @@ class DatabaseSeeder extends Seeder
                 'title' => 'Spatie',
                 'url' => 'https://spatie.be/feed',
                 'type' => 'atom',
-            ]
+            ],
         ]);
     }
 }

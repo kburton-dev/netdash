@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
  * App\Models\Feed
@@ -21,6 +22,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Article> $articles
  * @property-read int|null $articles_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tag> $tags
+ * @property-read int|null $tags_count
+ * @property-read string|null $hostname
  *
  * @method static \Illuminate\Database\Eloquent\Builder|Feed newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Feed newQuery()
@@ -61,13 +65,24 @@ class Feed extends Model
         return $this->hasMany(Article::class);
     }
 
+    /**
+     * @return MorphMany<Tag>
+     */
+    public function tags(): MorphMany
+    {
+        return $this->morphMany(Tag::class, 'taggable');
+    }
+
+    /**
+     * @return Attribute<string,string>
+     */
     public function hostname(): Attribute
     {
         return Attribute::make(
             get: function (): ?string {
                 $fullHostName = parse_url($this->url, PHP_URL_HOST);
 
-                if ($fullHostName === false) {
+                if ($fullHostName === false || $fullHostName === null) {
                     return null;
                 }
 
