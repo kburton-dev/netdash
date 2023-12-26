@@ -37,6 +37,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|Article whereFeedId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Article wherePublishedAt($value)
  * @method static Builder|Article whereHasTags(array $tagIds)
+ * @method static Builder|Article onlyTrashed()
+ * @method static Builder|Article withTrashed()
+ * @method static Builder|Article withoutTrashed()
  *
  * @mixin \Eloquent
  */

@@ -27,6 +27,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tag> $tags
  * @property-read int|null $tags_count
  * @property-read string|null $hostname
+ * @property-read \App\Models\Article|null $latestArticle
  *
  * @method static \Illuminate\Database\Eloquent\Builder|Feed newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Feed newQuery()
@@ -39,6 +40,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|Feed whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Feed whereUrl($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Feed whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Feed onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Feed withTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Feed withoutTrashed()
  *
  * @mixin \Eloquent
  */
