@@ -1,23 +1,19 @@
 <?php
 
-use App\Livewire\Actions\Logout;
-use Illuminate\Support\Facades\Auth;
 use Livewire\Volt\Component;
 use App\Models\Article;
 use App\Models\Tag;
-use Illuminate\Support\Collection;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Url;
 use Illuminate\Database\Eloquent\Builder;
 
 new #[Layout('layouts.app')] class extends Component
 {
-    private const LIMIT = 20;
+    private const LIMIT = 10;
 
     #[Url]
     public array $selectedTagIds = [];
 
-    #[Url]
     public int $limit = self::LIMIT;
  
     /**
@@ -25,14 +21,16 @@ new #[Layout('layouts.app')] class extends Component
      */
     public function with(): array
     {
-        $articleQuery = Article::query()
-            ->when($this->selectedTagIds,
-                fn (Builder $query) => $query->whereHasTags($this->selectedTagIds)
-            );
+        $articleQuery = Article::when($this->selectedTagIds,
+            fn (Builder $query) => $query->whereHasTags($this->selectedTagIds)
+        );
 
         return [
-            'tags' => Tag::query()->orderBy('name')->get(),
-            'articleCount' => $articleQuery->count(),
+            'tags' => Tag::query()
+                ->has('feeds.articles')
+                ->orderBy('name')
+                ->get(),
+            'articlesCount' => $articleQuery->count(),
             'articles' => $articleQuery->limit($this->limit)
                 ->with('feed')
                 ->orderByDesc('published_at')
@@ -42,13 +40,10 @@ new #[Layout('layouts.app')] class extends Component
 
     public function clickedTag(int $id)
     {
-        if (in_array($id, $this->selectedTagIds)) {
-            $this->selectedTagIds = array_filter($this->selectedTagIds, fn ($tagId) => $tagId != $id);
-        } else {
-            $this->selectedTagIds[] = $id;
-        }
-
         $this->limit = self::LIMIT;
+        $this->selectedTagIds = in_array($id, $this->selectedTagIds)
+            ? array_filter($this->selectedTagIds, fn ($tagId) => $tagId != $id)
+            : [...$this->selectedTagIds, $id];
     }
 
     public function loadMore()
@@ -63,7 +58,11 @@ new #[Layout('layouts.app')] class extends Component
             <ul class="flex gap-2">
                 @foreach ($tags as $tag)
                 <li>
-                    <a href="#" wire:click.prevent="clickedTag({{ $tag->id }})" class="cursor-pointer {{ in_array($tag->id, $selectedTagIds) ? 'text-gray-900' : 'text-gray-400' }}">
+                    <a
+                        href="#"
+                        wire:click.prevent="clickedTag({{ $tag->id }})"
+                        class="cursor-pointer hover:text-gray-900 hover:underline {{ in_array($tag->id, $selectedTagIds) ? 'text-gray-900' : 'text-gray-400' }}"
+                    >
                         {{ $tag->name }}
                     </a>
                 </li>
@@ -76,6 +75,12 @@ new #[Layout('layouts.app')] class extends Component
         </div>
 
         <div class="space-y-4">
+            @if ($articles->isEmpty())
+                <div class="my-12 text-center">
+                    Oops, no results. Try selecting different tags to see articles.
+                </div>
+            @endif
+
             @foreach ($articles as $article)
                 <a class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 grid grid-cols-1 md:grid-cols-4 gap-4" href="{{ $article->url }}">
                     @if ($article->image)
@@ -105,7 +110,7 @@ new #[Layout('layouts.app')] class extends Component
             @endforeach
         </div>
 
-        @if ($articleCount > $limit)
+        @if ($articlesCount > $limit)
             <div class="flex justify-center">
                 <x-primary-button wire:click.prevent="loadMore">{{ __('Load More') }}</x-primary-button>
             </div>
