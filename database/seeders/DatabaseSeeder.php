@@ -65,6 +65,11 @@ class DatabaseSeeder extends Seeder
                 'title' => 'Spatie',
                 'url' => 'https://spatie.be/feed',
                 'type' => 'atom',
+            ], [
+                'id' => 9,
+                'title' => 'Mohammed Said',
+                'url' => 'https://themsaid.com/feed',
+                'type' => 'atom',
             ],
         ]);
 
