@@ -34,6 +34,9 @@ class Tag extends Model
         'name',
     ];
 
+    /**
+     * @return MorphToMany<Feed>
+     */
     public function feeds(): MorphToMany
     {
         return $this->morphedByMany(Feed::class, 'taggable');

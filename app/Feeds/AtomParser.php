@@ -15,13 +15,13 @@ class AtomParser implements Parser
     public function parse(XmlReader $rawFeedData): \Illuminate\Support\Collection
     {
         return $rawFeedData->value('feed.entry')->collect()
-            ->map(function (array $item): array {
-                return [
-                    'title' => (string) $item['title'],
-                    'url' => (string) $item['id'],
-                    'description' => (string) $item['summary'],
-                    'published_at' => Carbon::parse((string) $item['updated']),
-                ];
+            ->map(function (array $item): FeedItem {
+                return new FeedItem(
+                    title: (string) $item['title'],
+                    url: (string) $item['id'],
+                    description: (string) $item['summary'],
+                    publishedAt: Carbon::parse((string) $item['updated']),
+                );
             });
     }
 }

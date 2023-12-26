@@ -49,5 +49,7 @@ Artisan::command('app:add-feed {url} {type}', function (string $url, string $typ
 
     save_model($feed);
 
-    $this->comment('Adding feed... Done!');
+    $this->comment('Adding feed... Done! (Fetching feed items in background)');
+
+    dispatch(new FetchFeedItems($feed));
 })->purpose('Add feed');

@@ -1,16 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Method App\\\\Feeds\\\\AtomParser\\:\\:parse\\(\\) should return Illuminate\\\\Support\\\\Collection\\<\\(int\\|string\\), array\\{title\\: string, url\\: string, description\\: string, published_at\\: Carbon\\\\CarbonInterface\\}\\> but returns Illuminate\\\\Support\\\\Collection\\<string, array\\{title\\: string, url\\: string, description\\: string, published_at\\: Illuminate\\\\Support\\\\Carbon\\}\\>\\.$#"
-			count: 1
-			path: app/Feeds/AtomParser.php
-
-		-
-			message: "#^Method App\\\\Feeds\\\\RssParser\\:\\:parse\\(\\) should return Illuminate\\\\Support\\\\Collection\\<\\(int\\|string\\), array\\{title\\: string, url\\: string, description\\: string, published_at\\: Carbon\\\\CarbonInterface\\}\\> but returns Illuminate\\\\Support\\\\Collection\\<string, array\\{title\\: string, url\\: string, description\\: string, published_at\\: Illuminate\\\\Support\\\\Carbon\\}\\>\\.$#"
-			count: 1
-			path: app/Feeds/RssParser.php
-
-		-
 			message: "#^Cannot call method hasVerifiedEmail\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
 			count: 1
 			path: app/Http/Controllers/Auth/VerifyEmailController.php

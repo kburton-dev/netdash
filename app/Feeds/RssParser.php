@@ -16,13 +16,13 @@ class RssParser implements Parser
     public function parse(XmlReader $rawFeedData): Collection
     {
         return $rawFeedData->value('rss.channel.item')->collect()
-            ->map(function (array $item): array {
-                return [
-                    'title' => (string) $item['title'],
-                    'url' => (string) $item['link'],
-                    'description' => (string) $item['description'],
-                    'published_at' => Carbon::parse((string) $item['pubDate']),
-                ];
+            ->map(function (array $item): FeedItem {
+                return new FeedItem(
+                    (string) $item['title'],
+                    (string) $item['link'],
+                    (string) $item['description'],
+                    Carbon::parse((string) $item['pubDate']),
+                );
             });
     }
 }

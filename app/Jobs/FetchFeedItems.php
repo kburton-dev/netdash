@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Feeds\FeedItem;
 use App\Feeds\ParserFactory;
 use App\Models\Article;
 use App\Models\Feed;
@@ -30,28 +31,25 @@ class FetchFeedItems implements ShouldQueue
         $parser->create($this->feed->type)
             ->parse($dataReader)
             ->take(10)
-            ->each(fn (array $item) => $this->saveItem($this->feed->id, $item));
+            ->each(fn (FeedItem $item) => $this->saveItem($this->feed->id, $item));
 
         save_model($this->feed, [
             'last_fetch' => now(),
         ]);
     }
 
-    /**
-     * @param  array{title: string, url: string, description: string, published_at: \Carbon\CarbonInterface}  $item
-     */
-    private function saveItem(int $feedId, array $item): void
+    private function saveItem(int $feedId, FeedItem $item): void
     {
         $article = Article::query()->firstOrNew([
             'feed_id' => $feedId,
-            'url' => $item['url'],
+            'url' => $item->url,
         ]);
 
         save_model($article, [
-            'title' => $item['title'],
-            'image' => $this->getImageUrl($item),
-            'content' => $this->removeImagesFromDescription($item['description']),
-            'published_at' => $item['published_at'],
+            'title' => $item->title,
+            'image' => $this->determineImageUrl($article, $item),
+            'content' => $this->removeImagesFromDescription($item->description),
+            'published_at' => $item->publishedAt,
         ]);
 
         logger()->info("Saved article ({$article->id}): ".$article->title);
@@ -62,19 +60,20 @@ class FetchFeedItems implements ShouldQueue
         return preg_replace('/<img[^>]+>/i', '', $description);
     }
 
-    /**
-     * @param  array{title: string, url: string, description: string, published_at: \Carbon\CarbonInterface}  $item
-     */
-    private function getImageUrl(array $item): ?string
+    private function determineImageUrl(Article $article, FeedItem $item): ?string
     {
+        if ($article->image !== null) {
+            return $article->image;
+        }
+
         $matches = [];
-        preg_match('/<img.+src=[\'"](?P<src>.+?)[\'"].*>/i', $item['description'], $matches);
+        preg_match('/<img.+src=[\'"](?P<src>.+?)[\'"].*>/i', $item->description, $matches);
 
         if (isset($matches['src']) && $matches['src']) {
             return $this->prependHostIfNeeded($matches['src']);
         }
 
-        $responseBody = Http::get($item['url'])->body();
+        $responseBody = Http::get($item->url)->body();
 
         foreach (['og:image', 'twitter:image'] as $tag) {
             $matches = [];
@@ -88,6 +87,9 @@ class FetchFeedItems implements ShouldQueue
         return null;
     }
 
+    /**
+     * Some images are relative to the feed URL, so we need to prepend the host.
+     */
     private function prependHostIfNeeded(string $src): string
     {
         $host = parse_url($src, PHP_URL_HOST);
