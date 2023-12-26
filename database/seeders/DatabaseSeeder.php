@@ -81,7 +81,7 @@ class DatabaseSeeder extends Seeder
             ], [
                 'id' => 4,
                 'name' => 'sql',
-            ]
+            ],
         ]);
 
         DB::table('taggables')->insert([
@@ -97,7 +97,7 @@ class DatabaseSeeder extends Seeder
                 'tag_id' => 4,
                 'taggable_id' => 3,
                 'taggable_type' => 'App\Models\Feed',
-            ]
+            ],
         ]);
     }
 }

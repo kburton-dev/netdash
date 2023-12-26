@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -34,6 +35,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|Article whereUrl($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Article whereFeedId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Article wherePublishedAt($value)
+ * @method static Builder|Article whereHasTags(array $tagIds)
  *
  * @mixin \Eloquent
  */
@@ -60,5 +62,21 @@ class Article extends Model
     public function feed(): BelongsTo
     {
         return $this->belongsTo(Feed::class);
+    }
+
+    /**
+     * @param  Builder<self>  $query
+     */
+    public function scopeWhereHasTags(Builder $query, array $tagIds): Builder
+    {
+        if ($tagIds === []) {
+            return $query->whereRaw('1 = 2');
+        }
+
+        return $query->whereHas('feed',
+            fn (Builder $query) => $query->whereHas('tags',
+                fn (Builder $query) => $query->whereIn('id', $tagIds)
+            )
+        );
     }
 }

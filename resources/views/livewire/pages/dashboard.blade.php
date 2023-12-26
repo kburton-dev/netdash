@@ -12,8 +12,24 @@ use Illuminate\Database\Eloquent\Builder;
 
 new #[Layout('layouts.app')] class extends Component
 {
+    private const LIMIT = 20;
+
     #[Url]
     public array $selectedTagIds = [];
+
+    #[Url]
+    public int $limit = self::LIMIT;
+
+    /**
+     * @return Builder<Article>
+     */
+    private function getArticleQuery(): Builder
+    {
+        return Article::query()
+            ->when($this->selectedTagIds,
+                fn (Builder $query) => $query->whereHasTags($this->selectedTagIds)
+            );
+    }
  
     /**
      * @return array<string, mixed>
@@ -22,16 +38,10 @@ new #[Layout('layouts.app')] class extends Component
     {
         return [
             'tags' => Tag::query()->orderBy('name')->get(),
-            'articles' => Article::query()
-                ->when($this->selectedTagIds, fn (Builder $query) =>
-                    $query->whereHas('feed', fn (Builder $query) =>
-                        $query->whereHas('tags', fn (Builder $query) =>
-                            $query->whereIn('id', $this->selectedTagIds)
-                        )
-                    )
-                )
+            'articleCount' => $this->getArticleQuery()->count(),
+            'articles' => $this->getArticleQuery()
                 ->orderByDesc('published_at')
-                ->limit(30)
+                ->limit($this->limit)
                 ->get()
         ];
     }
@@ -43,6 +53,13 @@ new #[Layout('layouts.app')] class extends Component
         } else {
             $this->selectedTagIds[] = $id;
         }
+
+        $this->limit = self::LIMIT;
+    }
+
+    public function loadMore()
+    {
+        $this->limit += 10;
     }
 }; ?>
 
@@ -99,5 +116,11 @@ new #[Layout('layouts.app')] class extends Component
                 </a>
             @endforeach
         </div>
+
+        @if ($articleCount > $limit)
+            <div class="flex justify-center">
+                <x-primary-button wire:click.prevent="loadMore">{{ __('Load More') }}</x-primary-button>
+            </div>
+        @endif
     </div>
 </div>
