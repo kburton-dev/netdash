@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 /**
  * App\Models\Tag
@@ -13,8 +12,6 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
  * @property string $name
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Feed> $feeds
- * @property-read int|null $feeds_count
  *
  * @method static \Illuminate\Database\Eloquent\Builder|Tag newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Tag newQuery()
@@ -33,12 +30,4 @@ class Tag extends Model
     protected $fillable = [
         'name',
     ];
-
-    /**
-     * @return MorphToMany<Feed>
-     */
-    public function feeds(): MorphToMany
-    {
-        return $this->morphedByMany(Feed::class, 'taggable');
-    }
 }
