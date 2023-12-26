@@ -49,6 +49,14 @@ class DatabaseSeeder extends Seeder
                 'title' => 'Jake Archibald',
                 'url' => 'https://jakearchibald.com/posts.rss',
                 'type' => 'rss',
+            ], [
+                'title' => 'Freek Van der Herten',
+                'url' => 'https://freek.dev/feed',
+                'type' => 'atom',
+            ], [
+                'title' => 'Spatie',
+                'url' => 'https://spatie.be/feed',
+                'type' => 'atom',
             ]
         ]);
     }
