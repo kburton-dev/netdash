@@ -82,14 +82,14 @@ new #[Layout('layouts.app')] class extends Component
             @endif
 
             @foreach ($articles as $article)
-                <a class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 grid grid-cols-1 md:grid-cols-4 gap-4" href="{{ $article->url }}">
+                <a class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 grid md:grid-cols-4 gap-4" href="{{ $article->url }}">
                     @if ($article->image)
-                        <div class="col-span-1">
-                            <img src="{{ $article->image }}" alt="{{ $article->title }}" class="w-full" />
+                        <div class="col-span-full md:col-span-1">
+                            <img src="{{ $article->image }}" alt="{{ $article->title }}" class="w-full rounded-lg" />
                         </div>
                     @endif
 
-                    <div class="col-span-3">
+                    <div class="col-span-full md:col-span-3">
                         <div class="text-gray-900 text-lg mb-2 font-semibold">
                             {{ $article->title }}
                         </div>

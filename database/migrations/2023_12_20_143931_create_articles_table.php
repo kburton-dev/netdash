@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
 
             $table->string('title');
-            $table->string('url')->unique();
+            $table->string('url');
             $table->text('content');
             $table->string('image')->nullable();
             $table->dateTime('published_at');
@@ -20,6 +20,8 @@ return new class extends Migration
 
             $table->timestamps();
             $table->softDeletes();
+
+            $table->unique(['feed_id', 'url']);
         });
     }
 };

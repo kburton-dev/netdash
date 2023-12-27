@@ -6,6 +6,7 @@ namespace App\Feeds;
 
 use Illuminate\Support\Carbon;
 use Saloon\XmlWrangler\XmlReader;
+use Saloon\XmlWrangler\Data\Element;
 
 class AtomParser implements Parser
 {
@@ -14,13 +15,16 @@ class AtomParser implements Parser
      */
     public function parse(XmlReader $rawFeedData): \Illuminate\Support\Collection
     {
-        return $rawFeedData->value('feed.entry')->collect()
-            ->map(function (array $item): FeedItem {
+        return $rawFeedData->element('feed.entry')->collect()
+            ->map(function (Element $item): FeedItem {
+                /** @var array<string, \Saloon\XmlWrangler\Data\Element> $content */
+                $content = $item->getContent();
+
                 return new FeedItem(
-                    title: (string) $item['title'],
-                    url: (string) $item['id'],
-                    description: (string) $item['summary'],
-                    publishedAt: Carbon::parse((string) $item['updated']),
+                    title: (string) $content['title']->getContent(),
+                    url: (string) $content['link']->getAttribute('href'),
+                    description: (string) $content['summary']->getContent(),
+                    publishedAt: Carbon::parse((string) $content['updated']->getContent()),
                 );
             });
     }

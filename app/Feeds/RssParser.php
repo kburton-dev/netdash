@@ -20,8 +20,8 @@ class RssParser implements Parser
                 return new FeedItem(
                     (string) $item['title'],
                     (string) $item['link'],
-                    (string) $item['description'],
-                    Carbon::parse((string) $item['pubDate']),
+                    (string) ($item['description'] ?? null),
+                    Carbon::parse((string) ($item['pubDate'] ?? null)),
                 );
             });
     }
