@@ -1,16 +1,11 @@
 <?php
 
-use App\Actions\Feeds\UpdateWithTags;
+use App\Actions\Feeds\SaveWithTags;
 use App\Models\Feed;
 use App\Models\Tag;
-use App\Providers\RouteServiceProvider;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Arr;
 use Illuminate\Validation\Rule;
 use Livewire\Volt\Component;
 use App\Feeds\FeedType;
-use Illuminate\Support\Facades\DB;
 
 new class extends Component
 {
@@ -27,12 +22,9 @@ new class extends Component
      */
     public array $tagIds;
 
-    public function mount(int $feedId): void
+    public function mount(Feed $feed): void
     {
-        $this->feed = Feed::query()
-            ->whereKey($feedId)
-            ->with('tags')
-            ->firstOrFail();
+        $this->feed = $feed;
 
         $this->title = $this->feed->title;
         $this->type = $this->feed->type;
@@ -61,11 +53,11 @@ new class extends Component
         ];
     }
 
-    public function updateFeed(UpdateWithTags $updateWithTags): void
+    public function updateFeed(SaveWithTags $saveWithTags): void
     {
-        $updateWithTags($this->feed, $this->validate());
+        $saveWithTags($this->feed, $this->validate());
 
-        $this->dispatch('feed-updated', name: $this->feed->name);
+        $this->dispatch('feed-saved', name: $this->feed->name);
     }
 }; ?>
 
@@ -107,7 +99,7 @@ new class extends Component
             <x-input-label for="tagIds" :value="__('Tags')" />
             <select wire:model="tagIds" id="tagIds" name="tagIds" multiple class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
                 @foreach ($tags as $tag)
-                    <option @selected($feed->tags->pluck('id')->contains($tag->id)) value="{{ $tag->id }}">{{ $tag->name }}</option>
+                    <option @selected(in_array($tag->id, $tagIds)) value="{{ $tag->id }}">{{ $tag->name }}</option>
                 @endforeach
             </select>
             <x-input-error class="mt-2" :messages="$errors->get('tagIds')" />
@@ -116,7 +108,7 @@ new class extends Component
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
 
-            <x-action-message class="me-3" on="feed-updated">
+            <x-action-message class="me-3" on="feed-saved">
                 {{ __('Saved.') }}
             </x-action-message>
         </div>

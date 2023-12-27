@@ -3,10 +3,22 @@
 use Livewire\Volt\Component;
 use App\Models\Feed;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 
 new #[Layout('layouts.app')] class extends Component
 {
     public Feed $feed;
+
+    public function mount(): void
+    {
+        $this->feed = new Feed;
+    }
+
+    #[On('feed-saved')]
+    public function backToIndex()
+    {
+        $this->redirect(route('feeds'));
+    }
 }; ?>
 
 <div class="py-12">
@@ -14,12 +26,6 @@ new #[Layout('layouts.app')] class extends Component
         <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
             <div class="max-w-xl">
                 <livewire:feeds.create-update-form :feed="$feed" />
-            </div>
-        </div>
-
-        <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-            <div class="max-w-xl">
-                <livewire:feeds.delete-form :feed="$feed" />
             </div>
         </div>
     </div>

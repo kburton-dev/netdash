@@ -45,16 +45,25 @@ new #[Layout('layouts.app')] class extends Component
             ? array_filter($this->selectedTagIds, fn ($tagId) => $tagId != $id)
             : [...$this->selectedTagIds, $id];
     }
+
+    public function addNew()
+    {
+        $this->redirect(route('feeds.add'));
+    }
 }; ?>
 
 <div class="py-6">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-4">
-        <div class="flex justify-between">
-            <x-tags.link-filters :tags="$tags" :selectedTagIds="$selectedTagIds" />
+        <div class="flex gap-4 items-center">
+            <div class="flex-grow">
+                <x-tags.link-filters :tags="$tags" :selectedTagIds="$selectedTagIds" />
+            </div>
 
             <div class="text-gray-400">
                 Showing {{ $feeds->count() }} feeds
             </div>
+
+            <x-primary-button wire:click.prevent="addNew">{{ __('Add New') }}</x-primary-button>
         </div>
 
         <div class="space-y-4">

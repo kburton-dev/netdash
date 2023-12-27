@@ -8,11 +8,6 @@ new class extends Component
 {
     public Feed $feed;
 
-    public function mount(int $feedId): void
-    {
-        $this->feed = Feed::findOrFail($feedId);
-    }
-
     public function deleteFeed(): void
     {
         DB::transaction(fn () => delete_model($this->feed));

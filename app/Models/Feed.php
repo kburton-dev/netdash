@@ -63,6 +63,12 @@ class Feed extends Model
         'deleted_at' => 'datetime',
     ];
 
+    protected $attributes = [
+        'type' => FeedType::RSS,
+        'title' => '',
+        'url' => '',
+    ];
+
     public static function boot(): void
     {
         parent::boot();
