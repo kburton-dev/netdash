@@ -6,6 +6,7 @@ use App\Models\Tag;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Url;
 use Illuminate\Database\Eloquent\Builder;
+use Livewire\Attributes\On;
 
 new #[Layout('layouts.app')] class extends Component
 {
@@ -38,6 +39,7 @@ new #[Layout('layouts.app')] class extends Component
         ];
     }
 
+    #[On('clickedTag')]
     public function clickedTag(int $id)
     {
         $this->limit = self::LIMIT;
@@ -55,19 +57,7 @@ new #[Layout('layouts.app')] class extends Component
 <div class="py-6">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-4">
         <div class="flex justify-between">
-            <ul class="flex gap-2">
-                @foreach ($tags as $tag)
-                <li>
-                    <a
-                        href="#"
-                        wire:click.prevent="clickedTag({{ $tag->id }})"
-                        class="cursor-pointer hover:text-gray-900 hover:underline {{ in_array($tag->id, $selectedTagIds) ? 'text-gray-900' : 'text-gray-400' }}"
-                    >
-                        {{ $tag->name }}
-                    </a>
-                </li>
-                @endforeach
-            </ul>
+            <x-tags.link-filters :tags="$tags" :selectedTagIds="$selectedTagIds" />
 
             <div class="text-gray-400">
                 Showing {{ $articles->count() }} articles

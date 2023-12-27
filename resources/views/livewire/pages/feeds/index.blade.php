@@ -4,29 +4,59 @@ use App\Livewire\Actions\Logout;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Volt\Component;
 use App\Models\Feed;
+use App\Models\Tag;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Url;
 use Illuminate\Database\Eloquent\Builder;
+use Livewire\Attributes\On;
 
 new #[Layout('layouts.app')] class extends Component
 {
+    #[Url]
+    public array $selectedTagIds = [];
+
     /**
      * @return array<string, mixed>
      */
     public function with(): array
     {
         return [
+            'tags' => Tag::query()
+                ->has('feeds')
+                ->orderBy('name')
+                ->get(),
             'feeds' => Feed::query()
+                ->when($this->selectedTagIds,
+                    fn (Builder $query) => $query->whereHas('tags',
+                        fn (Builder $query) => $query->whereIn('id', $this->selectedTagIds)
+                    )
+                )
                 ->with('latestArticle')
                 ->orderBy('title')
                 ->get(),
         ];
     }
+
+    #[On('clickedTag')]
+    public function clickedTag(int $id)
+    {
+        $this->selectedTagIds = in_array($id, $this->selectedTagIds)
+            ? array_filter($this->selectedTagIds, fn ($tagId) => $tagId != $id)
+            : [...$this->selectedTagIds, $id];
+    }
 }; ?>
 
 <div class="py-6">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-4">
+        <div class="flex justify-between">
+            <x-tags.link-filters :tags="$tags" :selectedTagIds="$selectedTagIds" />
+
+            <div class="text-gray-400">
+                Showing {{ $feeds->count() }} feeds
+            </div>
+        </div>
+
         <div class="space-y-4">
             @foreach ($feeds as $feed)
                 <a class="block bg-white overflow-hidden shadow-sm sm:rounded-lg p-6" href="{{ route('feeds.view', $feed) }}" wire:navigate>

@@ -1,4 +1,5 @@
 # NetDash
+Basic RSS/Atom aggregator using Laravel with Livewire/Volt
 
 ## Initial Setup
 There is some basic data seeding to get you going
