@@ -40,7 +40,7 @@ new #[Layout('layouts.app')] class extends Component
     }
 
     #[On('clickedTag')]
-    public function clickedTag(int $id)
+    public function clickedTag(int $id): void
     {
         $this->limit = self::LIMIT;
         $this->selectedTagIds = in_array($id, $this->selectedTagIds)
@@ -48,7 +48,7 @@ new #[Layout('layouts.app')] class extends Component
             : [...$this->selectedTagIds, $id];
     }
 
-    public function loadMore()
+    public function loadMore(): void
     {
         $this->limit += 10;
     }

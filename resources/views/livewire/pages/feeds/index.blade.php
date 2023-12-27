@@ -39,14 +39,14 @@ new #[Layout('layouts.app')] class extends Component
     }
 
     #[On('clickedTag')]
-    public function clickedTag(int $id)
+    public function clickedTag(int $id): void
     {
         $this->selectedTagIds = in_array($id, $this->selectedTagIds)
             ? array_filter($this->selectedTagIds, fn ($tagId) => $tagId != $id)
             : [...$this->selectedTagIds, $id];
     }
 
-    public function addNew()
+    public function addNew(): void
     {
         $this->redirect(route('feeds.add'));
     }

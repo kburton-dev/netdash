@@ -15,7 +15,7 @@ new #[Layout('layouts.app')] class extends Component
     }
 
     #[On('feed-saved')]
-    public function backToIndex()
+    public function backToIndex(): void
     {
         $this->redirect(route('feeds'));
     }
