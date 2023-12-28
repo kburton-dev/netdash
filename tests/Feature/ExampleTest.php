@@ -1,7 +1,16 @@
 <?php
 
-it('returns a successful response', function () {
-    $response = $this->get('/');
+use App\Models\User;
 
-    $response->assertStatus(200);
+it('redirects to login', function () {
+    $this->get('/')
+        ->assertRedirect('/login');
+});
+
+it('redirects to dashboard', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)
+        ->get('/')
+        ->assertRedirect('/dashboard');
 });
