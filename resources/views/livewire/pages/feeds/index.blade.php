@@ -1,11 +1,8 @@
 <?php
 
-use App\Livewire\Actions\Logout;
-use Illuminate\Support\Facades\Auth;
 use Livewire\Volt\Component;
 use App\Models\Feed;
 use App\Models\Tag;
-use Illuminate\Support\Collection;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Url;
 use Illuminate\Database\Eloquent\Builder;

@@ -26,6 +26,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Volt::route('feeds', 'pages.feeds.index')->name('feeds');
     Volt::route('feeds/add', 'pages.feeds.add')->name('feeds.add');
     Volt::route('feeds/{feed}', 'pages.feeds.view')->name('feeds.view');
+
+    Volt::route('tags', 'pages.tags.index')->name('tags');
 });
 
 require __DIR__.'/auth.php';
