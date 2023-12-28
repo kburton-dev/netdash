@@ -1,12 +1,12 @@
 <?php
 
-use Livewire\Volt\Component;
 use App\Models\Feed;
 use App\Models\Tag;
-use Livewire\Attributes\Layout;
-use Livewire\Attributes\Url;
 use Illuminate\Database\Eloquent\Builder;
+use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Url;
+use Livewire\Volt\Component;
 
 new #[Layout('layouts.app')] class extends Component
 {

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Feeds;
 
 use Illuminate\Support\Carbon;
-use Saloon\XmlWrangler\XmlReader;
 use Saloon\XmlWrangler\Data\Element;
+use Saloon\XmlWrangler\XmlReader;
 
 class AtomParser implements Parser
 {
