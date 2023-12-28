@@ -63,6 +63,9 @@ class Feed extends Model
         'deleted_at' => 'datetime',
     ];
 
+    /**
+     * @var array<string, mixed>
+     */
     protected $attributes = [
         'type' => FeedType::RSS,
         'title' => '',
