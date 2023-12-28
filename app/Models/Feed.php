@@ -43,6 +43,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|Feed onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Feed withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Feed withoutTrashed()
+ * @method static \Database\Factories\FeedFactory factory($count = null, $state = [])
  *
  * @mixin \Eloquent
  */

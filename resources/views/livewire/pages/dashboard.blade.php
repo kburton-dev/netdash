@@ -22,9 +22,10 @@ new #[Layout('layouts.app')] class extends Component
      */
     public function with(): array
     {
-        $articleQuery = Article::when($this->selectedTagIds,
-            fn (Builder $query) => $query->whereHasTags($this->selectedTagIds)
-        );
+        $articleQuery = Article::query()
+            ->when($this->selectedTagIds,
+                fn (Builder $query) => $query->whereHasTags($this->selectedTagIds)
+            );
 
         return [
             'tags' => Tag::query()
