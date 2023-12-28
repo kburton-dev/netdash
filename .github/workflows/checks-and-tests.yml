@@ -19,11 +19,18 @@ jobs:
     - uses: shivammathur/setup-php@d30ad8b1843ace22e6698ab99bbafaa747b6bd0d
       with:
         php-version: '8.3'
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '18'
     - uses: actions/checkout@v3
     - name: Copy .env
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
     - name: Install Dependencies
       run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+    - name: Install Node Dependencies
+      run: npm install
+    - name: Compile Assets
+      run: npm run build
     - name: Generate key
       run: php artisan key:generate
     - name: Directory Permissions
