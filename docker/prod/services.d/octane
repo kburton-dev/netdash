@@ -1,0 +1,3 @@
+#!/usr/bin/with-contenv bash
+
+gosu abc php /app/artisan octane:start
