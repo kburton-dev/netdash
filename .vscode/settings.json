@@ -1,0 +1,21 @@
+{
+    "filewatcher.commands": [
+        {
+            "match": "(app|bootstrap|config|database|tests|resources|routes)/.*\\.php*",
+            "isAsync": true,
+            "cmd": "cd ${workspaceRoot}/ && vendor/bin/sail pint ${workspaceRelativeDir}",
+            "event": "onFileChange"
+        },
+        {
+            "match": "(fe)/.*\\.(vue|ts)*",
+            "isAsync": true,
+            "cmd": "cd ${workspaceRoot}/fe/ && echo ${workspaceRelativeDir} | cut -c 4- | xargs -I {} npm run format-file {}",
+            "event": "onFileChange"
+        }
+    ],
+    "better-pest.docker.enable": true,
+    "better-pest.docker.command": "vendor/bin/sail exec laravel.test",
+    "better-pest.docker.paths": {
+        "/home/kyle/projects/private/netdash": "/var/www/html"
+    }
+}
