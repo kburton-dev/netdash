@@ -1,0 +1,27 @@
+name: Docker Build And Push
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build and push the tagged docker image to Amazon ECR
+        run: |
+          docker pull $ECR_PATH --quiet
+          docker build --cache-from $ECR_PATH -t $ECR_PATH . -f docker/prod/Dockerfile
+          docker push $ECR_PATH
