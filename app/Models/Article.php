@@ -89,7 +89,7 @@ class Article extends Model
     }
 
     /**
-     * @return Attribute<string, string>
+     * @return Attribute<?string, ?string>
      */
     public function image(): Attribute
     {

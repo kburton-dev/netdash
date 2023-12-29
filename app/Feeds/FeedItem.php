@@ -13,7 +13,7 @@ readonly class FeedItem
         public string $url,
         public string $description,
         public CarbonInterface $publishedAt,
-        public ?string $featuredImage,
+        public ?string $featuredImage = null,
     ) {
         //
     }
