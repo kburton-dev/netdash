@@ -2,10 +2,14 @@
 
 use App\Actions\Feeds\SaveWithTags;
 use App\Feeds\FeedType;
+use App\Jobs\FetchFeedItems;
 use App\Models\Feed;
 use App\Models\Tag;
+use Illuminate\Support\Facades\Queue;
 
 it('can save a new feed', function () {
+    Queue::fake();
+
     $feed = new Feed;
     $tagIds = Tag::factory()
         ->count(3)
@@ -28,4 +32,5 @@ it('can save a new feed', function () {
     expect($feed->title)->toBe('title');
     expect($feed->type)->toBe(FeedType::RSS);
     expect($feed->url)->toBe('https://example.com');
+    Queue::assertPushed(FetchFeedItems::class, fn (FetchFeedItems $job) => $job->feed->is($feed));
 });

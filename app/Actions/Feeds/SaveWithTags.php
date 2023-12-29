@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Actions\Feeds;
 
 use App\Feeds\FeedType;
+use App\Jobs\FetchFeedItems;
 use App\Models\Feed;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -22,6 +23,10 @@ class SaveWithTags
             $feed->tags()->sync(
                 Arr::pull($data, 'tagIds', [])
             );
+
+            if ($feed->wasRecentlyCreated || $feed->wasChanged('url')) {
+                dispatch(new FetchFeedItems($feed));
+            }
 
             return $saved;
         });

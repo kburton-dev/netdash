@@ -18,7 +18,7 @@ class FetchFeedItems implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function __construct(private readonly Feed $feed)
+    public function __construct(public readonly Feed $feed)
     {
     }
 
