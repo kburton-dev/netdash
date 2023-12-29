@@ -1,7 +1,10 @@
-.git
-bootstrap/cache/*
-node_modules
-vendor
-.vscode
 .env
-storage/logs/*.log
+.git
+.github
+.vscode
+
+./bootstrap/cache/*
+./node_modules
+./storage/logs/*.log
+./vendor
+./tests
