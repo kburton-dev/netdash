@@ -70,6 +70,21 @@ class DatabaseSeeder extends Seeder
                 'title' => 'Mohammed Said',
                 'url' => 'https://themsaid.com/feed',
                 'type' => 'atom',
+            ], [
+                'id' => 10,
+                'title' => 'Tailwind CSS',
+                'url' => 'https://tailwindcss.com/feeds/feed.xml',
+                'type' => 'atom',
+            ], [
+                'id' => 11,
+                'title' => 'PHP Annotated',
+                'url' => 'https://blog.jetbrains.com/feed',
+                'type' => 'rss',
+            ], [
+                'id' => 12,
+                'title' => 'Stitcher.IO',
+                'url' => 'https://stitcher.io/rss',
+                'type' => 'rss',
             ],
         ]);
 

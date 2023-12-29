@@ -80,8 +80,11 @@ class FetchFeedItems implements ShouldQueue
             return $matches['src'];
         }
 
-        FetchArticleImage::dispatch($article)->afterCommit(); // Done after commit to ensure the article has an ID by the time it is serialized.
-        logger()->debug("Asynchronously fetching image for article ({$article->id}): {$article->title}");
+        DB::afterCommit(function () use ($article) { // Done after commit to ensure the article has an ID by the time it is serialized, and title for logging.
+            FetchArticleImage::dispatch($article);
+
+            logger()->debug("Asynchronously fetching image for article ({$article->id}): {$article->title}");
+        });
 
         return null;
     }

@@ -25,7 +25,7 @@ class SaveWithTags
             );
 
             if ($feed->wasRecentlyCreated || $feed->wasChanged('url')) {
-                dispatch(new FetchFeedItems($feed));
+                FetchFeedItems::dispatch($feed)->afterCommit();
             }
 
             return $saved;
