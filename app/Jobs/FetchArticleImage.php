@@ -33,6 +33,8 @@ class FetchArticleImage implements ShouldQueue
                     Arr::only($matches, 'image')
                 );
 
+                logger()->debug("Fetched image for article ({$this->article->id}): {$this->article->title}");
+
                 return;
             }
         }

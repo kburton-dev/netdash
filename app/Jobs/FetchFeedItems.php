@@ -81,6 +81,7 @@ class FetchFeedItems implements ShouldQueue
         }
 
         FetchArticleImage::dispatch($article)->afterCommit(); // Done after commit to ensure the article has an ID by the time it is serialized.
+        logger()->debug("Asynchronously fetching image for article ({$article->id}): {$article->title}");
 
         return null;
     }
