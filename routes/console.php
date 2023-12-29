@@ -30,7 +30,7 @@ Artisan::command('app:get-feeds {feedId?}', function () {
         ->each(function (Feed $feed) {
             $this->comment("Fetching feed with ID {$feed->id}, URL: {$feed->url}, type: {$feed->type->value}");
 
-            dispatch(new FetchFeedItems($feed));
+            FetchFeedItems::dispatch($feed);
         });
 
     $this->comment('Dispatching feed fetching... Done!');

@@ -22,6 +22,7 @@ class RssParser implements Parser
                     (string) $item['link'],
                     (string) ($item['description'] ?? null),
                     Carbon::parse((string) ($item['pubDate'] ?? null)),
+                    $item['featuredImage'] ?? null,
                 );
             });
     }

@@ -1,0 +1,2023 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	 xmlns:media="http://search.yahoo.com/mrss/" >
+
+<channel>
+	<title>The JetBrains Blog</title>
+	<atom:link href="https://blog.jetbrains.com/feed/" rel="self" type="application/rss+xml" />
+	<link>https://blog.jetbrains.com</link>
+	<description>Developer Tools for Professionals and Teams</description>
+	<lastBuildDate>Thu, 28 Dec 2023 14:42:58 +0000</lastBuildDate>
+	<language>en-US</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	
+
+<image>
+	<url>https://blog.jetbrains.com/wp-content/uploads/2023/02/cropped-icon-512-32x32.png</url>
+	<title>The JetBrains Blog</title>
+	<link>https://blog.jetbrains.com</link>
+	<width>32</width>
+	<height>32</height>
+</image> 
+	<item>
+		<title>Try the Future TypeScript Engine With the WebStorm@next Program</title>
+		<link>https://blog.jetbrains.com/webstorm/2023/12/try-the-future-typescript-engine-with-the-webstorm-next-program/</link>
+		
+		<dc:creator><![CDATA[Vladislav Minaev]]></dc:creator>
+		<pubDate>Wed, 27 Dec 2023 16:25:58 +0000</pubDate>
+		<featuredImage>https://blog.jetbrains.com/wp-content/uploads/2023/12/ws-bug-fix-featured_blog_1280x720.png</featuredImage>		<category><![CDATA[news]]></category>
+		<guid isPermaLink="false">https://blog.jetbrains.com/?post_type=webstorm&#038;p=423200</guid>
+
+					<description><![CDATA[TL;DR There is an experimental WebStorm@next build, which introduces improved type inference for enhanced performance and accuracy. You can install it via the Toolbox App. Introduction The WebStorm team is currently undertaking a significant rework of the TypeScript language support. The new TypeScript engine will power future versions of WebStorm and other JetBrains IDEs with [&#8230;]]]></description>
+										<content:encoded><![CDATA[
+<h2 class="wp-block-heading">TL;DR</h2>
+
+
+
+<p>There is an experimental WebStorm@next build, which introduces improved type inference for enhanced performance and accuracy. You can install it via the <a href="https://www.jetbrains.com/toolbox-app" target="_blank" rel="noopener">Toolbox App</a>.</p>
+
+
+
+<h2 class="wp-block-heading">Introduction</h2>
+
+
+
+<p>The WebStorm team is currently undertaking a significant rework of the TypeScript language support. The new TypeScript engine will power future versions of WebStorm and other JetBrains IDEs with TypeScript support. Through the WebStorm@next program we are offering experimental builds for enthusiasts who are keen to provide their feedback, as well as for those of you who struggle with longstanding compatibility and performance issues with TypeScript. The program is scheduled to conclude before the launch of the 2024.1 EAP. We are eager to get your feedback, which we hope will enable us to polish the new engine and turn it on by default in the next major release.</p>
+
+
+
+<h2 class="wp-block-heading">Goals</h2>
+
+
+
+<p>The rework of the TypeScript engine is driven by two primary goals:</p>
+
+
+
+<ul>
+<li><strong>Fixing compatibility issues.</strong> A major focus is to address and fix issues related to discrepancies with the native TypeScript type evaluation. By aligning more closely with the TypeScript compiler, we ensure that miscalculated types are minimized and overall type accuracy is increased.</li>
+
+
+
+<li><strong>Boosting performance in specific scenarios.</strong> We are also committed to improving performance, especially in certain <a href="https://youtrack.jetbrains.com/issue/WEB-59766/Very-slow-code-analysis-in-React-MUI-Javascript-code" target="_blank" rel="noopener">setups</a> where users have historically <a href="https://youtrack.jetbrains.com/issue/WEB-52943/Meta-High-CPU-usage-on-resolve-or-types-evaluation-in-TypeScript" target="_blank" rel="noopener">faced problems</a>.&nbsp;</li>
+</ul>
+
+
+
+<h2 class="wp-block-heading">Motivation</h2>
+
+
+
+<p>The TypeScript type system is renowned for its power, a quality that is essential for covering the dynamic nature of JavaScript. Since introducing TypeScript support, WebStorm has operated with its own TypeScript engine. This engine has been effective in evaluating types, closely replicating the type evaluation mechanisms of the TypeScript compiler.</p>
+
+
+
+<p>However, this approach has led to the emergence of subtle <a href="https://youtrack.jetbrains.com/issue/WEB-60736/Return-type-of-createApi-from-redux-toolkit-is-not-correctly-inferred" target="_blank" rel="noopener">bugs</a> due to divergences from the TypeScript compiler. In the end, it has become clear that, while our efforts to match the TypeScript compiler&#8217;s accuracy have been significant, we can never surpass the precision of the TypeScript compiler itself.</p>
+
+
+
+<p>Additionally, there is already integration with the TypeScript language server in WebStorm, which is utilized, for instance, in error highlighting. However, as we use both the language server and our type evaluation, in <em>some </em>cases the overall performance is limited by the slower component. Recognizing this, we have come up with the idea of utilizing the TypeScript language server&#8217;s capabilities for type evaluation to enhance both accuracy and performance.</p>
+
+
+
+<h2 class="wp-block-heading">Changes under the hood</h2>
+
+
+
+<p>In this update, a critical aspect to note is that our own robust TypeScript language support remains intact. All mechanisms that rely on IntelliJ <a href="https://plugins.jetbrains.com/docs/intellij/psi.html" target="_blank" rel="noopener">PSI</a> continue to operate as before. The primary change concerns type evaluation. The new engine utilizes the same TypeScript language service instance that is already in use. Additionally, we&#8217;re now retrieving type information, caching it, and converting it into our internal representation.</p>
+
+
+
+<p>It&#8217;s important to emphasize that this shift doesn&#8217;t mean a complete transition to the language service. Therefore, plugin developers and our team can still utilize our model to provide complex refactorings and inspections. This new approach ensures that, while we align with TypeScript for improved accuracy, our powerful features continue to be functional.</p>
+
+
+
+<h2 class="wp-block-heading">What to expect</h2>
+
+
+
+<p>The new engine should primarily address issues in specific setups and projects, particularly those with complex TypeScript typings. While this update does not introduce new functionality, it affects crucial aspects of the IDE such as highlighting, inspections, completions, and navigation.</p>
+
+
+
+<p>In terms of performance, you can generally expect a decrease in CPU consumption and an improvement in the responsiveness of completion and highlighting speed. However, please <strong>don’t expect widespread performance improvements</strong> across the entire IDE.</p>
+
+
+
+<h2 class="wp-block-heading">Area of application</h2>
+
+
+
+<p>While the new approach introduces substantial improvements, please be aware of its current application scope:</p>
+
+
+
+<ol>
+<li><strong>General TypeScript support</strong>: The new type evaluation is fully functional in <em>*.ts</em> and <em>*.tsx</em> files, ensuring general support for TypeScript files. Consequently, it works in React-based projects.</li>
+
+
+
+<li><strong>Integration with Vue</strong>: For Vue developers, the updated evaluation works effectively within <code>&lt;template&gt;</code> and <code>&lt;script&gt;</code> blocks if Volar integration is enabled and the <em>bundled</em> Vue language server is used.</li>
+
+
+
+<li><strong>JavaScript and other frameworks are not fully supported yet</strong>: The team is working to expand this solution to include full support of JavaScript and other popular frameworks. We anticipate the introduction of the expanded framework support in the coming year.</li>
+</ol>
+
+
+
+<h2 class="wp-block-heading">How to get it</h2>
+
+
+
+<p>The WebStorm@next program offers free-to-use Early Access Preview builds, and you can download them through the Toolbox App.</p>
+
+
+
+<p class="has-text-align-center"><a class="jb-download-button" href="https://www.jetbrains.com/toolbox-app/?_ga=2.90725850.1339838829.1702836281-437923801.1692299962&amp;_gl=1*6zw2li*_ga*NDM3OTIzODAxLjE2OTIyOTk5NjI.*_ga_9J976DJZ68*MTcwMjk3NjE2OC4zNTEuMS4xNzAyOTc3Njc0LjUwLjAuMA.." target="_blank" rel="noopener">GET VIA TOOLBOX BUTTON</a></p>
+
+
+
+<p>In the Toolbox, click the three dots button on the regular WebStorm item, and then select <em>Other versions</em> from the context menu.</p>
+
+
+
+<figure class="wp-block-image size-full"><img decoding="async" fetchpriority="high" width="512" height="429" src="https://blog.jetbrains.com/wp-content/uploads/2023/12/unnamed-3.png" alt="" class="wp-image-423201"/></figure>
+
+
+
+<p>Find the <em>2024.1 Next</em> build and then click the <em>Install</em> button:</p>
+
+
+
+<figure class="wp-block-image size-full"><img decoding="async" width="512" height="449" src="https://blog.jetbrains.com/wp-content/uploads/2023/12/unnamed-4.png" alt="" class="wp-image-423212"/></figure>
+
+
+
+<p>WebStorm@next builds do require a login and will expire one month after the build date.<br>We&#8217;re continuously improving the new engine, which means we’ll be regularly publishing updates. Just like the initial installation, these updates will be accessible via <a href="https://www.jetbrains.com/toolbox-app" target="_blank" rel="noopener">the Toolbox App</a>.</p>
+
+
+
+<h2 class="wp-block-heading">Feedback</h2>
+
+
+
+<p>Your insights are incredibly important to us, especially in these areas:</p>
+
+
+
+<ul>
+<li><strong>Overall experience when working with TypeScript:</strong> As mentioned before, the changes in type evaluation may affect various aspects, thus it’s crucial for us to verify that all smart features such as refactorings, quick-fixes, and find usages continue to work as expected.</li>
+
+
+
+<li><strong>Performance</strong>: We’re interested in your experience regarding performance when working with TypeScript code in WebStorm. Any observations about variations in CPU consumption, responsiveness of completion, speed of highlighting and running inspections, or any other related aspect would be highly appreciated.</li>
+</ul>
+
+
+
+<p>If you encounter any problems with type evaluation, we encourage you to create an issue and label it with the <code>WebStorm@next</code> tag. Here is the <a href="https://youtrack.jetbrains.com/newIssue?project=WEB&amp;c=Subsystem+TypeScript&amp;c=tag+WebStorm%40next" target="_blank" rel="noopener">issue template</a> for your convenience. If any issues arise, it would be great if you could provide a project and reproduction steps. If that&#8217;s not possible, please attach a CPU snapshot and the contents of the log folder.</p>
+
+
+
+<p>Additionally, if there is a TypeScript-related issue you’ve previously reported or in which you&#8217;ve participated and the WebStorm@next build resolves it, please leave a comment on the corresponding issue. Your feedback is crucial to help us improve the performance and quality of WebStorm!</p>
+
+
+
+<p><em>The WebStorm team</em></p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>JetBrains Academy December Digest</title>
+		<link>https://blog.jetbrains.com/education/2023/12/26/jetbrains-academy-december-digest/</link>
+		
+		<dc:creator><![CDATA[Maria Sharobaeva]]></dc:creator>
+		<pubDate>Tue, 26 Dec 2023 13:57:56 +0000</pubDate>
+		<featuredImage>https://blog.jetbrains.com/wp-content/uploads/2023/12/Featured_1280x720-2.png</featuredImage>		<category><![CDATA[digest]]></category>
+		<category><![CDATA[jetbrains-academy]]></category>
+		<category><![CDATA[academydigest-2]]></category>
+		<guid isPermaLink="false">https://blog.jetbrains.com/?post_type=education&#038;p=423033</guid>
+
+					<description><![CDATA[’Tis the season to be jolly, and at JetBrains Academy, we&#8217;re spreading festive cheer. That’s why our December newsletter comes stuffed with a sackful of Christmas goodies like discounts, brand new courses, and a sleigh-load of updates to make your learning journey merrier than ever before. &#x1f384;&#x1f381;]]></description>
+										<content:encoded><![CDATA[
+<p>’Tis the season to be jolly, and at JetBrains Academy, we&#8217;re spreading festive cheer. That’s why our December newsletter comes stuffed with a sackful of Christmas goodies like discounts, brand new courses, and a sleigh-load of updates to make your learning journey merrier than ever before. &#x1f384;&#x1f381;</p>
+
+
+            <div class="newsletter">
+                            <h2>Level Up Your Coding</h2>
+                                                            <article class="newsletter__post">
+                                                                                    <img decoding="async" class="newsletter__post-img" src="https://blog.jetbrains.com/wp-content/uploads/2023/12/AcNwsl_Dec_03.png" alt="">
+                                                                            <div class="newsletter__post-text">
+                                                            <h3>Master Kotlin With JetBrains Academy</h3>
+                                                        <p>Discover the power of Kotlin, Google&#8217;s preferred language for Android app development.<br />
+With our Kotlin tracks, created by JetBrains Academy, you’ll have the rare privilege of mastering the language under the guidance of its original creators.</p>
+                                                            <a href="https://hyperskill.org/providers/2?category=4&#038;gutm_source=newsletter&#038;gutm_medium=email&#038;gutm_campaign=kotline_course" class="btn" target="_blank" rel="noopener">Start Learning</a>
+                                                    </div>
+                    </article>
+                                    <article class="newsletter__post">
+                                                                                    <img decoding="async" class="newsletter__post-img" src="https://blog.jetbrains.com/wp-content/uploads/2023/12/AcNwsl_Dec_04-1.png" alt="">
+                                                                            <div class="newsletter__post-text">
+                                                            <h3>FREE Course: An Introduction to IDE Code Refactoring</h3>
+                                                        <p>Immerse yourself into refactorings and the IDE features and learn how to perform them in an effective way. Within our new course, you’ll learn how to recognize refactoring opportunities in code and take full advantage of them. Using automatic IDE refactorings, you’ll transform code to improve its structure, readability, and maintainability.</p>
+                                                            <a href="https://plugins.jetbrains.com/plugin/23048-introduction-to-ide-code-refactoring" class="btn" target="_blank" rel="noopener">Try now</a>
+                                                    </div>
+                    </article>
+                                    <article class="newsletter__post">
+                                                                                    <img decoding="async" class="newsletter__post-img" src="https://blog.jetbrains.com/wp-content/uploads/2023/12/AcNwsl_Dec_05-1.png" alt="">
+                                                                            <div class="newsletter__post-text">
+                                                            <h3>Apply for the Computer Science Bachelor Program</h3>
+                                                        <p>Dive into the world of &#8220;Software, Data and Technology&#8221; with this three-year bachelor’s program jointly developed by JetBrains and Constructor University. In this program, you&#8217;ll explore advanced math, cutting-edge programming, data analysis, machine learning, and more. Apply for the first wave of scholarships by March 1, 2024, and secure your spot ahead of time.</p>
+                                                            <a href="https://lp.jetbrains.com/software-data-and-technology-constructor-university/?_ga=2.64728742.820780560.1701848627-390552752.1688377235&#038;_gl=1*1nhbl4r*_ga*MzkwNTUyNzUyLjE2ODgzNzcyMzU.*_ga_9J976DJZ68*MTcwMjAzMjcyOS44NS4xLjE3MDIwMzM3NDAuNTUuMC4w" class="btn" target="_blank" rel="noopener">Apply now</a>
+                                                    </div>
+                    </article>
+                                    </div>
+    
+
+            <div class="newsletter">
+                            <h2>Incentives for Learners</h2>
+                                                            <article class="newsletter__post">
+                                                                                    <img decoding="async" class="newsletter__post-img" src="https://blog.jetbrains.com/wp-content/uploads/2023/12/AcNwsl_Dec_06.png" alt="">
+                                                                            <div class="newsletter__post-text">
+                                                            <h3>Hyperskill’s Christmas Promotion</h3>
+                                                        <p>Up until January 8, you can use the coupon XMAS to get a 25% discount on your first month of Hyperskill Premium. It will give you unlimited problems and hits per day, access to 300+ IT projects that you’ll be able to add to your portfolio, a certificate of completion for your CV, and much more. Use the coupon now and check if Hyperskill Premium is for you!</p>
+                                                            <a href="https://hyperskill.org/?gutm_source=newsletter&#038;gutm_medium=email&#038;gutm_campaign=xmas_incentive" class="btn" target="_blank" rel="noopener">Buy premium with 25% off</a>
+                                                    </div>
+                    </article>
+                                    </div>
+    
+
+            <div class="newsletter">
+                            <h2>Career Tips</h2>
+                                                            <article class="newsletter__post">
+                                                                                    <img decoding="async" class="newsletter__post-img" src="https://blog.jetbrains.com/wp-content/uploads/2023/12/AcNwsl_Dec_07.png" alt="">
+                                                                            <div class="newsletter__post-text">
+                                                            <h3>Elevate Your Career With 12 Game-Changing Traits</h3>
+                                                        <p>Discover how you can accelerate your career growth from junior to senior positions by acquiring 12 essential traits.</p>
+                                                            <a href="https://dev.to/dragosnedelcu/12-senior-developer-traits-junior-developers-need-to-master-285m" class="btn" target="_blank" rel="noopener">Learn more</a>
+                                                    </div>
+                    </article>
+                                    </div>
+    
+
+            <div class="newsletter">
+                            <h2>Events</h2>
+                                                            <article class="newsletter__post">
+                                                                                    <img decoding="async" class="newsletter__post-img" src="https://blog.jetbrains.com/wp-content/uploads/2023/12/DSGN-18296_JetBrains-Youth-Challenge_Featured_1280x720-1.png" alt="">
+                                                                            <div class="newsletter__post-text">
+                                                            <h3>Join JetBrains Academy Youth Challenge</h3>
+                                                        <p>If you&#8217;re aged 13–18, seize the opportunity to join the JetBrains Academy Youth Challenge. Choose math, coding, or both! Go solo or form a dynamic team, and have a chance to win certificates and a spot in the JetBrains Hall of Fame!</p>
+                                                            <a href="https://lp.jetbrains.com/youth-challenge/#register-now" class="btn" target="_blank" rel="noopener">Register now</a>
+                                                    </div>
+                    </article>
+                                    <article class="newsletter__post">
+                                                                                    <img decoding="async" class="newsletter__post-img" src="https://blog.jetbrains.com/wp-content/uploads/2023/12/Featured_Blog_1280x720-2x-7.png" alt="">
+                                                                            <div class="newsletter__post-text">
+                                                            <h3>Webinar Recording: Building Your Future in IT – Applications of Artificial Intelligence in Real Life</h3>
+                                                        <p>Discover the power of AI in tech and its impact on your IT career. Watch the webinar recording to gain insights into crucial skills and learn how to acquire them. Explore the specialized bachelor&#8217;s program by JetBrains at Constructor University to master all you need for success.</p>
+                                                            <a href="https://www.youtube.com/watch?v=VN2QyBd62Hw&#038;t=125s" class="btn" target="_blank" rel="noopener">Watch now</a>
+                                                    </div>
+                    </article>
+                                    <article class="newsletter__post">
+                                                                                    <img decoding="async" class="newsletter__post-img" src="https://blog.jetbrains.com/wp-content/uploads/2023/12/Featured_Blog_1280x720-2x-1-1-1.png" alt="">
+                                                                            <div class="newsletter__post-text">
+                                                            <h3>Webinar Recording: How Universities and Applicants Choose Each Other</h3>
+                                                        <p>Dive into the future of tech with our webinar about the Computer Science and Artificial Intelligence program. Explore career possibilities and discover how JetBrains University programs launch students’ careers at top IT companies. Get to know the program highlights, be guided through admissions, and get valuable insights on IT education. Don&#8217;t miss this chance to shape your tech career!</p>
+                                                            <a href="https://www.youtube.com/watch?v=BjsE-GOa1ZE&#038;t=137s" class="btn" target="_blank" rel="noopener">Watch now</a>
+                                                    </div>
+                    </article>
+                                    </div>
+    
+
+            <div class="newsletter">
+                            <h2>Teach Computer Science Your Way</h2>
+                                                            <article class="newsletter__post">
+                                                                                    <img decoding="async" class="newsletter__post-img" src="https://blog.jetbrains.com/wp-content/uploads/2023/12/AcNwsl_Dec_08-2.png" alt="">
+                                                                            <div class="newsletter__post-text">
+                                                            <h3>Automate Teaching With JetBrains Academy</h3>
+                                                        <p>Simplify the Kotline course creation process using our NEW template! This tool offers a sneak peek into your course from both the teacher&#8217;s and student&#8217;s perspectives. Dive in to discover the myriad possibilities this plugin unlocks for teachers, and explore the course creation process. Unleash your teaching potential with JetBrains Academy!</p>
+                                                            <a href="https://github.com/jetbrains-academy/kotlin-course-template" class="btn" target="_blank" rel="noopener">Try now</a>
+                                                    </div>
+                    </article>
+                                    </div>
+    ]]></content:encoded>
+					
+		
+		
+		<media:content url="https://www.youtube.com/embed/e0O4TZKI8kQ" medium="video" width="1280" height="720">
+			<media:player url="https://www.youtube.com/embed/e0O4TZKI8kQ" />
+			<media:title type="plain">How to create a course with JetBrains Academy</media:title>
+			<media:description type="html"><![CDATA[A quick guide for educators looking to create a course in JetBrains IDEs. For more detailed help see our documentation: https://plugins.jetbrains.com/plugin/...]]></media:description>
+			<media:thumbnail url="https://blog.jetbrains.com/wp-content/uploads/2023/12/Featured_1280x720-2.png" />
+			<media:rating scheme="urn:simple">nonadult</media:rating>
+		</media:content>
+	</item>
+		<item>
+		<title>Django vs FastAPI: Which is the Best Python Web Framework?</title>
+		<link>https://blog.jetbrains.com/pycharm/2023/12/django-vs-fastapi-which-is-the-best-python-web-framework/</link>
+		
+		<dc:creator><![CDATA[Mukul Mantosh]]></dc:creator>
+		<pubDate>Fri, 22 Dec 2023 15:02:46 +0000</pubDate>
+				<category><![CDATA[python]]></category>
+		<category><![CDATA[django]]></category>
+		<category><![CDATA[fastapi]]></category>
+		<category><![CDATA[frameworks]]></category>
+		<guid isPermaLink="false">https://blog.jetbrains.com/?post_type=pycharm&#038;p=421407</guid>
+
+					<description><![CDATA[Introduction If you’re new to web development and have only recently heard of “Frameworks” as a method of speeding up your application development, then you’re in the right place. Today, we’ll explore the two most popular web frameworks in the Python ecosystem currently, namely Django and FastAPI. In this blog post, we’ll help you understand [&#8230;]]]></description>
+										<content:encoded><![CDATA[
+<h2 class="wp-block-heading"><strong>Introduction</strong></h2>
+
+
+
+<p>If you’re new to web development and have only recently heard of “<strong>Frameworks</strong>” as a method of speeding up your application development, then you’re in the right place. Today, we’ll explore the two most popular web frameworks in the Python ecosystem currently, namely Django and FastAPI.</p>
+
+
+
+<figure class="wp-block-image size-full"><img decoding="async" width="2560" height="1440" src="https://blog.jetbrains.com/wp-content/uploads/2023/12/Featured_1280x720-x2-5.png" alt="" class="wp-image-423015"/></figure>
+
+
+
+<p>In this blog post, we’ll help you understand which framework is best for you in terms of business requirements, learning curve, complexity, speed, support, and more.</p>
+
+
+
+<h2 class="wp-block-heading">Django</h2>
+
+
+
+<figure class="wp-block-image is-resized"><img decoding="async" src="https://lh7-us.googleusercontent.com/c68VPuLqXyRD5KAEWBtbIbXxL3XKNigmWJx1jQJVYaJDwWpY2VSmov35ovJE9fIHTTv7K9012NcnHVm0C9hpbR_Ez7fF1M_u1fpCvfApka6HWwaef8WJODG6ulCBsEZ67LUKuEYuPj3hyVNmSPTMUgM" alt="" style="aspect-ratio:2.889390519187359;width:254px;height:auto"/></figure>
+
+
+
+<p>Django is a high-level web framework for building web applications in Python. It follows the model-view-controller (MVC) architectural pattern, emphasizing reusability, pluggability, and rapid development. Django provides a range of built-in features, such as an object-relational mapping (ORM) system for database interactions, an admin panel for managing content, and a templating engine for designing user interfaces. It aims to simplify the development process by promoting a clean and pragmatic coding style, allowing developers to focus on building robust and scalable web applications.<br>For a more comprehensive understanding of Django, see this dedicated <a href="https://blog.jetbrains.com/pycharm/2023/11/what-is-the-django-web-framework/">blog post</a>.</p>
+
+
+
+<h3 class="wp-block-heading">Architecture</h3>
+
+
+
+<p>Django follows the MVT pattern, which stands for model, view, and template.</p>
+
+
+
+<figure class="wp-block-image"><img decoding="async" src="https://lh7-us.googleusercontent.com/5-P9d9XS7dYIL8rBZO0FCMmBOjSUoa3QGTGrYo2FexVhcjQkytIy6EJZKlC4zb7jOJW0EqL-xa1gdKvEaL-gGnbnBSxHT1g1Oc6AtRo5Ad5lnEYA1QJLIuFkS_xdcgrRl8DObm75v2VO2QqmPxDQReI" alt=""/></figure>
+
+
+
+<p><strong>Model</strong>: A model is defined as the exclusive and authoritative repository of knowledge pertaining to your data. Models, in essence, are Python entities that offer functionalities for administering (creating, reading, updating, and deleting) and querying records within the database. Each attribute from the model represents a database field.</p>
+
+
+
+<p>An example from the official Django documentation:</p>
+
+
+
+<figure class="wp-block-image size-full is-resized"><img decoding="async" loading="lazy" width="1582" height="1042" src="https://blog.jetbrains.com/wp-content/uploads/2023/12/code-snip1.png" alt="" class="wp-image-421678" style="aspect-ratio:1.5182341650671785;width:840px;height:auto"/></figure>
+
+
+
+<p>Reference: <a href="https://docs.djangoproject.com/en/4.2/topics/db/models/" target="_blank" rel="noopener">https://docs.djangoproject.com/en/4.2/topics/db/models/</a></p>
+
+
+
+<p><br><strong>View</strong>: A view serves as a request-handling function that takes an HTTP request, processes it by executing business logic, accesses data models directly or through ORMs, and ultimately sends the resulting HTTP response to be rendered in the user interface via templates.</p>
+
+
+
+<p><strong>Template</strong>: Django templates help you to design the structure and layout of your website by combining HTML with special tags and variables. These tags and variables are placeholders that Django fills in with actual content when a user views your web page. As such, a Django template makes creating dynamic and personalized web pages easier by allowing you to reuse and customize the overall design.</p>
+
+
+
+<p><strong>URLs</strong>: While processing requests from every single URL via a single function is possible, it is much more efficient to write a separate view function to handle each resource. A URL mapper is used to redirect HTTP requests to the appropriate view based on the request URL. The URL mapper can also match particular patterns of strings or digits that appear in a URL and pass these to a view function as data.</p>
+
+
+
+<h3 class="wp-block-heading">Benefits of Django</h3>
+
+
+
+<p><strong>Velocity in action</strong></p>
+
+
+
+<p>Django was created to enable rapid application prototyping and facilitate a fast feedback loop.</p>
+
+
+
+<p><strong>Packed to perfection</strong></p>
+
+
+
+<p>Django provides out-of-the-box support for everything, offering a rich set of built-in features for handling development operations. The most powerful part of Django is the <em>Admin</em> interface, which automatically generates production-ready UIs from database models.</p>
+
+
+
+<p><strong>Ironclad confidence</strong></p>
+
+
+
+<p>Django offers built-in, fortified security measures, including safeguards against SQL injection, cross-site scripting (XSS), CSRF forgery, and a robust authentication system.</p>
+
+
+
+<p><strong>Trusted by titans</strong></p>
+
+
+
+<p>It may come as a surprise, but industry giants like Instagram, Spotify, Mozilla, National Geographic, and numerous others place their trust in Django.</p>
+
+
+
+<p><strong>Crafting a myriad of apps, from social to commerce and beyond</strong></p>
+
+
+
+<p>Django is an excellent choice for building applications like content management systems (CMS), e-commerce platforms, or social media applications. Many developers have also leveraged Django to create multi-tenant applications as well.</p>
+
+
+
+<h3 class="wp-block-heading">Django’s design philosophies</h3>
+
+
+
+<p>These fundamental philosophies have served as guiding principles throughout the framework&#8217;s development process.</p>
+
+
+
+<p><strong>Loose coupling</strong></p>
+
+
+
+<p>One of the core principles underlying Django&#8217;s architecture is maintaining a balance between minimal interdependence and strong internal unity. The different components within the framework should only have knowledge of each other when this is absolutely essential.&nbsp;</p>
+
+
+
+<p><strong>Less code</strong></p>
+
+
+
+<p>Django applications promote code simplicity by minimizing unnecessary code and eliminating boilerplate whenever possible. Django is designed to harness Python&#8217;s dynamic features, including introspection, to their fullest extent.</p>
+
+
+
+<p><strong>Quick development</strong></p>
+
+
+
+<p>Django enables swift web development by expediting laborious tasks. Django facilitates rapid development through its high-level abstractions and built-in features, streamlining common web development tasks.</p>
+
+
+
+<p><strong>“Don’t repeat yourself” (DRY)</strong></p>
+
+
+
+<p>Each unique concept or piece of data should exist in a single, exclusive location. Redundancy is undesirable, while normalization is favorable.</p>
+
+
+
+<p>To a reasonable extent, the framework should extract as much information as it can from minimal input.</p>
+
+
+
+<p><strong>Explicit is better than implicit</strong></p>
+
+
+
+<p>In Python, there&#8217;s a basic idea mentioned in <a href="https://peps.python.org/pep-0020/" target="_blank" rel="noopener">PEP 20</a>. It advises that when using Django, a tool for making web apps, we should keep “magic” to a minimum. Magic in programming means making things work automatically without showing how they work. We should only use this kind of magic for simplifying our work. However, we need to ensure that this magic doesn&#8217;t make Django confusing for those beginners trying to learn the framwork.</p>
+
+
+
+<p><strong>Consistency</strong></p>
+
+
+
+<p>Consistency within the framework should be maintained across all levels, encompassing aspects ranging from the low level, such as adhering to a consistent Python coding style, to the high level, including the overall user experience when working with Django.</p>
+
+
+
+<h3 class="wp-block-heading">How to install Django</h3>
+
+
+
+<ol>
+<li>First, we are going to create a virtual environment. For our example, we are going to create a Python virtual environment and name it <code>DjangoEnv</code>.</li>
+</ol>
+
+
+
+<p>Once successfully created, we will activate the virtual environment.</p>
+
+
+
+<figure class="wp-block-image"><img decoding="async" src="https://lh7-us.googleusercontent.com/i-SIiTKIP0_0ay13F_K_1sv0gjEhdqyfDZDHJxJ4nZnzOvpoFR0LMlsC-7DJ-FgeLflJENbMIBmlw8ZsEIrK1vdRp-td6HgVPTXxsUrh7Hi2Uz8IQTdl6wSFOX76WK5di1Aj6ViaACJiSa8OpN1WBMU" alt=""/></figure>
+
+
+
+<ol start="2">
+<li>Run the following command to install the Django</li>
+</ol>
+
+
+
+<p><code>pip install Django</code></p>
+
+
+
+<figure class="wp-block-image"><img decoding="async" src="https://lh7-us.googleusercontent.com/8adKQS3e0VTOjBg35cNFb9C2-VuB-BXvIwOQ9S0wdufiaVtfDsp7B0NYFvMb7Jqq-Mf_WUGFK0kaWtpWLkwG1Ul2ngNyTQ-XmUdfp0Bb18GF0LVFZdfKPmzqMq2UnXoBOdVutbBrL7kOH4Nz7f_tlXg" alt=""/></figure>
+
+
+
+<ol start="3">
+<li>We are going to create a new Django project and name it <code>mysite</code>.</li>
+</ol>
+
+
+
+<figure class="wp-block-image"><img decoding="async" src="https://lh7-us.googleusercontent.com/OcTTzVtFLSI--G6nx9ZW8BqkLNIQ38CsUWaWAQoI-GgqJ03NPwECOlRBZ6chDc3QFS5IZAcvUSYr6PBTHAmuXYvu4s8mSwoFIvbPSMY4J6hj_FZDF62yy2kFuzh39yKoFWNQWDzzgYx_POqEfpHBebA" alt=""/></figure>
+
+
+
+<ol start="4">
+<li>Once the project is created successfully, move inside the project directory and run the following command:</li>
+</ol>
+
+
+
+<p><code>python manage.py runserver</code></p>
+
+
+
+<figure class="wp-block-image"><img decoding="async" src="https://lh7-us.googleusercontent.com/fRHPOlUIrebobRYMwpSShBfEt_9va0BcVxk1LWUWq-jhfYRFRn6BStKURwUt2no86ShMuwhN3VeBr2Da30_Y010QEWZDm5ItsrxW5pJETc7zUIkUjDujcXDumn_Fuekhzdkr1vHWGeUWqMbhVd9s2vg" alt=""/></figure>
+
+
+
+<ol start="5">
+<li>Visit <a href="http://localhost:8000" target="_blank" rel="noopener">http://localhost:8000</a>, where you will see the Django landing page. &#x1f642;</li>
+</ol>
+
+
+
+<figure class="wp-block-image"><img decoding="async" src="https://lh7-us.googleusercontent.com/GbkQKbn93esmrxOHs-0el1FYAF8LbZCBsW91kj28O2uuL2cTxai0Wjtg-1dMnOzs2K3heFm3mx3x9Zd6cOk5tPFnyeaMQECPZaHnC-knp46wvv3dJ-JRPhhHbsMmFrGLo6vzfZPNcHLLFL5r1uPV71E" alt=""/></figure>
+
+
+
+<p>Finding manually entering commands in the terminal exhausting and looking for a quicker solution? &#x1f680; Check out our tutorials designed to get you up to speed in no time.</p>
+
+
+
+<p>You may want to explore this<a href="https://blog.jetbrains.com/pycharm/2023/04/create-a-django-app-in-pycharm/"> blog post</a>, which details a smooth method for creating Django projects.</p>
+
+
+
+<p>Short on time? Skip the text and dive into quick, engaging videos to kick-start your journey!</p>
+
+
+
+<figure class="wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<iframe loading="lazy" title="Django Project Setup Made Easy" width="500" height="281" src="https://www.youtube.com/embed/MoEDqObTZkg?start=1&#038;feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+</div></figure>
+
+
+
+<h2 class="wp-block-heading">FastAPI</h2>
+
+
+
+<p>FastAPI is one of the most popular Python frameworks available on the market, having amassed over 65,000 GitHub stars. It’s a high-performance framework, and its beauty lies in its exceptional use of type hints.</p>
+
+
+
+<p>Type hints utilize Python annotations, a feature introduced in PEP <a href="https://peps.python.org/pep-3107/" target="_blank" rel="noopener">3107</a> and PEP <a href="https://peps.python.org/pep-0484/" target="_blank" rel="noopener">484</a>. They serve the purpose of specifying types for variables, parameters, function arguments, return values, class attributes, and methods.</p>
+
+
+
+<p>The creator of FastAPI, <a href="https://github.com/tiangolo" target="_blank" rel="noopener">Sebastian Ramirez</a>, also stands behind Typer, as well as various CLI-based apps and other open-source projects.</p>
+
+
+
+<p>The FastAPI project has experienced significant growth in just a few years, much of which is attributable to its vibrant community. Moreover, it’s famously more straightforward to work with than Django.</p>
+
+
+
+<p>FastAPI is backed by two major components:</p>
+
+
+
+<ul>
+<li>Pydantic</li>
+
+
+
+<li>Starlette</li>
+</ul>
+
+
+
+<p></p>
+
+
+
+<p><a href="https://docs.pydantic.dev/latest/" target="_blank" rel="noopener">Pydantic</a> is a Python library used for data validation and parsing. It is beneficial for data serialization and deserialization, making it easier to work with complex data types in Python. Pydantic allows you to define the structure of your data using Python data classes and then validate and parse incoming data according to that structure.</p>
+
+
+
+<p>Pydantic has now unveiled its version 2, completely rewritten in Rust. As stated in the official Pydantic documentation, this update has led to a substantial performance boost, with a 4–50 times speed increase compared to the previous version.</p>
+
+
+
+<p><a href="https://www.starlette.io/" target="_blank" rel="noopener">Starlette</a> is a lightweight ASGI (Asynchronous Server Gateway Interface) framework for building web applications and microservices in Python. It provides the foundation for building asynchronous web applications using Python&#8217;s asyncio library. Starlette is designed to be minimalistic and modular, allowing developers to pick and choose the components they need for their specific application.</p>
+
+
+
+<p>According to the official website, it is production-ready and gives you the following:</p>
+
+
+
+<ul>
+<li>A lightweight, low-complexity HTTP web framework</li>
+
+
+
+<li>WebSocket support</li>
+
+
+
+<li>In-process background tasks</li>
+
+
+
+<li>Startup and shutdown events</li>
+
+
+
+<li>A TestClient built on HTTPX</li>
+
+
+
+<li>Support for CORS, GZip, StaticFiles, and streaming responses</li>
+
+
+
+<li>Session and cookie support</li>
+
+
+
+<li>100% test coverage</li>
+
+
+
+<li>100% type-annotated codebase</li>
+
+
+
+<li>A small number of hard dependencies</li>
+
+
+
+<li>Compatibility with asyncio and trio backends</li>
+</ul>
+
+
+
+<p></p>
+
+
+
+<h3 class="wp-block-heading"><strong>Benefits of FastAPI</strong></h3>
+
+
+
+<p>FastAPI is designed for building efficient APIs quickly with auto-generated API docs using Swagger or ReDoc.&nbsp;</p>
+
+
+
+<p>Moreover, it has additional benefits.</p>
+
+
+
+<ul>
+<li>The major advantage of FastAPI is its async nature, backed by libraries like Starlette and Pydantic.</li>
+</ul>
+
+
+
+<p></p>
+
+
+
+<ul>
+<li>FastAPI has garnered the interest of organizations in search of exceptionally efficient API development frameworks due to its emphasis on performance, contemporary design, and developer-friendly features.</li>
+</ul>
+
+
+
+<p></p>
+
+
+
+<ul>
+<li>FastAPI provides comprehensive support for asynchronous programming, enabling the creation of highly responsive APIs capable of efficiently managing numerous simultaneous requests.</li>
+</ul>
+
+
+
+<p></p>
+
+
+
+<h3 class="wp-block-heading"><strong>How to install FastAPI</strong></h3>
+
+
+
+<p>First, create a new Python Virtual environment. Once created, activate the environment.</p>
+
+
+
+<figure class="wp-block-image"><img decoding="async" src="https://lh7-us.googleusercontent.com/9EdcwadSaqbQ1ICh3vR3PGPIL9JLVtegQvySsDgBiBXx8uBAQuKBbYkqfAb1mVwiuoJu8XSO1mmOtV1g_Ec0S8j-5rtBOa2fLi0Iyt3DijzOEmT5IXtlFRNT3lmrUgGrNpbjmRD_VT1D5PDRYeznHBU" alt=""/></figure>
+
+
+
+<p>Now, go ahead and install FastAPI by running the following command:</p>
+
+
+
+<p><code>pip install fastapi</code></p>
+
+
+
+<figure class="wp-block-image"><img decoding="async" src="https://lh7-us.googleusercontent.com/QQa_3wORiXBuve6CgNWtOmQehCQsK0kz7pYCGy7vltnuwLk7nPgWpDQgAyN8scX0zRDrf2Mp6EkR8ucJmeLGoWL_hDLlrGSr6TW7A4kGInebej200C_T9Vmfhsgxf8EpjTNpYA5vHig46gJtTTrgFuE" alt=""/></figure>
+
+
+
+<p>Then, you need to install Uvicorn. <a href="https://www.uvicorn.org/" target="_blank" rel="noopener">Uvicorn</a> is an ASGI web server implementation for Python.</p>
+
+
+
+<figure class="wp-block-image"><img decoding="async" src="https://lh7-us.googleusercontent.com/YoVfFTXmFPZdyGpJR5KFM6vaBbefHM_YuFXniSC0qWO1E6Kk6D_2W1laRIzsYZU59PhLfzQbOWibgKZdfdo38S1yJX2aQZ_l-wYqjrY8jk1YErQlxMkJkG5jLjrEQAF6HlgtyAtUyXBjy3CfwMt5_Tg" alt=""/></figure>
+
+
+
+<p>This is what a bare minimum FastAPI code block looks like, with no need for any complex setup.</p>
+
+
+
+<figure class="wp-block-image"><img decoding="async" src="https://lh7-us.googleusercontent.com/g6raoF49xBqrdZV_AEmYEY4JgucUDi9LStAlu_CX52Nb454bmzJGeOAa2FGR7XrdKlZygVo8c82n_yWGKfOaKoKOm6oQep3s1oRiLa5wUtosIVE83JKNzCaXYQwb7ySTjsqZhn8KAZyUtq5lqHzzAXw" alt=""/></figure>
+
+
+
+<p>To run the application, type the following command:</p>
+
+
+
+<p><code>uvicorn main:app –reload</code></p>
+
+
+
+<figure class="wp-block-image"><img decoding="async" src="https://lh7-us.googleusercontent.com/Rsx4qaL1oDOQLDVxmLMn3_YdkSWMOyNiem1zsINQDoFsvxNR64D6RS2IJrAKxHVA-2Ck-3AtvIsdmCW_CS73m9O2bWuUv-Yeo1ln6Qn-8ITe-cwNsKIsTAt0qi7lQmzofXRkCl6KSg6TSdROoAsrFI0" alt=""/></figure>
+
+
+
+<h2 class="wp-block-heading">Django vs. FastAPI: A Comparison</h2>
+
+
+
+<p><strong>Django</strong></p>
+
+
+
+<ul>
+<li>If you’d like to have all the necessary features already there in one place, without the need to set anything up manually, then you should definitely consider Django. DjangoAdmin, ORM, and built-in authentication are all available out of the box.</li>
+</ul>
+
+
+
+<ul>
+<li>Django can be very useful when working with large complex projects that have tons of complex functionalities, for example, building multi-tenant apps, internalization (i18n) support, caching, etc.&nbsp;</li>
+</ul>
+
+
+
+<ul>
+<li>When it comes to maturity, Django is over 18 years old and has a robust framework with extensive community support.&nbsp;</li>
+</ul>
+
+
+
+<ul>
+<li>There’s a steep learning curve compared to FastAPI, as Django has many features, which can take time to master and might be unnecessary depending on your use case.</li>
+</ul>
+
+
+
+<p></p>
+
+
+
+<p><strong>FastAPI</strong></p>
+
+
+
+<ul>
+<li>FastAPI&#8217;s features align well with the principles and requirements of microservices architecture, providing the necessary tools and capabilities to build scalable, efficient, and loosely coupled microservices.</li>
+
+
+
+<li>When you&#8217;re tasked with creating applications that need to support real-time features, such as WebSockets, FastAPIs become a valuable choice. FastAPIs offer efficient and quick ways to develop web applications, making them well-suited for handling real-time functionality and delivering responsive user experiences.</li>
+
+
+
+<li>You can boost your application development speeds by generating auto-docs using Swagger/Redoc using Python type hints and Pydantic.&nbsp;</li>
+
+
+
+<li>FastAPI is relatively easy to learn when compared to Django.</li>
+</ul>
+
+
+
+<p></p>
+
+
+
+<h3 class="wp-block-heading"><strong>Popularity</strong></h3>
+
+
+
+<p>Django is one of the most popular and widely used Python backend frameworks, having been in service for nearly two decades. There’s no doubt that it is capable of handling all kinds of complexity, including building complex applications, caching, multiple databases, and authenticating users, while also offering out-of-the-box support for DjangoAdmin.&nbsp;</p>
+
+
+
+<p>As per the <a href="https://lp.jetbrains.com/python-developers-survey-2022/" target="_blank" rel="noopener">Python Developer Survey 2022</a>, Flask, Django, and FastAPI maintain their positions as the leading three Python web frameworks. FastAPI, which was initially launched in late 2018, has experienced year-over-year growth of 4%.</p>
+
+
+
+<figure class="wp-block-image"><img decoding="async" src="https://lh7-us.googleusercontent.com/C4wS6P-sHqqDqGnEWIPlwUck85i_zwINZ-ESw62pYyZVcXizksbOcPBcvlh8nxrRamWW5btupzQFF9FCR81DS6t6whQxnHH7nsNPpOhf7SLC3pmfSskf2itFihjijTfa3yxW25xJZDEIxZlbeC2DEF4" alt=""/></figure>
+
+
+
+<p>Per the <a href="https://survey.stackoverflow.co/2023/" target="_blank" rel="noopener">StackOverflow Developer Survey 2023</a>, Flask and Django continue to be consistently popular choices among developers, while FastAPI is steadily increasing its market share, reaching 7.42% in 2023.</p>
+
+
+
+<figure class="wp-block-image size-large"><img decoding="async" loading="lazy" width="2802" height="1500" src="https://blog.jetbrains.com/wp-content/uploads/2023/12/Artboard-1-3x-2800x1499.png" alt="" class="wp-image-423002"/></figure>
+
+
+
+<p>The Django community is really active and keeps on striving to improve the framework, providing updates, new features, and more. Not only that, the framework has received around 74,000 stars on GitHub, which clearly indicates how popular it is.</p>
+
+
+
+<p>FastAPI, while relatively new when compared to Django, boasts significant potential for constructing high-performance APIs, handling asynchronous requests, and automatically generating documentation. This feature is particularly appreciated by developers, as it reduces the time they need to invest in documenting APIs, marking a substantial advancement.</p>
+
+
+
+<h2 class="wp-block-heading">Final thoughts</h2>
+
+
+
+<p>Django is a web framework equipped with an integrated admin interface, ORM, templates, authentication, and many more features, making it well-suited for extensive projects like content management systems, social media platforms, multi-tenant apps, and e-commerce websites. On the other hand, FastAPI is a contemporary API framework tailored to asynchronous programming, making it an excellent choice for data-rich APIs, machine-learning applications, and building microservices.</p>
+
+
+
+<p>Django may not be the optimal framework for every situation. While it serves as an excellent framework for building extensive projects, it might be deemed excessive for smaller endeavors. Its robust, monolithic architecture could pose challenges for developers seeking more customizable and faster applications, especially for shorter scripts. Django excels in providing reliability, efficiency, architectural integrity, and security, which makes it particularly suitable for developing larger-scale applications.</p>
+
+
+
+<p>FastAPI has a more limited library ecosystem compared to Django, and being relatively new at just five years old, it&#8217;s undergoing significant changes. Depending on your particular needs, there might be a necessity to develop extensions on your own.</p>
+
+
+
+<p>At times, selecting the right framework can be quite challenging, yet it&#8217;s crucial to ensure that the chosen framework aligns with your precise business objectives before proceeding.</p>
+
+
+
+<h2 class="wp-block-heading">PyCharm Support</h2>
+
+
+
+<p>Did you know that PyCharm offers built-in support for popular Python frameworks such as Django, FastAPI, and Flask, and goes the extra mile by providing excellent support for frontend frameworks like React, Angular, and Vue.js?</p>
+
+
+
+<p><br><br>Let&#8217;s explore the IDE playground and discover its features together.</p>
+
+
+
+<p>Open PyCharm and click on <em>New Project.</em></p>
+
+
+
+<figure class="wp-block-image"><img decoding="async" src="https://lh7-us.googleusercontent.com/Bj6nx8v9TqzGFbB2CRPy3G1OLVpnzHHG-wh3183slrPv7HQlliPOANSfMK1uha_IwQHGV55nsJZ3FgDvNSdBxi3-QO-sGcbqCEEp5Egs07talTQTsKb21J-K6E9P0n8Y0zpQqQ0p3_tBXPJDoDRnX8I" alt=""/></figure>
+
+
+
+<p>Click on Django and provide a project name.</p>
+
+
+
+<p>You can effortlessly generate virtual environments or link up with existing ones. After completion, simply click on <em>Create</em>.</p>
+
+
+
+<figure class="wp-block-image"><img decoding="async" src="https://lh7-us.googleusercontent.com/QVrqIZfgvCnbadCyVil8gOcpcodhq4bVdY_jmHalkuo9gaOSkwZcbggw1jbpwSUqSCcOxluGOGN4ObbgbOeOuYLOg37UzSn5nFShzQzsjD49lM8l3KCjnIKa59GfHajfqrI0QomdMTPltFSN8KCuvgI" alt=""/></figure>
+
+
+
+<p>PyCharm will effortlessly configure everything for you. Just click on the play icon, and the server will initiate without the need for any manual commands.</p>
+
+
+
+<figure class="wp-block-image"><img decoding="async" src="https://lh7-us.googleusercontent.com/0e1SCoy73jz7_Px2fKP_82rEZ-ZrWLNcPKLheGFk5sIsVBZxef6BlKw2_TK6m6tBxDpxvrr70QfNzqAT0HpFek3AXwrjz2x-Kb3DNgjKSV3nbjko8R3ITnF9U3IQK-792aA8Lo5j8s6kgT5S7DfMJKE" alt=""/></figure>
+
+
+
+<p>Hooray! The server is already up and running.</p>
+
+
+
+<figure class="wp-block-image"><img decoding="async" src="https://lh7-us.googleusercontent.com/iSA8cQtFS8gO09bmNg3GNDqdg2OrQGjxCCkn2ZfGbUxwxLbsGnGW-5l4y_oMPVh3XbUoSYe2DdRpAxJYtbKoFdkpiZd0JAdNNcNcfc1H6oe7DeA0x6QqqDxyoxejMRuLMU5aYgddfL2N_lCqoi-4l2I" alt=""/></figure>
+
+
+
+<p>The setup for FastAPI is quite similar to Django.&nbsp;</p>
+
+
+
+<p>Open PyCharm, select <em>FastAPI</em>,<em> </em>and specify the project name.</p>
+
+
+
+<figure class="wp-block-image"><img decoding="async" src="https://lh7-us.googleusercontent.com/f7kYQ1p_gtj8bZXK7iDqxNGd2Qml6WA5-XuqlFRJQ-FrEjmtWKZwk3NRSksvEtvSTrErskw_zLrKBoOBIJJ22sz99gyc_LcbfcCvC8VkvcZX5VpoOGZuLDDq1Z1VnC7Y9HhoNUJ7ErNw-XATXh5X1Do" alt=""/></figure>
+
+
+
+<p>PyCharm will then create a boilerplate. &#x1f973;</p>
+
+
+
+<p><br>Click on the play icon to start the server.</p>
+
+
+
+<figure class="wp-block-image"><img decoding="async" src="https://lh7-us.googleusercontent.com/t5qnZYtv2KgxkiS2v_5-0WflIJMA2GPahj0a2JNMRqSk_TB6gOrDfH_xnhnaWKCmjz3dA8oVxquk-HyTniMwHaWFHCzfXGCxy4cSR1H8m9rqNuvbACT7Salt1GkrRx1nrOfGG0w7bi9SNXGu0ChZ6IU" alt=""/></figure>
+
+
+
+<p>Effortlessly <em>initiate/terminate/reload</em> the FastAPI server at your convenience.</p>
+
+
+
+<figure class="wp-block-image"><img decoding="async" src="https://lh7-us.googleusercontent.com/ssLPU8wNitmJ7xLQAJAL_yEj-KQkOVdmWsPqFNtotCKEJ4M73-IrsZz6PlLn7y8fBs1Lxr3jf-CyKJAKhDCQL06ZtCkI0H4f0dzDwL0IFlwJ2-jvUeweS4FkOWNaEmoCHP_3auR-3XlPbzfLwGNZmQ0" alt=""/></figure>
+
+
+
+<h2 class="wp-block-heading">Tutorials</h2>
+
+
+
+<p>If you&#8217;re eager to delve deeper into Django and FastAPI, we&#8217;ve curated some tutorials for you.</p>
+
+
+
+<p><a href="https://blog.jetbrains.com/pycharm/2023/04/create-a-django-app-in-pycharm/"><strong>Create a Django App in PyCharm</strong></a></p>
+
+
+
+<p>The tutorial covers creating a simple Django application that displays your local air temperature and allows you to explore weather conditions in random locations.</p>
+
+
+
+<p><a href="https://blog.jetbrains.com/pycharm/2022/07/faster-django-queries-with-materialized-views/"><strong>How To Use Materialized Views in Django</strong></a></p>
+
+
+
+<p>This post covers materialized views in Django. After reading it, you’ll know how to create and integrate materialized views into Django models, refresh them as required with the DROP statement, and utilize unique indexes to enhance performance.</p>
+
+
+
+<p><a href="https://blog.jetbrains.com/pycharm/2023/07/build-django-apps-on-google-cloud-with-pycharm-and-cloud-code/"><strong>Build Django Apps on Google Cloud With PyCharm and Cloud Code</strong></a></p>
+
+
+
+<p>This tutorial guides you through building and running applications in both local Kubernetes clusters and Google Kubernetes Engine using Cloud Code and PyCharm.&nbsp;</p>
+
+
+
+<p><a href="https://www.jetbrains.com/guide/python/tutorials/fastapi-aws-kubernetes/" target="_blank" rel="noopener"><strong>Developing FastAPI Application using K8s &amp; AWS</strong></a></p>
+
+
+
+<p>This tutorial will exclusively concentrate on FastAPI while also exploring powerful platforms such as Kubernetes and Amazon Web Services.</p>
+]]></content:encoded>
+					
+		
+		
+		<media:content url="https://www.youtube.com/embed/MoEDqObTZkg" medium="video" width="1280" height="720">
+			<media:player url="https://www.youtube.com/embed/MoEDqObTZkg" />
+			<media:title type="plain">Django Project Setup Made Easy</media:title>
+			<media:description type="html"><![CDATA[Create a new Django project in seconds! Imagine if you could just leap over Django installation, project setup, and virtual environment creation and dive str...]]></media:description>
+			<media:rating scheme="urn:simple">nonadult</media:rating>
+		</media:content>
+	</item>
+		<item>
+		<title>Writing a Java Inspection for IntelliJ IDEA Using AI Assistant</title>
+		<link>https://blog.jetbrains.com/idea/2023/12/java-inspection-with-ai-assistant/</link>
+		
+		<dc:creator><![CDATA[Tagir Valeev]]></dc:creator>
+		<pubDate>Fri, 22 Dec 2023 13:25:39 +0000</pubDate>
+		<featuredImage>https://blog.jetbrains.com/wp-content/uploads/2023/12/ij-release-featured_blog_1280x720.png</featuredImage>		<category><![CDATA[idea]]></category>
+		<category><![CDATA[ai-assistant]]></category>
+		<category><![CDATA[inspections]]></category>
+		<category><![CDATA[intellij-idea]]></category>
+		<category><![CDATA[java]]></category>
+		<guid isPermaLink="false">https://blog.jetbrains.com/?post_type=idea&#038;p=421697</guid>
+
+					<description><![CDATA[We&#8217;ve just released AI Assistant for IntelliJ IDEA, which can help you complete many tasks in the IDE, such as explaining code, generating commits, and assisting with writing code. The AI Assistant plugin is powered by the JetBrains AI Service, which uses different large language models (LLMs) under the hood and enables specific AI-powered features [&#8230;]]]></description>
+										<content:encoded><![CDATA[
+<p>We&#8217;ve just released <a href="https://www.jetbrains.com/help/idea/ai-assistant.html" target="_blank" rel="noopener">AI Assistant for IntelliJ IDEA</a>, which can help you complete many tasks in the IDE, such as explaining code, generating commits, and assisting with writing code. The AI Assistant plugin is powered by the JetBrains AI Service, which uses different large language models (LLMs) under the hood and enables specific AI-powered features within many JetBrains products.</p>
+
+
+
+<p>Since we like dogfooding, I decided to try out AI Assistant in IntelliJ IDEA to write a new Java inspection for IntelliJ IDEA, and write down my experience while solving this task. Let&#8217;s take a look!</p>
+
+
+
+<h2 class="wp-block-heading">What do we want to create with AI Assistant?</h2>
+
+
+
+<p>Yesterday, a coworker approached me and asked about making a simple new Java inspection:</p>
+
+
+
+<blockquote class="wp-block-quote">
+<p>Hello! Am I missing something, or is there no inspection in IDEA like this?<br><code>(int)($VAR$ ^ $VAR$ &lt;&lt;&lt; 32) =&gt; Long.hashCode($VAR$)</code></p>
+</blockquote>
+
+
+
+<p>In the Java team, we usually give a task like this to new team members because it&#8217;s a relatively easy, isolated, and well-formulated problem and it helps them to learn about the IntelliJ IDEA codebase. Now, everybody says that AI can replace programmers, 80% of new code is written by AI, and so on. So I thought: why not ask our AI Assistant to do this for me? It was 16:09.</p>
+
+
+
+<p>My response was:</p>
+
+
+
+<blockquote class="wp-block-quote">
+<p>It looks easy enough to ask a neural network…<br>I wonder if it can do it.</p>
+</blockquote>
+
+
+
+<h2 class="wp-block-heading">Asking AI Assistant to write code for a new Java inspection</h2>
+
+
+
+<p>In the <a href="https://www.jetbrains.com/help/idea/ai-assistant.html#ai-chat" target="_blank" rel="noopener">chat window</a>, I ask AI Assistant to perform this task, just copying the desired replacement from the original request. It produces some code for this new inspection:</p>
+
+
+
+<figure class="wp-block-image size-full"><img decoding="async" loading="lazy" width="1600" height="1237" src="https://blog.jetbrains.com/wp-content/uploads/2023/12/image-33.png" alt="" class="wp-image-421698"/></figure>
+
+
+
+<p>As requested in the initial prompt, AI Assistant also suggests a corresponding quick-fix:</p>
+
+
+
+<figure class="wp-block-image size-full"><img decoding="async" loading="lazy" width="1600" height="1125" src="https://blog.jetbrains.com/wp-content/uploads/2023/12/image-34.png" alt="" class="wp-image-421710"/></figure>
+
+
+
+<p>As you can see, some of the generated methods are incomplete, and their implementation is missing. This is not a problem, as you can ask AI Assistant to write these as well:</p>
+
+
+
+<figure class="wp-block-image size-full"><img decoding="async" loading="lazy" width="1583" height="1600" src="https://blog.jetbrains.com/wp-content/uploads/2023/12/image-35.png" alt="" class="wp-image-421721"/></figure>
+
+
+
+<p>Honestly, every time I ask AI Assistant to generate the next method, I expect the answer to be something like, &#8220;Come on, should I do the whole job instead of you? Write some code yourself!&#8221; Luckily, it is always ready to help:</p>
+
+
+
+<figure class="wp-block-image size-full"><img decoding="async" loading="lazy" width="1600" height="646" src="https://blog.jetbrains.com/wp-content/uploads/2023/12/image-36.png" alt="" class="wp-image-421732"/></figure>
+
+
+
+<p>Once all the methods are generated, I have what I need to paste into the editor, register the extension, and compile and launch it, all without writing any code manually. First, I register the extension myself, because this is mostly a copy-paste of an existing extension with minor edits. AI Assistant would not be faster for me here.</p>
+
+
+
+<p>Can AI Assistant write tests? A typical test case for inspections in IntelliJ IDEA requires creating a test class (which is also mostly a copy-paste of an existing test) and then creating <code>beforeXyz.java</code> and <code>afterXyz.java</code> to ensure that the quick-fix works correctly. Since the test data can be relatively straightforward, let’s ask AI Assistant to do this!</p>
+
+
+
+<figure class="wp-block-image size-full"><img decoding="async" loading="lazy" width="1274" height="819" src="https://blog.jetbrains.com/wp-content/uploads/2023/12/image-37.png" alt="" class="wp-image-421743"/></figure>
+
+
+
+<p>An inspection also needs textual descriptions that can be shown in documentation – another thing the LLM should do well.</p>
+
+
+
+<figure class="wp-block-image size-full"><img decoding="async" loading="lazy" width="1277" height="1052" src="https://blog.jetbrains.com/wp-content/uploads/2023/12/image-38.png" alt="" class="wp-image-421754"/></figure>
+
+
+
+<p>While AI Assistant is able to write some HTML for us, the writing style it generates differs from what we have for other inspections. In fact, we have a template for these descriptions, so why not feed the template into a prompt?</p>
+
+
+
+<figure class="wp-block-image size-full"><img decoding="async" loading="lazy" width="1539" height="1600" src="https://blog.jetbrains.com/wp-content/uploads/2023/12/image-39.png" alt="" class="wp-image-421765"/></figure>
+
+
+
+<p>This looks much better!</p>
+
+
+
+<p>All of the resulting code actually compiles and does something, though the test doesn&#8217;t pass. What&#8217;s the problem?</p>
+
+
+
+<p>The first and most important thing is that the problem was reported incorrectly, and thus the initial prompt was incorrect as well. There&#8217;s no <code>&lt;&lt;&lt;</code> operator in Java! It should be <code>&gt;&gt;&gt;</code> instead; the <a href="https://docs.oracle.com/javase/tutorial/java/nutsandbolts/op3.htm" target="_blank" rel="noopener">unsigned right shift operator</a>. I would expect a real programmer who’s given this task to detect the typo and fix it before starting to solve the problem.</p>
+
+
+
+<p>Unfortunately, the LLM started solving it right away, without first analyzing whether the prompt was correct. And it actually tries to match <code>&lt;&lt;</code> using a constant <code>JavaTokenType.LTLT</code>, which we use for this token inside IntelliJ IDEA sources (“LT” means “less than” and is used to designate “&lt;”). There&#8217;s apparently no LTLTLT constant, as there&#8217;s no <code>&lt;&lt;&lt;</code> Java token, so AI Assistant tried to fix the mistake. However, it would be correct to use <a href="https://github.com/JetBrains/intellij-community/blob/73790777f8fb3611183715fd6754fb801e26fdd6/java/java-frontback-psi-api/src/com/intellij/psi/JavaTokenType.java#L123" target="_blank" rel="noopener">JavaTokenType.GTGTGT</a>, which corresponds to <code>&gt;&gt;&gt;</code> (“GT” means “greater than” and is used to designate “&gt;”), so I fixed this. Additionally, I need to replace all instances of <code>&lt;&lt;&lt;</code> with <code>&gt;&gt;&gt;</code> in the tests and the description.</p>
+
+
+
+<p>Once that’s done, it is better. Can we just commit and push the result? Unfortunately, the quality of the solution is in fact not very satisfactory, and there&#8217;s room for a number of improvements:</p>
+
+
+
+<ol>
+<li>The inspection should still work if the original code has extra parentheses, like <code>(int)(($VAR$) ^ ($VAR$ &gt;&gt;&gt; 32))</code>. To support this, we should add some calls to <a href="https://github.com/JetBrains/intellij-community/blob/32ff47ec045e04c341162d0645cf3fc110c15230/java/java-psi-api/src/com/intellij/psi/util/PsiUtil.java#L1252" target="_blank" rel="noopener">skipParenthesesExprDown</a>.</li>
+
+
+
+<li>The inspection matches only when the <code>$VAR$</code> part is a reference, which looks like an unnecessary limitation. It could be for example, an array element, and we should also match that case.</li>
+
+
+
+<li>It compares two instances of <code>$VAR$</code> textually, but it would be more robust to compare on the abstract syntax tree level. We have a utility for this called <a href="https://github.com/JetBrains/intellij-community/blob/32ff47ec045e04c341162d0645cf3fc110c15230/java/java-analysis-impl/src/com/siyeh/ig/psiutils/EquivalenceChecker.java" target="_blank" rel="noopener">EquivalenceChecker</a>, which has existed since at least 2005.</li>
+
+
+
+<li>It doesn&#8217;t match the equivalent <code>(var &gt;&gt;&gt; 32) ^ var</code> (XOR arguments are swapped). We would like to match this as well.</li>
+
+
+
+<li>The static method <code>Long.hashCode</code> was introduced in Java 8. So if we suggest it when the user&#8217;s project is configured to use Java 7 or older, there will be a compilation error. The inspection should not suggest anything on code older than Java 8.</li>
+
+
+
+<li>Messages are not externalized, which means localizing them is not possible. This is probably OK, as it&#8217;s likely hard for the LLM to generate changes in several files. And we have a quick-fix for this, so we don&#8217;t actually need to write this code manually.</li>
+
+
+
+<li>The quick-fix will delete any comments that happen to be in the original expression. We usually try to preserve user comments when doing any replacements in quick-fixes, using the <a href="https://github.com/JetBrains/intellij-community/blob/32ff47ec045e04c341162d0645cf3fc110c15230/java/java-analysis-impl/src/com/siyeh/ig/psiutils/CommentTracker.java" target="_blank" rel="noopener">CommentTracker</a> utility. It looks like the LLM is not aware of it, despite its consistent use in the IntelliJ IDEA Java plugin since at least 2018.</li>
+
+
+
+<li>For the quick-fix, it uses the old API instead of the shiny, new <code>ModCommands</code>. Of course, the LLM cannot know about <code>ModCommands</code>, as this is an experimental API that appeared very recently, is still heavily changing, and is not documented yet. Luckily the conversion is trivial for simple quick-fixes.</li>
+</ol>
+
+
+
+<p>In conclusion, I need to rewrite the solution from the LLM quite significantly to fix these issues. Here&#8217;s a part of the diff (the left pane is AI-generated code).</p>
+
+
+
+<figure class="wp-block-image size-full"><img decoding="async" loading="lazy" width="1600" height="934" src="https://blog.jetbrains.com/wp-content/uploads/2023/12/image-40.png" alt="" class="wp-image-421776"/></figure>
+
+
+
+<p>I also need to touch up the documentation, as the style from the LLM is different from our usual style. Nevertheless, at 16:45 I committed the changes, reaching a satisfactory level of quality. The whole task took about 35 minutes, including creating <a href="https://youtrack.jetbrains.com/issue/IDEA-338114" target="_blank" rel="noopener">a YouTrack issue</a> and taking the screenshots for this blogpost. Not bad!</p>
+
+
+
+<figure class="wp-block-image size-full"><img decoding="async" loading="lazy" width="1193" height="654" src="https://blog.jetbrains.com/wp-content/uploads/2023/12/image-41.png" alt="" class="wp-image-421787"/></figure>
+
+
+
+<h2 class="wp-block-heading">Conclusion</h2>
+
+
+
+<p>I&#8217;m not sure how much time was saved by using AI Assistant for this task. I definitely saved some time here, probably 10–20 minutes. It looks like the actual coding doesn’t take too much time.&nbsp;</p>
+
+
+
+<p>More time was needed to find the proper locations for new files, find what to copy-paste, and copy-paste it. I also spent some time checking whether our <code>OrderedBinaryExpression</code> class could help make the inspection robust to argument swapping, but I concluded that it&#8217;s simpler not to use it. Finally, I hadn&#8217;t initially noticed the problem with <code>&lt;&lt;&lt;</code>, so it took some time to fix that. If you’d like to have a look at the code, it’s on <a href="https://github.com/JetBrains/intellij-community/commit/2770254f2f952939fae25319c588170ae05b27ac" target="_blank" rel="noopener">GitHub</a>.</p>
+
+
+
+<p>The main problem I see for these kinds of tasks is that AI cannot learn (yet). If this were code produced by a new teammate (assuming there’s no <code>&lt;&lt;&lt;</code> bug), it would be a solid first try. However, I can explain to my teammates that they should use <code>CommentTracker</code>, care about parentheses, and so on during a code review. And the next time, the teammate would do so from the first try, working more efficiently. When AI is able to accumulate and use&nbsp;project-specific knowledge, it will become way more useful.</p>
+
+
+
+<p>If you take the time and effort to review AI Assistant-generated code, it may help in speeding up your coding task. Have you tried <a href="https://www.jetbrains.com/help/idea/ai-assistant.html" target="_blank" rel="noopener">AI Assistant in IntelliJ IDEA</a>? Let us know how it works for you!</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>WebStorm 2023.3.2 Is Out!</title>
+		<link>https://blog.jetbrains.com/webstorm/2023/12/webstorm-2023-3-2/</link>
+		
+		<dc:creator><![CDATA[David Watson]]></dc:creator>
+		<pubDate>Thu, 21 Dec 2023 14:57:22 +0000</pubDate>
+		<featuredImage>https://blog.jetbrains.com/wp-content/uploads/2023/12/ws-2023-3-2-featured.png</featuredImage>		<category><![CDATA[newsletter]]></category>
+		<category><![CDATA[webstorm-2023-3]]></category>
+		<guid isPermaLink="false">https://blog.jetbrains.com/?post_type=webstorm&#038;p=421336</guid>
+
+					<description><![CDATA[WebStorm 2023.3.2, the second bug-fix update for WebStorm 2023.3, is now available! You can update to v2023.3.2 by using the Toolbox App, installing it right from the IDE, or downloading it from our website. Notable fixes Here are some of the notable fixes in v2023.3.2: We’ve added support for Angular 17 new control flow block [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>WebStorm 2023.3.2, the second bug-fix update for WebStorm 2023.3, is now available!</p>
+<p>You can update to v2023.3.2 by using the <a href="https://www.jetbrains.com/toolbox/app/" target="_blank" rel="noopener">Toolbox App</a>, installing it right from the IDE, or downloading it from our <a href="https://www.jetbrains.com/webstorm/download/" target="_blank" rel="noopener">website</a>.</p>
+<h2 id="notable_fixes">Notable fixes</h2>
+<p>Here are some of the notable fixes in v2023.3.2:</p>
+<ul>
+<li>We’ve added support for Angular 17 new control flow block syntax (<a href="https://youtrack.jetbrains.com/issue/WEB-63164/" target="_blank" rel="noopener">WEB-63164</a>).</li>
+<li>We&#8217;ve fixed the issue causing WebStorm to lose file names in file templates (<a href="https://youtrack.jetbrains.com/issue/IDEA-279811" target="_blank" rel="noopener">IDEA-279811</a>).</li>
+<li>We&#8217;ve fixed several HTTP Client related issues (<a href="https://youtrack.jetbrains.com/issue/IDEA-332986" target="_blank" rel="noopener">IDEA-332986</a>, <a href="https://youtrack.jetbrains.com/issue/IDEA-224825" target="_blank" rel="noopener">IDEA-224825</a>, <a href="https://youtrack.jetbrains.com/issue/IDEA-296844" target="_blank" rel="noopener">IDEA-296844</a>).</li>
+<li>We&#8217;ve fixed the issue causing WebStorm to show a blank window when opening a second project in full-screen mode on macOS (<a href="https://youtrack.jetbrains.com/issue/IDEA-339992" target="_blank" rel="noopener">IDEA-339992</a>).</li>
+<li>When using borderless mode on Windows, WebStorm again correctly restores the position of a window that had previously been snapped to one side of the screen (<a href="https://youtrack.jetbrains.com/issue/IDEA-250563" target="_blank" rel="noopener">IDEA-250563</a>).</li>
+<li>We&#8217;ve fixed the issue causing WebStorm to crash on startup due to errors appearing when parsing the UI theme (<a href="https://youtrack.jetbrains.com/issue/IDEA-340108" target="_blank" rel="noopener">IDEA-340108</a>).</li>
+<li>We’ve fixed the issue causing WebStorm to throw an error after updating to ESLint 8.56.0 while using a flat config file (<em>eslint.config.js</em>) and the ESLint plugin (<a href="https://youtrack.jetbrains.com/issue/WEB-64696/" target="_blank" rel="noopener">WEB-64696</a>).</li>
+<li>We’ve fixed the regression causing WebStorm not to include anything inside the <code>default</code> export in the Vue component <em>Structure</em> view (<a href="https://youtrack.jetbrains.com/issue/WEB-63946/" target="_blank" rel="noopener">WEB-63946</a>).</li>
+</ul>
+<p>That’s all for today! For the full list of issues addressed in WebStorm 2023.3.2, please see the <a href="https://youtrack.jetbrains.com/articles/WEB-A-233538458/WebStorm-2023.3.2-233.13135.92-build-Release-Notes" target="_blank" rel="noopener">release notes</a>.</p>
+<p><em>The WebStorm team</em></p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>PyCharm 2023.3.2 Is Out!</title>
+		<link>https://blog.jetbrains.com/pycharm/2023/12/2023-3-2/</link>
+		
+		<dc:creator><![CDATA[Valeria Letusheva]]></dc:creator>
+		<pubDate>Thu, 21 Dec 2023 13:40:13 +0000</pubDate>
+		<featuredImage>https://blog.jetbrains.com/wp-content/uploads/2023/12/pc-bug-fix-featured_blog_1280x720.png</featuredImage>		<category><![CDATA[releases]]></category>
+		<guid isPermaLink="false">https://blog.jetbrains.com/?post_type=pycharm&#038;p=422033</guid>
+
+					<description><![CDATA[The second bug-fix update for v2023.3 is now available. You can update to this version from inside the IDE, using the Toolbox App, or using snaps if you are a Ubuntu user. You can also download it from our website. Here are the most notable fixes and updates that PyCharm 2023.3.2 brings: For more information about the [&#8230;]]]></description>
+										<content:encoded><![CDATA[
+<p>The second bug-fix update for v2023.3 is now available.</p>
+
+
+
+<p>You can update to this version from inside the IDE, using the <a href="https://www.jetbrains.com/toolbox-app/" target="_blank" rel="noreferrer noopener">Toolbox App</a>, or using snaps if you are a Ubuntu user. You can also download it from our <a href="https://www.jetbrains.com/pycharm/download/" target="_blank" rel="noreferrer noopener">website</a>.</p>
+
+
+
+<p>Here are the most notable fixes and updates that PyCharm 2023.3.2 brings:</p>
+
+
+
+<ul>
+<li>PyCharm now correctly resolves &lt;code>pytest_plugins&lt;/code> for pytest fixtures declaration. [<a href="https://youtrack.jetbrains.com/issue/PY-62419" target="_blank" rel="noopener">PY-62419</a>]</li>
+
+
+
+<li>The test runner now works fine with Django 5.0. [<a href="https://youtrack.jetbrains.com/issue/PY-53355" target="_blank" rel="noopener">PY-53355</a>]</li>
+
+
+
+<li>We’ve fixed several issues that were cropping up when working with the HTTP Client. [<a href="https://youtrack.jetbrains.com/issue/IDEA-332986/" target="_blank" rel="noreferrer noopener">IDEA-332986</a>, <a href="https://youtrack.jetbrains.com/issue/IDEA-224825/" target="_blank" rel="noreferrer noopener">IDEA-224825</a>, <a href="https://youtrack.jetbrains.com/issue/IDEA-296844/" target="_blank" rel="noreferrer noopener">IDEA-296844</a>]</li>
+
+
+
+<li>We’ve fixed the issue causing the IDE to display a blank window when opening a second project in full-screen mode on macOS. [<a href="https://youtrack.jetbrains.com/issue/IDEA-339992/" target="_blank" rel="noreferrer noopener">IDEA-339992</a>]</li>
+
+
+
+<li>When using borderless mode on Windows, the IDE once again correctly restores the position of a window that had previously been snapped to one side of the screen. [<a href="https://youtrack.jetbrains.com/issue/IDEA-250563/" target="_blank" rel="noreferrer noopener">IDEA-250563</a>]</li>
+
+
+
+<li>We’ve fixed the issue causing the IDE to crash on startup due to errors appearing when parsing the UI theme. [<a href="https://youtrack.jetbrains.com/issue/IDEA-340108/" target="_blank" rel="noreferrer noopener">IDEA-340108</a>]</li>
+
+
+
+<li>The main menu is displayed for all open projects on the tiling desktop when working on Linux. [<a href="https://youtrack.jetbrains.com/issue/IDEA-328047/Main-menu-is-displayed-only-for-one-opened-project-on-tiling-desktop-with-menu-shown-as-separate-toolbar" target="_blank" rel="noreferrer noopener">IDEA-328047</a>]</li>
+
+
+
+<li>The IDE no longer erroneously resets namespaces during actions like&nbsp;<em>Apply</em>,&nbsp;<em>Refresh</em>, and others when working with Kubernetes. [<a href="https://youtrack.jetbrains.com/issue/IDEA-339448" target="_blank" rel="noreferrer noopener">IDEA-339448</a>]&nbsp;&nbsp;</li>
+
+
+
+<li>The branch checkout from the <em>Pull Request</em> pane has been fixed. [<a href="https://youtrack.jetbrains.com/issue/IDEA-339471/" target="_blank" rel="noreferrer noopener">IDEA-339471</a>] </li>
+
+
+
+<li>When you work on Linux without a window manager, the main menu is now displayed for all open projects. [<a href="https://youtrack.jetbrains.com/issue/IDEA-337548/No-main-menu-on-simple-linux-with-Xvfb" target="_blank" rel="noreferrer noopener">IDEA-337548</a>]</li>
+</ul>
+
+
+
+<p>For more information about the issues we’ve addressed, please refer to the <a href="https://youtrack.jetbrains.com/articles/PY-A-233538157/PyCharm-2023.3.2-233.13135.95-build-Release-Notes" target="_blank" rel="noreferrer noopener">release notes</a>. </p>
+
+
+
+<p>If you experience any other issues, please report them to our <a href="https://youtrack.jetbrains.com/issues/PY" target="_blank" rel="noreferrer noopener">issue tracker</a>.</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Writerside: The Name, the Vision, and Plans for 2024</title>
+		<link>https://blog.jetbrains.com/writerside/2023/12/writerside-the-name-the-vision-and-plans-for-2024/</link>
+		
+		<dc:creator><![CDATA[Anna Gasparyan]]></dc:creator>
+		<pubDate>Thu, 21 Dec 2023 13:39:13 +0000</pubDate>
+		<featuredImage>https://blog.jetbrains.com/wp-content/uploads/2023/12/wrs-release-featured_blog_1280x720.png</featuredImage>		<guid isPermaLink="false">https://blog.jetbrains.com/?post_type=writerside&#038;p=422143</guid>
+
+					<description><![CDATA[The winter holidays have historically been a time for magic and stories. With this in mind, I&#8217;d like to share a little story of my own &#8211; one with more than just a sprinkling of magic. Have you ever wondered where the name of our product came from? I’ve been asked this question many times [&#8230;]]]></description>
+										<content:encoded><![CDATA[
+<p>The winter holidays have historically been a time for magic and stories. With this in mind, I&#8217;d like to share a little story of my own &#8211; one with more than just a sprinkling of magic.</p>
+
+
+
+<p>Have you ever wondered where the name of our product came from? I’ve been asked this question many times on different occasions.</p>
+
+
+
+<p>When the project started, we were often referred to internally as the “IDE for technical writers.” That&#8217;s understandable because JetBrains&#8217; flagship products are integrated development environments (IDEs). But we needed a good, humorous, and catchy name for our product.</p>
+
+
+
+<p>There is a process at JetBrains for product naming. The research team places the suggested names onto a value-driven association map. Then, there is a linguistic check to ensure the proposed names don’t have negative connotations in different languages. This is followed by research to see if the name appeals to potential users, and of course, there&#8217;s a legal compliance check.</p>
+
+
+
+<p>We had a lot of fun brainstorming names. We played with associations, indulged in creating puns, and came up with a few dozen options. At the final stage, we had the following four candidates to choose from:</p>
+
+
+
+<ul>
+<li>AllWrite</li>
+
+
+
+<li>AuthoRing</li>
+
+
+
+<li>Litera</li>
+
+
+
+<li>Writera</li>
+</ul>
+
+
+
+<p></p>
+
+
+
+<p>When the time came to make our final decision, none of the names felt like a perfect fit. At the same time, we were about to release our first landing page, and it needed a name on it. The “IDE for technical writers” seemed too long to me, so I started using “Writers’ IDE” – and there it was staring us right in the face.</p>
+
+
+
+<p>WritersIDE. Or WriterSide. The perfect name had been right under our noses all along.</p>
+
+
+
+<p>We conducted the linguistic and legal checks – and, miraculously,&nbsp; the new name passed them all.</p>
+
+
+
+<p>We immediately fell in love with the new name. It had all the ingredients – a built-in pun, the “IDE” part that resonated with the JetBrains brand, and the two-word formula that’s often used in our products (for example, RubyMine, PyCharm, WebStorm, DataSpell, etc.). And most importantly, it conveyed our mission of helping writers do their jobs and being on their side. It has even inspired all kinds of jokes referencing “Come to the dark side” (a line from Star Wars).</p>
+
+
+
+<figure class="wp-block-image size-full is-resized"><img decoding="async" loading="lazy" width="1324" height="1116" src="https://blog.jetbrains.com/wp-content/uploads/2023/12/cookies-1.jpg" alt="" class="wp-image-422190" style="width:331px"/></figure>
+
+
+
+<p><em>Yes, we celebrated our first Early Access release with cookies – so predictable.</em></p>
+
+
+
+<p>2023 was a good year for Writerside.&nbsp;</p>
+
+
+
+<p>We’ve been to <a href="https://blog.jetbrains.com/writerside/2023/03/meet-the-writerside-team-at-events-in-2023/" data-type="link" data-id="https://blog.jetbrains.com/writerside/2023/03/meet-the-writerside-team-at-events-in-2023/" target="_blank" rel="noreferrer noopener">some</a> <a href="https://blog.jetbrains.com/writerside/2023/07/field-notes-the-writerside-team-at-write-the-docs-portland-and-soap-krakow/" data-type="link" data-id="https://blog.jetbrains.com/writerside/2023/07/field-notes-the-writerside-team-at-write-the-docs-portland-and-soap-krakow/" target="_blank" rel="noreferrer noopener">major</a> <a href="https://blog.jetbrains.com/writerside/2023/04/nordic-techkomm-stockholm-2023-field-notes/" data-type="link" data-id="https://blog.jetbrains.com/writerside/2023/04/nordic-techkomm-stockholm-2023-field-notes/" target="_blank" rel="noreferrer noopener">industry events</a> and the need for better processes and better tools is palpable. We’ve opened <a href="https://jetbrains.com/writerside" data-type="link" data-id="https://jetbrains.com/writerside" target="_blank" rel="noreferrer noopener">the Early Access Program</a> to allow everyone to use our tool free of charge. </p>
+
+
+
+<p>Now, with 2024 right around the corner, we are setting goals for the next year. In the spirit of making New Year&#8217;s resolutions, we would have loved to share our roadmap with you, but uncertainty abounds.</p>
+
+
+
+<h1 class="wp-block-heading">2024 Roadmap</h1>
+
+
+
+<figure class="wp-block-image size-full is-resized"><img decoding="async" loading="lazy" width="683" height="636" src="https://blog.jetbrains.com/wp-content/uploads/2023/12/image-5-1.png" alt="" class="wp-image-422202" style="object-fit:cover;width:455px;height:422px"/></figure>
+
+
+
+<p>Writerside was born out of our internal practices, and our team is excited to see how it resonates with you. We don&#8217;t have a fixed in-depth roadmap just yet, but we’ve been listening to your feedback, and your insights have outlined our path.</p>
+
+
+
+<p>There are a few strategic directions that we are committed to. We would like to hear your thoughts on these. To share any ideas you may have, just click on the link to the ticket and leave a comment.</p>
+
+
+
+<h2 class="wp-block-heading">A polyglot editor</h2>
+
+
+
+<p>Writerside already supports<strong> two markup languages: Markdown and an XML-based semantic markup</strong>. Each of these can be developed towards polyglot capabilities. For Markdown, <strong>AsciiDoc</strong> seems to be the logical next step. For the XML-based flavor, it’s <strong>DITA</strong>.&nbsp;</p>
+
+
+
+<p>After all, why should you have to migrate from one language to another to use the docs-as-code approach, automated doc quality checks, or single-source capabilities?&nbsp;</p>
+
+
+
+<p><strong>Comment and vote &#x1f449; </strong><a href="https://youtrack.jetbrains.com/issue/WRS-3735" target="_blank" rel="noreferrer noopener"><strong>WRS-3735</strong></a><strong> DITA support</strong></p>
+
+
+
+<p><strong>Tell us about your DITA case &#x1f449; </strong><a href="https://calendar.app.google/R9JRzX3GPPKFhY2t5" target="_blank" rel="noreferrer noopener"><strong>Book a short call with us</strong></a></p>
+
+
+
+<h2 class="wp-block-heading">Review</h2>
+
+
+
+<p>Documentation often goes through several steps before it gets published: peer review, editor review, stakeholder review, and compliance review – this all takes time.</p>
+
+
+
+<p>If we automate what can be automated, writers and <strong>reviewers will not have to rely on their eyes to spot typos, grammar errors, and style-guide violations</strong>. This will help writers avoid errors before they are even seen. Letting mistakes slip through can be embarrassing, and we’re on the <em>writers’ side</em>, remember?&nbsp;</p>
+
+
+
+<p>For steps that cannot be automated, we want to give reviewers<strong> a staged HTML version of the docs. </strong>They won’t just review the text – <strong>they&#8217;ll experience the documentation as readers would, evaluating the overall user experience.</strong> This means the exact same layout, appearance, and navigation as the end users will see when your docs go live. And no reviewing in Google Docs – all revisions and edits are tracked in the version control history.</p>
+
+
+
+<p><strong>Comment and vote &#x1f449;</strong><a href="https://youtrack.jetbrains.com/issue/WRS-28" target="_blank" rel="noreferrer noopener"><strong>WRS-28</strong></a><strong> Writerside Review</strong></p>
+
+
+
+<h2 class="wp-block-heading">Better content reuse and single-source</h2>
+
+
+
+<p>Writing in Markdown often makes it hard to reuse content. And Markdown is a common choice in docs-as-code. We&#8217;ve tackled this issue with XML snippets, but we can do much more. <strong>To reuse content, you need to know what&#8217;s available, where it&#8217;s stored, and how it&#8217;s organized.</strong> Otherwise, you might end up duplicating existing texts. We&#8217;re working on a duplicate analysis tool that will not only help writers identify shareable content but also alert them about similar existing content as they write.</p>
+
+
+
+<p><strong>Comment and vote &#x1f449;</strong><a href="https://youtrack.jetbrains.com/issue/WRS-86" target="_blank" rel="noreferrer noopener"><strong>WRS-86</strong></a><strong> Single-source improvements</strong></p>
+
+
+
+<h2 class="wp-block-heading">Docs and code</h2>
+
+
+
+<p>If you’re writing for developers, your docs most likely include code samples. <strong>These samples must be functional, which means they need to be tested</strong>. Writerside, being developed on the same IntelliJ platform as JetBrains&#8217; IDEs, could potentially enable you to test these code samples directly in your content files.</p>
+
+
+
+<p>But sometimes storing code samples separately is easier. Developers can maintain them without cloning the entire documentation project or having to edit or review them in an unfamiliar environment.&nbsp; One step even further would be to alert the writer if the code changes, so that documentation can be updated accordingly.</p>
+
+
+
+<p><strong>Comment and vote &#x1f449;</strong><a href="https://youtrack.jetbrains.com/issue/WRS-3736" target="_blank" rel="noreferrer noopener"><strong>WRS-3736</strong></a><strong> Better support for code samples</strong></p>
+
+
+
+<h2 class="wp-block-heading">&#x1f64f; Help us with details!</h2>
+
+
+
+<p>All these features are in the discovery and research phases, and we’re asking for your help here. If any of these resonate with you, or if you are trying to come up with a solution or workaround to any of the problems outlined above, we’d be happy to schedule a short call with you.</p>
+
+
+
+<p>You can also send us a direct email at <a href="mailto:writerside@jetbrains.com">writerside@jetbrains.com</a></p>
+
+
+
+<hr class="wp-block-separator has-alpha-channel-opacity"/>
+
+
+
+<p></p>
+
+
+
+<p><a href="https://jetbrains.com/writerside/download" data-type="link" data-id="https://jetbrains.com/writerside/download" target="_blank" rel="noreferrer noopener">Download Writerside standalone</a> or install the Writerside plugin &#x1f447;</p>
+
+
+    <iframe loading="lazy" frameborder="none" width="384px" height="320px" src="https://plugins.jetbrains.com/embeddable/card/20158"></iframe>
+
+
+
+
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>The X-Ray Mode</title>
+		<link>https://blog.jetbrains.com/scala/2023/12/21/the-x-ray-mode/</link>
+		
+		<dc:creator><![CDATA[Maciej Gorywoda]]></dc:creator>
+		<pubDate>Thu, 21 Dec 2023 11:59:27 +0000</pubDate>
+		<featuredImage>https://blog.jetbrains.com/wp-content/uploads/2023/12/cover_black_1280.png</featuredImage>		<category><![CDATA[ide]]></category>
+		<category><![CDATA[inlay-hints]]></category>
+		<category><![CDATA[scala]]></category>
+		<category><![CDATA[x-ray]]></category>
+		<guid isPermaLink="false">https://blog.jetbrains.com/?post_type=scala&#038;p=409600</guid>
+
+					<description><![CDATA[IntelliJ IDEA&#160;allows for displaying useful information directly in the editor, next to the code, in the form of&#160;inlay hints, that is, text that is slightly different from the actual code, but similar enough to be effortlessly read together with it. You can think of it as augmented code. You can see the line numbers, inferred [&#8230;]]]></description>
+										<content:encoded><![CDATA[
+<p>IntelliJ IDEA&nbsp;allows for displaying useful information directly in the editor, next to the code, in the form of&nbsp;inlay hints, that is, text that is slightly different from the actual code, but similar enough to be effortlessly read together with it. You can think of it as augmented code. You can see the line numbers, inferred result types, parameter names, indentation guidelines, and method separators. All that info doesn&#8217;t have to be typed explicitly in the Scala code – which is good because the code can be more concise, but on the other hand, if you read it for the first time, you might have trouble understanding what&#8217;s going on. In such cases,&nbsp;inlay hints&nbsp;can improve readability and greatly help the developer.</p>
+
+
+
+<p>But such functionality comes at a price. Readability is a subjective issue, and instead of appreciating the help, you may feel that the editor is now too crowded and cluttered with unnecessary text. If you&#8217;re an experienced developer working on the code you already know, you may find little need for all that additional information displayed on the screen. So you decide to turn it off, and rightfully so. But it may happen after you do it that your work takes you to a place you don&#8217;t know so well, and now additional information displayed directly in the editor could be helpful again. So you need to go to&nbsp;the settings&nbsp;and re-enable it.</p>
+
+
+
+<p>The constant switching between too little and too much information displayed on the screen and the fact that disabling and re-enabling the hints snaps the developer out of the coding flow is a common problem. The&nbsp;X-Ray&nbsp;mode is a way to solve it. With&nbsp;X-Ray, you can keep&nbsp;inlay hints&nbsp;and all the other additional information disabled or only partially enabled to the point where you feel comfortable, and then press down the Control / Command button two times and hold it – all the other hints will appear, and will be displayed only for the length of time you keep Control / Command down. </p>
+
+
+
+<p>The X-Ray mode is also an alternative to two other actions: Show Implicit Hints and Type Info. In both cases, instead of memorizing the shortcuts for the respective actions, you can press Control / Command. On top of that, types displayed in hints are navigable – while pressing Control / Command down, you can hover the cursor over them and click to go to the type&#8217;s declaration.</p>
+
+
+
+<p>Below, we will go through the types of additional information that X-Ray can display. You can switch them on and off in&nbsp;<strong>Settings | Languages &amp; Frameworks | Scala | X-Ray Mode</strong>. But remember that each type can also be turned on permanently in&nbsp;<strong>Settings | Editor | Inlay Hints</strong>&nbsp;and in&nbsp;<strong>Settings | Editor | General | Appearance</strong>&nbsp;for methods separators and indent guides. If a given type of additional information is turned on permanently, it will be displayed regardless of your X-Ray settings.</p>
+
+
+
+<figure class="wp-block-image size-full"><img decoding="async" loading="lazy" width="1500" height="1095" src="https://blog.jetbrains.com/wp-content/uploads/2023/11/settings_black_1500.png" alt="" class="wp-image-410267"/></figure>
+
+
+
+<p></p>
+
+
+
+<h3 class="wp-block-heading">Type hints</h3>
+
+
+
+<p>Type hints are&nbsp;inlay hints&nbsp;showing inferred types of fields, parameters, as well as values created via destructuring, lambda expressions, or stream operations. It might be particularly useful in Scala, where variable types are not always explicitly visible in the code.</p>
+
+
+
+<p></p>
+
+
+
+<h3 class="wp-block-heading">Method chain hints</h3>
+
+
+
+<p>Chaining methods is an idiomatic way of writing complex data transformations in Scala. Method chain hints are a great way to learn intermediate data types as you write a chain of transformations and avoid mistakes.&nbsp;<a href="https://blog.jetbrains.com/scala/2019/11/28/intellij-scala-plugin-2019-3-method-chain-hints-scala-repl-scala-worksheet-and-scalatest-improvements/#method-chain-hints" target="_blank" rel="noreferrer noopener">We wrote about this feature in the past</a>.</p>
+
+
+
+<p></p>
+
+
+
+<h3 class="wp-block-heading">Implicit hints</h3>
+
+
+
+<p>Scala supports implicit conversions and parameters, which can significantly reduce boilerplate code. However, this can also make it challenging to understand where values come from or how types are converted. Implicit hints show information about implicit arguments and implicit conversions that the data in question will undergo during compilation – but given their nature, they may render the code less readable. The&nbsp;X-Ray&nbsp;mode may prove to be particularly useful in this case, letting you see implicit hints only for a moment when you want to make sure what they are, and then they will disappear again.</p>
+
+
+
+<p></p>
+
+
+
+<h3 class="wp-block-heading">By-name argument hints</h3>
+
+
+
+<p>It is a very simple hint, but it might be helpful sometimes to differentiate between regular arguments and those passed by name since, in the implementation part of the method, there is no distinction between the two in the Scala code. In such case,&nbsp;X-Ray&nbsp;will show inlay parentheses after a by-name argument.</p>
+
+
+
+<p></p>
+
+
+
+<h3 class="wp-block-heading">Parameter name hints</h3>
+
+
+
+<p>These are the names of parameters taken from the method&#8217;s declaration. A parameter name can be valuable additional information about the role of data passed to the method, but writing them down explicitly is usually too wordy.&nbsp;X-Ray&nbsp;might turn out to be a perfect golden middle, letting you see the parameter names only when needed.</p>
+
+
+
+<p>Here is a video with examples of all types of hints discussed above:</p>
+
+
+
+<figure class="wp-block-video"><video controls src="https://blog.jetbrains.com/wp-content/uploads/2023/12/xray_overview_black-1.mp4"></video></figure>
+
+
+
+<p></p>
+
+
+
+<h3 class="wp-block-heading">Indent guides</h3>
+
+
+
+<p>Indent guides are those delicate vertical lines showing where a given nesting level starts and ends. Together with methods separators, they might be helpful to you if you code in Scala 3 with the new brace-less syntax. But even if you use braces, you may still give it a try.</p>
+
+
+
+<figure class="wp-block-video"><video controls src="https://blog.jetbrains.com/wp-content/uploads/2023/11/indentguides_black.mp4"></video></figure>
+
+
+
+<p></p>
+
+
+
+<h3 class="wp-block-heading">Methods separators</h3>
+
+
+
+<p>While indent guides outline nesting levels vertically, methods separators are, simply put, horizontal lines separating methods. Again, you might find it helpful in Scala 3 brace-less projects but also on the opposite end – when you have too many braces in your code.</p>
+
+
+
+<figure class="wp-block-video"><video controls src="https://blog.jetbrains.com/wp-content/uploads/2023/11/methodseparators_black.mov"></video></figure>
+
+
+
+<p></p>
+
+
+
+<p>As always, your feedback is very welcome. Please report any issues you find to <a href="https://youtrack.jetbrains.com/issues/SCL" target="_blank" rel="noreferrer noopener">YouTrack</a>. If you have any questions, feel free to ask us on <a href="https://discord.com/channels/931170831139217469" target="_blank" rel="noreferrer noopener">Discord</a>.</p>
+
+
+
+<p>Happy developing!</p>
+
+
+
+<p class="has-text-align-right">The <a href="https://plugins.jetbrains.com/plugin/1347-scala" target="_blank" rel="noreferrer noopener">IntelliJ Scala plugin</a> team</p>
+]]></content:encoded>
+					
+		
+		
+		<media:content url="https://blog.jetbrains.com/wp-content/uploads/2023/11/typehints.mp4" medium="video" width="3000" height="1200">
+			<media:player url="https://blog.jetbrains.com/wp-content/uploads/2023/11/typehints.mp4" />
+			<media:title type="plain">The X-Ray Mode | The IntelliJ Scala Plugin Blog</media:title>
+			<media:description type="html"><![CDATA[IntelliJ IDEA&nbsp;allows for displaying useful information directly in the editor, next to the code, in the form of&nbsp;inlay hints, that is, text that is slightly different from the actual code, but similar enough to be effortlessly read together with it. You can think of it as augmented code. You can see the line numbers, inferred result types, parameter names, indentation guidelines, and method separators. All that info doesn't have to be typed explicitly in the Scala code – which is good because the code can be more concise, but on the other hand, if you read it for the first time, you might have trouble understanding what's going on. In such cases,&nbsp;inlay hints&nbsp;can improve readability and greatly help the developer.]]></media:description>
+			<media:thumbnail url="https://blog.jetbrains.com/wp-content/uploads/2023/12/cover_black_1280.png" />
+			<media:rating scheme="urn:simple">nonadult</media:rating>
+		</media:content>
+	</item>
+		<item>
+		<title>The MPS 2023.3 EAP Has Started</title>
+		<link>https://blog.jetbrains.com/mps/2023/12/the-mps-2023-3-eap-has-started/</link>
+		
+		<dc:creator><![CDATA[Vaclav Pech]]></dc:creator>
+		<pubDate>Thu, 21 Dec 2023 11:56:33 +0000</pubDate>
+		<featuredImage>https://blog.jetbrains.com/wp-content/uploads/2023/12/Blog_Featured_image_1280x720_MPS.png</featuredImage>		<category><![CDATA[releases]]></category>
+		<category><![CDATA[eap]]></category>
+		<category><![CDATA[release]]></category>
+		<guid isPermaLink="false">https://blog.jetbrains.com/?post_type=mps&#038;p=420679</guid>
+
+					<description><![CDATA[The first EAP build for the upcoming MPS 2023.3 is out and ready for you to try. Grab it today and take some of the features planned for the upcoming release for a test drive. DOWNLOAD MPS 2023.2 EAP Here’s what awaits you in this build: Documentation There’s a new Documentation facet to write and [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>The first EAP build for the upcoming MPS 2023.3 is out and ready for you to try. Grab it today and take some of the features planned for the upcoming release for a test drive.</p>
+<p align="center"><a class="jb-download-button" href="https://www.jetbrains.com/mps/nextversion/" target="_blank" rel="noopener">DOWNLOAD MPS 2023.2 EAP</a></p>
+<p>Here’s what awaits you in this build:</p>
+<h2>Documentation</h2>
+<p>There’s a new <i>Documentation facet</i> to write and generate documentation for concepts in the structure aspect, which allows you to:</p>
+<ul>
+<li>Write documentation using a dedicated language</li>
+<li>Perform a quick preview</li>
+<li>Generate HTML documentation</li>
+</ul>
+<p><img decoding="async" src="https://blog.jetbrains.com/wp-content/uploads/2023/12/MPS_2023_3_DocFacet.png" width="300" alt="New documentation facet use"/><br />
+Read more about this new feature in the <a href="https://www.jetbrains.com/help/mps/2023.3/documentationfacet.html" target="_blank" rel="noopener">Documentation facet documentation page</a>.</p>
+<h2>New UI for tooltips</h2>
+<p>We’ve reimplemented the popup message that displays tooltips. It can now show additional information, such as the documentation specified through the new <i>Documentation facet</i>. In the lower right-hand corner, the message offers additional actions, such as the option to open the displayed piece of documentation in the <i>Documentation</i> tool window.<br />
+<img decoding="async" src="https://blog.jetbrains.com/wp-content/uploads/2023/12/MPS_2023_3_DocPopup.png" width="300" alt="New tooltip popup dialog"/></p>
+<h2>Conversion between <i>Concept</i> and <i>Concept Interface</i></h2>
+<p>An intention is now available to assist the language designer in quickly and painlessly converting a <i>Concept Declaration</i> into an <i>Interface Concept</i>. This is typically needed in the early stages of development, when the fundamental ideas are yet to be discovered and so the structure of your new language is rather fluid and needs to change frequently.<br />
+The intention helps ensure that all of the concept’s aspects, as well as the references from the models, are preserved.</p>
+<h2>Show History action for modules in Logical View</h2>
+<p>The popup menu that appears when you right-click on a module in the <i>Logical View</i> tool window now includes an option to show the Git history for that module. It will show the history of all files in the module&#8217;s directory as well as its subdirectories.<br />
+<img decoding="async" src="https://blog.jetbrains.com/wp-content/uploads/2023/12/history.png" width="700" alt="Show history for module"/></p>
+<h2>Group file changes by extension</h2>
+<p>Uncommited changes can be sorted by the file extension. This can be helpful in some setups to better organize the changes for review.<br />
+<img decoding="async" src="https://blog.jetbrains.com/wp-content/uploads/2023/12/MPS_2023_3_group_VCS.png" width="700" alt="Group by extension"/></p>
+<h2>Numerous bug fixes</h2>
+<p>On our mission to keep the quality of the MPS codebase high, we’ve fixed a great number of problems along the way. See a full list of all the fixed issues <a href="https://youtrack.jetbrains.com/issues/MPS?q=state:Resolved%20version:%202023.3*%20order%20by:%20Priority%20%20&amp;_ga=2.231099997.350008667.1687951340-393819702.1681896790&amp;_gl=1*183w1l3*_ga*MzkzODE5NzAyLjE2ODE4OTY3OTA.*_ga_9J976DJZ68*MTY4Nzk2NjcyOS4zMC4xLjE2ODc5Njc0MzYuNy4wLjA." target="_blank" rel="noopener">here</a>.</p>
+<p>This is only the first EAP release. We will continue adding more useful functionality to MPS 2023.3, so stay tuned!</p>
+<p>Your JetBrains MPS team</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Amper Update – December 2023</title>
+		<link>https://blog.jetbrains.com/amper/2023/12/amper-update-december-2023/</link>
+		
+		<dc:creator><![CDATA[Márton Braun]]></dc:creator>
+		<pubDate>Thu, 21 Dec 2023 11:42:47 +0000</pubDate>
+		<featuredImage>https://blog.jetbrains.com/wp-content/uploads/2023/12/Blog-Featured-1280x720-2x-3-1.png</featuredImage>		<product ><![CDATA[kotlin]]></product>
+		<guid isPermaLink="false">https://blog.jetbrains.com/?post_type=amper&#038;p=422035</guid>
+
+					<description><![CDATA[Last month JetBrains introduced Amper, a tool to improve the project configuration user experience. It offers concise, declarative configuration with sensible defaults for common use cases and carefully considered extension points. Since then, we’ve received a lot of feedback from the community and have continued our development work as well. In this post, we’ll recap [&#8230;]]]></description>
+										<content:encoded><![CDATA[
+<p>Last month JetBrains <a href="https://blog.jetbrains.com/blog/2023/11/09/amper-improving-the-build-tooling-user-experience/">introduced Amper</a>, a tool to improve the project configuration user experience. It offers concise, declarative configuration with sensible defaults for common use cases and carefully considered extension points.</p>
+
+
+
+<p>Since then, we’ve received a lot of feedback from the community and have continued our development work as well. In this post, we’ll recap some of the highlights of what we’ve heard from you and talk a little about where we’re headed next.</p>
+
+
+
+<h3 class="wp-block-heading">Your feedback</h3>
+
+
+
+<p>At this early stage of the project, receiving feedback is of utmost importance, as it helps us build Amper in a way that meets real needs and solves real problems. We’re grateful to everyone who has already shared their thoughts with us, and we hope to hear more from you. Your comments have reaffirmed that the simplicity offered by Amper is indeed something you want.</p>
+
+
+
+<p>We’ve also received a lot of feedback about our choice of YAML as the language of Amper’s module definition files. Rest assured that we’ve taken this feedback to heart. As stated in our initial announcement, this language choice is not final. We’re still evaluating the available options, and we look forward to sharing more on this topic soon.</p>
+
+
+
+<h3 class="wp-block-heading">New releases</h3>
+
+
+
+<p>Since the initial announcement, we’ve released a few updates, adding support for configuring <a href="https://github.com/Kotlin/kotlinx-kover" target="_blank" rel="noopener">Kover</a> (a <a href="https://github.com/JetBrains/amper/pull/9" target="_blank" rel="noopener">community contribution</a> from Landry Norris, which we’re grateful for) and delivering bug fixes (<a href="https://youtrack.jetbrains.com/issue/AMPER-222/" target="_blank" rel="noopener">AMPER-222</a>, <a href="https://youtrack.jetbrains.com/issue/AMPER-256/" target="_blank" rel="noopener">AMPER-256</a>).</p>
+
+
+
+<p>We’ve also published the source code for the current prototype implementation, which you can now browse in <a href="https://github.com/JetBrains/amper/" target="_blank" rel="noopener">the GitHub repository</a> of the project.</p>
+
+
+
+<p>Amper is being actively developed, and we also have other exciting additions coming soon. These include one of the most commonly requested features: support for version catalogs. We’re also working on improved IDE capabilities, such as better typing assistance and code completion in your Amper manifest files.</p>
+
+
+
+<h3 class="wp-block-heading">How to try Amper</h3>
+
+
+
+<p>If you haven’t tried Amper yet, we encourage you to give it a go and share your thoughts on it with us.&nbsp;</p>
+
+
+
+<p>To get started, open your project in the latest version of IntelliJ IDEA or Fleet, and follow the <a href="https://github.com/JetBrains/amper/blob/0.1/docs/Setup.md" target="_blank" rel="noopener">setup instructions</a>. You can also take a look at the <a href="https://github.com/JetBrains/amper/blob/0.1/docs/Tutorial.md" target="_blank" rel="noopener">tutorial</a>, <a href="https://github.com/JetBrains/amper/tree/0.1/examples" target="_blank" rel="noopener">sample projects</a>, and documentation to learn more.</p>
+
+
+
+<p align="center"><a class="ek-link jb-download-button" title="Explore the docs" href="https://github.com/JetBrains/amper/blob/0.1/docs/Documentation.md" target="_blank" rel="noopener">Explore the docs</a></p>
+
+
+
+<p>A good approach for trying Amper in your own project is to create a separate branch where you replace your existing configuration with Amper modules. You can see this in action in our KMP app template repositories with <a href="https://github.com/Kotlin/KMP-App-Template/tree/amper" target="_blank" rel="noopener">shared Compose Multiplatform UI</a> and with <a href="https://github.com/Kotlin/KMP-App-Template-Native/tree/amper" target="_blank" rel="noopener">native UI implementations</a>, which now have separate branches configured with Amper.</p>
+
+
+
+<p>For example, here’s how the shared module of the template with native UI was converted from the original build file to its new module manifest that uses Amper.</p>
+
+
+
+<figure class="wp-block-image size-full is-resized"><img decoding="async" loading="lazy" width="2650" height="2500" src="https://blog.jetbrains.com/wp-content/uploads/2023/12/image-42.png" alt="" class="wp-image-422036" style="aspect-ratio:1.06;width:840px;height:auto"/><figcaption class="wp-element-caption">Before / after converting a shared KMP module in the template project</figcaption></figure>
+
+
+
+<p>Because Amper offers <a href="https://github.com/JetBrains/amper/blob/0.1/docs/Documentation.md#gradle-interop" target="_blank" rel="noopener">interoperability with Gradle</a>, you can still use Gradle plugins and write custom Gradle tasks if necessary. For example, the module above uses this interop to include the Gradle plugin for <a href="https://skie.touchlab.co/" target="_blank" rel="noopener">SKIE</a> in the project. You also have the option to <a href="https://github.com/JetBrains/amper/blob/0.1/docs/Documentation.md#file-layout-with-gradle-interop" target="_blank" rel="noopener">keep the file layout</a> that Gradle projects use to simplify migration.</p>
+
+
+
+<p>To provide feedback about your experience, join the discussion in the <a href="https://kotlinlang.slack.com/archives/C062WG3A7T8" target="_blank" rel="noopener">#amper channel</a> on the Kotlin Slack, or share your suggestions and ideas <a href="https://youtrack.jetbrains.com/issues/AMPER" target="_blank" rel="noopener">in an issue on YouTrack</a>. Your input will really help shape Amper’s future, and we look forward to hearing from you.</p>
+
+
+
+<p align="center"><a class="ek-link jb-download-button" title="Join the Slack channel" href="https://kotlinlang.slack.com/archives/C062WG3A7T8" target="_blank" rel="noopener">Join the Slack channel</a></p>
+
+
+
+<h3 class="wp-block-heading">More resources</h3>
+
+
+
+<ul>
+<li><a href="https://surveys.jetbrains.com/s3/kotlin-slack-sign-up" target="_blank" rel="noopener">Sign up for the Kotlin Slack</a></li>
+
+
+
+<li><a href="https://blog.jetbrains.com/kotlin/2023/12/kotlin-news-nov-23/">News Digest: Kotlin Multiplatform Special</a></li>
+</ul>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>CLion 2023.3.2 Bug-Fix Update</title>
+		<link>https://blog.jetbrains.com/clion/2023/12/clion-2023-3-2-bug-fix-update/</link>
+		
+		<dc:creator><![CDATA[Anastasia Kazakova]]></dc:creator>
+		<pubDate>Wed, 20 Dec 2023 20:31:02 +0000</pubDate>
+		<featuredImage>https://blog.jetbrains.com/wp-content/uploads/2023/12/cl-bug-fix-featured_blog_1280x720.png</featuredImage>		<category><![CDATA[news]]></category>
+		<category><![CDATA[releases]]></category>
+		<category><![CDATA[2023-3]]></category>
+		<category><![CDATA[code-analysis]]></category>
+		<category><![CDATA[platformio]]></category>
+		<guid isPermaLink="false">https://blog.jetbrains.com/?post_type=clion&#038;p=421855</guid>
+
+					<description><![CDATA[The CLion 2023.3.2 bug-fix update is here! The fixes included in this update are listed below. Download build 233.13135.93 from our website, through the Toolbox App, as a snap package for Ubuntu, or via a patch from inside the IDE. DOWNLOAD CLION While bug-fix update 2023.3.1 was mostly focused on addressing AI Assistant licensing issues, [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>The CLion 2023.3.2 bug-fix update is here!</p>
+<p>The fixes included in this update are listed below. Download build 233.13135.93 from our <a href="https://www.jetbrains.com/clion/download" target="_blank" rel="noopener">website</a>, through the <a href="https://www.jetbrains.com/toolbox-app/" target="_blank" rel="noopener">Toolbox App</a>, as a snap package for Ubuntu, or via a patch from inside the IDE.</p>
+<p align="center"><a class="jb-download-button" href="https://www.jetbrains.com/clion/download" target="_blank" rel="noopener">DOWNLOAD CLION</a></p>
+<p>While bug-fix update 2023.3.1 was mostly focused on addressing <a href="https://www.jetbrains.com/help/clion/ai-assistant.html" target="_blank" rel="noopener">AI Assistant</a> licensing issues, this second update brings fixes from many other areas.</p>
+<h2 id="platformio_integration">PlatformIO integration</h2>
+<p>We fixed the issue with <a href="https://www.jetbrains.com/help/clion/platformio.html" target="_blank" rel="noopener">PlatformIO</a>&#8216;s serial device monitor so that it no longer throws <em>Inappropriate ioctl for device</em> errors (<a href="https://youtrack.jetbrains.com/issue/CPP-19591" target="_blank" rel="noopener">CPP-19591</a>). We also fixed the issue with the PlatformIO <em>Upload</em> action that was not available (<a href="https://youtrack.jetbrains.com/issue/CPP-34696" target="_blank" rel="noopener">CPP-34696</a>). Finally, files at the second nesting level in the project directories are no longer marked as if they don&#8217;t belong to the project (<a href="https://youtrack.jetbrains.com/issue/CPP-35938" target="_blank" rel="noopener">CPP-35938</a>).</p>
+<h2 id="speed_up_test_indexing">Speed up test indexing</h2>
+<p>Test indexing is one of the most CPU- and time-consuming IDE procedures. To speed it up, you can create a test scope manually. After you have a test scope, only the files filtered by this scope will be processed during test indexation.</p>
+<p>Starting with this update, you can also use CLion&#8217;s mechanism of automatically detecting test scopes. Check our <a href="https://www.jetbrains.com/help/clion/exclude-test-directories-from-indexing.html#auto-detect-test-scope" target="_blank" rel="noopener">webhelp</a> to learn how to do so.<br />
+<img decoding="async" alt="Test Scope creation" width="739" src="https://blog.jetbrains.com/wp-content/uploads/2023/12/test_scope_action.png"/></p>
+<h2 id="code_analysis">Code analysis</h2>
+<p>In v2023.3, we transitioned CLion’s data flow analysis to a new approach and performed low-level optimizations, bringing great improvements both to analysis accuracy and to memory consumption and performance. A few blog posts have been dedicated to these changes:</p>
+<ul>
+<li><a href="https://blog.jetbrains.com/clion/2023/11/striving-for-better-cpp-code-part-i-data-flow-analysis-basics/">Striving For Better C++ Code, Part I: Data Flow Analysis Basics</a></li>
+<li><a href="https://blog.jetbrains.com/clion/2023/12/striving-for-better-cpp-code-part-ii-function-summaries-to-speed-up-the-data-flow-analysis/">Striving For Better C++ Code, Part II: Function Summaries to Speed Up the Data Flow Analysis</a></li>
+</ul>
+<p>This update brings several enhancements to this built-in analysis:</p>
+<ul>
+<li>We fixed the incorrect <em>The address of the local variable may escape the function</em> warning in cases when <code>+=</code> operator is used (<a href="https://youtrack.jetbrains.com/issue/CPP-34721" target="_blank" rel="noopener">CPP-34721</a>) and the incorrect <em>Value escapes the local scope</em> that occurred for struct fields (<a href="https://youtrack.jetbrains.com/issue/CPP-11482" target="_blank" rel="noopener">CPP-11482</a>).</li>
+<li>We fixed a few cases with incorrectly detected dangling pointers (<a href="https://youtrack.jetbrains.com/issue/CPP-33198" target="_blank" rel="noopener">CPP-33198</a>, <a href="https://youtrack.jetbrains.com/issue/CPP-25277" target="_blank" rel="noopener">CPP-25277</a>).</li>
+</ul>
+<p>We plan to publish the third post in the <em>Striving For Better C++ Code</em> series summarizing the improvements in the beginning of 2024.</p>
+<h2 id="other_fixes">Other fixes</h2>
+<ul>
+<li>If variable data collection in the debugger is too slow, CLion no longer ends the debug session, but instead cancels the children loading in the debugger UI (<a href="https://youtrack.jetbrains.com/issue/CPP-36312" target="_blank" rel="noopener">CPP-36312</a>).</li>
+<li>CLion no longer adds <em>CMAKE_BUILD_TYPE</em> by mistake when multi-config generators are used (<a href="https://youtrack.jetbrains.com/issue/CPP-33514" target="_blank" rel="noopener">CPP-33514</a>).</li>
+</ul>
+<p>You can read the full release notes <a href="https://youtrack.jetbrains.com/articles/CPP-A-230654280" target="_blank" rel="noopener">here</a>.</p>
+<p align="center"><a class="jb-download-button" href="https://www.jetbrains.com/clion/download" target="_blank" rel="noopener">DOWNLOAD CLION</a></p>
+<p>Your CLion team<br />
+<em>JetBrains</em><br />
+<em>The Drive to Develop</em></p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>IntelliJ IDEA 2023.3.2 Is Out!</title>
+		<link>https://blog.jetbrains.com/idea/2023/12/intellij-idea-2023-3-2/</link>
+		
+		<dc:creator><![CDATA[Maria Kosukhina]]></dc:creator>
+		<pubDate>Wed, 20 Dec 2023 17:38:05 +0000</pubDate>
+		<featuredImage>https://blog.jetbrains.com/wp-content/uploads/2023/12/IJ-IDEA-2023.3.2-release-featured_blog.png</featuredImage>		<category><![CDATA[releases]]></category>
+		<category><![CDATA[2023-3]]></category>
+		<category><![CDATA[bug-fix-update]]></category>
+		<category><![CDATA[intellij-idea-2023-3]]></category>
+		<guid isPermaLink="false">https://blog.jetbrains.com/?post_type=idea&#038;p=421826</guid>
+
+					<description><![CDATA[The second bug-fix update for v2023.3 is now available. You can update to this version from inside the IDE, using the&#160;Toolbox App, or using snaps if you are a Ubuntu user. You can also download it from our&#160;website. Here are the most notable fixes and updates that IntelliJ IDEA 2023.3.2 brings: For more information about [&#8230;]]]></description>
+										<content:encoded><![CDATA[
+<p>The second bug-fix update for v2023.3 is now available.</p>
+
+
+
+<p>You can update to this version from inside the IDE, using the&nbsp;<a href="https://www.jetbrains.com/toolbox-app/" target="_blank" rel="noreferrer noopener">Toolbox App</a>, or using snaps if you are a Ubuntu user. You can also download it from our&nbsp;<a href="https://www.jetbrains.com/idea/download/" target="_blank" rel="noreferrer noopener">website</a>.</p>
+
+
+
+<p>Here are the most notable fixes and updates that IntelliJ IDEA 2023.3.2 brings:</p>
+
+
+
+<ul>
+<li>The IDE no longer loses file names in file templates. [<a href="https://youtrack.jetbrains.com/issue/IDEA-279811/" target="_blank" rel="noopener">IDEA-279811</a>]</li>
+
+
+
+<li>It’s once again possible to build Groovy projects using the JetBrains build system on Java 8. [<a href="https://youtrack.jetbrains.com/issue/IDEA-337831/" target="_blank" rel="noopener">IDEA-337831</a>]</li>
+
+
+
+<li>We’ve fixed several issues that were cropping up when working with the HTTP Client. [<a href="https://youtrack.jetbrains.com/issue/IDEA-332986/" target="_blank" rel="noopener">IDEA-332986</a>, <a href="https://youtrack.jetbrains.com/issue/IDEA-224825/" target="_blank" rel="noopener">IDEA-224825</a>, <a href="https://youtrack.jetbrains.com/issue/IDEA-296844/" target="_blank" rel="noopener">IDEA-296844</a>]</li>
+
+
+
+<li>We’ve fixed the issue causing the IDE to display a blank window when opening a second project in full-screen mode on macOS. [<a href="https://youtrack.jetbrains.com/issue/IDEA-339992/" target="_blank" rel="noopener">IDEA-339992</a>]</li>
+
+
+
+<li>When using borderless mode on Windows, the IDE once again correctly restores the position of a window that had previously been snapped to one side of the screen. [<a href="https://youtrack.jetbrains.com/issue/IDEA-250563/" target="_blank" rel="noopener">IDEA-250563</a>]</li>
+
+
+
+<li>The IDEA correctly recognizes configuration properties in Spring Boot projects when the builder pattern is used as a setter in the <code>@ConfigurationProperties</code> classes. [<a href="https://youtrack.jetbrains.com/issue/IDEA-338397/" target="_blank" rel="noopener">IDEA-338397</a>]</li>
+
+
+
+<li>We’ve fixed the issue causing the IDE to crash on startup due to errors appearing when parsing the UI theme. [<a href="https://youtrack.jetbrains.com/issue/IDEA-340108/" target="_blank" rel="noopener">IDEA-340108</a>]</li>
+
+
+
+<li>The IDE once again properly displays Android project structures. [<a href="https://youtrack.jetbrains.com/issue/IDEA-340049/Android-Project-Structure-not-loading" target="_blank" rel="noopener">IDEA-340049</a>]</li>
+
+
+
+<li>The main menu is displayed for all open projects on the tiling desktop when working on Linux. [<a href="https://youtrack.jetbrains.com/issue/IDEA-328047/Main-menu-is-displayed-only-for-one-opened-project-on-tiling-desktop-with-menu-shown-as-separate-toolbar" target="_blank" rel="noopener">IDEA-328047</a>]</li>
+
+
+
+<li>The configurations list is no longer disabled in the<em> Run/Debug </em>widget after the configuration starts. [<a href="https://youtrack.jetbrains.com/issue/IDEA-316838/" target="_blank" rel="noopener">IDEA-316838</a>]</li>
+
+
+
+<li>The IDE no longer mistakenly provides the <em>Project Error</em> report when using Jakarta&#8217;s <code>@Nonnull</code> annotation in combination with Lombok&#8217;s <code>@RequiredArgsConstructor</code>. [<a href="https://youtrack.jetbrains.com/issue/IDEA-334216/IntelliJ-falsly-marks-as-Project-Error-when-using-Jakarta-Nonnull-annotation-in-combination-with-Lombok-RequiredArgsConstructor" target="_blank" rel="noopener">IDEA-334216</a>]</li>
+
+
+
+<li>The IDE no longer erroneously resets namespaces during actions like <em>Apply</em>, <em>Refresh</em>, and others when working with Kubernetes. [<a href="https://youtrack.jetbrains.com/issue/IDEA-339448" target="_blank" rel="noopener">IDEA-339448</a>]&nbsp;&nbsp;</li>
+
+
+
+<li>The branch checkout from the <em>Pull Request</em> pane has been fixed. [<a href="https://youtrack.jetbrains.com/issue/IDEA-339471/" target="_blank" rel="noopener">IDEA-339471</a>]&nbsp;</li>
+
+
+
+<li>The <em>New</em> context menu once again appears correctly on a right-click when the Grails plugin is installed. [<a href="https://youtrack.jetbrains.com/issue/IDEA-340588/New-submenu-doesnt-open-with-Grails-plugin-installed" target="_blank" rel="noopener">IDEA-340588</a>]</li>
+
+
+
+<li>When you work on Linux without a window manager, the main menu is now displayed for all open projects. [<a href="https://youtrack.jetbrains.com/issue/IDEA-337548/No-main-menu-on-simple-linux-with-Xvfb" target="_blank" rel="noopener">IDEA-337548</a>]</li>
+
+
+
+<li>The IDE now accurately provides the <em>Constant values</em> inspection for Stream expressions with nested Optional chains, eliminating the occurrence of false positives. [<a href="https://youtrack.jetbrains.com/issue/IDEA-340683/" target="_blank" rel="noopener">IDEA-340683</a>]</li>
+</ul>
+
+
+
+<p></p>
+
+
+
+<p>For more information about the issues we’ve addressed, please refer to the&nbsp;<a href="https://youtrack.jetbrains.com/articles/IDEA-A-2100661803/IntelliJ-IDEA-2023.3.2-233.13135.103-build-Release-Notes" target="_blank" rel="noreferrer noopener">release notes</a>.&nbsp;</p>
+
+
+
+<p>If you experience any other issues, please report them to our&nbsp;<a href="https://youtrack.jetbrains.com/issues/IDEA" target="_blank" rel="noreferrer noopener">issue tracker</a>.</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+	</channel>
+</rss>

@@ -11,6 +11,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Saloon\XmlWrangler\XmlReader;
 
@@ -45,12 +46,14 @@ class FetchFeedItems implements ShouldQueue
             'url' => $item->url,
         ]);
 
-        save_model($article, [
-            'title' => $item->title,
-            'image' => $this->determineImageUrl($article, $item),
-            'content' => $this->removeImagesFromDescription($item->description),
-            'published_at' => $item->publishedAt,
-        ]);
+        DB::transaction(function () use ($article, $item): void {
+            save_model($article, [
+                'title' => $item->title,
+                'published_at' => $item->publishedAt,
+                'image' => $this->determineImageUrl($article, $item),
+                'content' => $this->removeImagesFromDescription($item->description),
+            ]);
+        });
 
         logger()->info("Saved article ({$article->id}): ".$article->title);
     }
@@ -66,40 +69,19 @@ class FetchFeedItems implements ShouldQueue
             return $article->image;
         }
 
+        if ($item->featuredImage !== null) {
+            return $item->featuredImage;
+        }
+
         $matches = [];
         preg_match('/<img.+src=[\'"](?P<src>.+?)[\'"].*>/i', $item->description, $matches);
 
         if (isset($matches['src']) && $matches['src']) {
-            return $this->prependHostIfNeeded($matches['src']);
+            return $matches['src'];
         }
 
-        $responseBody = Http::get($item->url)->body();
-
-        foreach (['og:image', 'twitter:image'] as $tag) {
-            $matches = [];
-            preg_match("/<meta property=\"{$tag}\" content=\"(?P<image>.+?)\"/i", $responseBody, $matches);
-
-            if (isset($matches['image']) && $matches['image']) {
-                return $this->prependHostIfNeeded($matches['image']);
-            }
-        }
+        FetchArticleImage::dispatch($article)->afterCommit(); // Done after commit to ensure the article has an ID by the time it is serialized.
 
         return null;
-    }
-
-    /**
-     * Some images are relative to the feed URL, so we need to prepend the host.
-     */
-    private function prependHostIfNeeded(string $src): string
-    {
-        $host = parse_url($src, PHP_URL_HOST);
-
-        if ($host !== null) {
-            return $src;
-        }
-
-        $feedUrl = parse_url($this->feed->url);
-
-        return "{$feedUrl['scheme']}://{$feedUrl['host']}{$src}"; // @phpstan-ignore-line - the URL should certainly have a schema and host at this point.
     }
 }

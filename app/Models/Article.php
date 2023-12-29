@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -85,5 +86,27 @@ class Article extends Model
                 fn (Builder $query) => $query->whereIn('id', $tagIds)
             )
         );
+    }
+
+    /**
+     * @return Attribute<string, string>
+     */
+    public function image(): Attribute
+    {
+        return Attribute::set(function (?string $value) {
+            if ($value === null) {
+                return null;
+            }
+
+            $host = parse_url($value, PHP_URL_HOST);
+
+            if ($host !== null) {
+                return $value;
+            }
+
+            $feedUrl = parse_url($this->feed->url);
+
+            return "{$feedUrl['scheme']}://{$feedUrl['host']}{$value}"; // @phpstan-ignore-line - the URL should certainly have a schema and host at this point.
+        });
     }
 }
