@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Queue;
 
 it('imports feed items', function () {
     $feed = Feed::factory()->create([
-        'url' => 'https://blog.jetbrains.com/feed',
+        'url' => 'https://blog.jetbrains.com/phpstorm/feed',
         'type' => FeedType::RSS,
         'last_fetch' => now()->subHour(),
     ]);

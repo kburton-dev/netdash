@@ -78,7 +78,7 @@ class DatabaseSeeder extends Seeder
             ], [
                 'id' => 11,
                 'title' => 'PHP Annotated',
-                'url' => 'https://blog.jetbrains.com/feed',
+                'url' => 'https://blog.jetbrains.com/phpstorm/feed/',
                 'type' => 'rss',
             ], [
                 'id' => 12,
