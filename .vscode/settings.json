@@ -14,7 +14,7 @@
         }
     ],
     "better-pest.docker.enable": true,
-    "better-pest.docker.command": "vendor/bin/sail exec laravel.test",
+    "better-pest.docker.command": "vendor/bin/sail exec -e XDEBUG_SESSION=1 laravel.test",
     "better-pest.docker.paths": {
         "/home/kyle/projects/private/netdash": "/var/www/html"
     }

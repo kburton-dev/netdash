@@ -18,7 +18,7 @@ if (! function_exists('save_model')) {
      */
     function save_model(Model $model, array $fillWith = []): Model
     {
-        if (count(func_get_args()) > 1) {
+        if (func_num_args() > 1) {
             $model->fill($fillWith);
         }
 
