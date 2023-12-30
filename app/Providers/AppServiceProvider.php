@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Feeds\AtomParser;
+use App\Feeds\RssParser;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 
@@ -12,7 +14,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->tag([RssParser::class, AtomParser::class], 'feedParsers');
     }
 
     /**

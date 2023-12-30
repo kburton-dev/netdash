@@ -5,15 +5,12 @@ use App\Models\Feed;
 use App\Models\Tag;
 use Illuminate\Validation\Rule;
 use Livewire\Volt\Component;
-use App\Feeds\FeedType;
 
 new class extends Component
 {
     public Feed $feed;
 
     public string $title;
-
-    public FeedType $type;
 
     public string $url;
 
@@ -27,7 +24,6 @@ new class extends Component
         $this->feed = $feed;
 
         $this->title = $this->feed->title;
-        $this->type = $this->feed->type;
         $this->url = $this->feed->url;
         $this->tagIds = $this->feed->tags->pluck('id')->toArray();
     }
@@ -46,8 +42,7 @@ new class extends Component
     {
         return [
             'title' => ['required', 'string'],
-            'type' => ['required', Rule::enum(FeedType::class)],
-            'url' => ['required', 'string', 'url', Rule::unique(Feed::class)->ignore($this->feed->id)],
+            'url' => ['required', 'string', 'url', Rule::unique(Feed::class)->ignore($this->feed->id)->whereNull('deleted_at')],
             'tagIds' => ['array'],
             'tagIds.*' => ['required', 'int', Rule::exists(Tag::class, 'id')],
         ];
@@ -77,16 +72,6 @@ new class extends Component
             <x-input-label for="title" :value="__('Title')" />
             <x-text-input wire:model="title" id="title" name="title" type="text" class="mt-1 block w-full" required autofocus autocomplete="title" />
             <x-input-error class="mt-2" :messages="$errors->get('title')" />
-        </div>
-
-        <div>
-            <x-input-label for="type" :value="__('Type')" />
-            <select wire:model="type" id="type" name="type" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
-                @foreach (FeedType::cases() as $feedType)
-                    <option value="{{ $feedType->value }}">{{ $feedType->value }}</option>
-                @endforeach
-            </select>
-            <x-input-error class="mt-2" :messages="$errors->get('type')" />
         </div>
 
         <div>

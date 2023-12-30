@@ -23,14 +23,13 @@ class FetchFeedItems implements ShouldQueue
     {
     }
 
-    public function handle(ParserFactory $parser): void
+    public function handle(ParserFactory $parserFactory): void
     {
         $dataReader = XmlReader::fromString(
             Http::get($this->feed->url)->body()
         );
 
-        $parser->create($this->feed->type)
-            ->parse($dataReader)
+        $parserFactory->parse($dataReader)
             ->take(10)
             ->each(fn (FeedItem $item) => $this->saveItem($this->feed->id, $item));
 

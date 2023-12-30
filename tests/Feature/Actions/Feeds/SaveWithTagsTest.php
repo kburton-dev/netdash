@@ -1,7 +1,6 @@
 <?php
 
 use App\Actions\Feeds\SaveWithTags;
-use App\Feeds\FeedType;
 use App\Jobs\FetchFeedItems;
 use App\Models\Feed;
 use App\Models\Tag;
@@ -21,7 +20,6 @@ it('can save a new feed', function () {
     $saveWithTags = app()->make(SaveWithTags::class);
     $saveWithTags($feed, [
         'title' => 'title',
-        'type' => FeedType::RSS,
         'url' => 'https://example.com',
         'tagIds' => $tagIds,
     ]);
@@ -30,7 +28,6 @@ it('can save a new feed', function () {
 
     expect($feed->tags->pluck('id')->toArray())->toBe($tagIds);
     expect($feed->title)->toBe('title');
-    expect($feed->type)->toBe(FeedType::RSS);
     expect($feed->url)->toBe('https://example.com');
     Queue::assertPushed(FetchFeedItems::class, fn (FetchFeedItems $job) => $job->feed->is($feed));
 });

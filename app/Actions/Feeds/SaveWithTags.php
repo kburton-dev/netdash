@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Actions\Feeds;
 
-use App\Feeds\FeedType;
 use App\Jobs\FetchFeedItems;
 use App\Models\Feed;
 use Carbon\CarbonInterface;
@@ -14,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 class SaveWithTags
 {
     /**
-     * @param  array{title?: string, type?: FeedType, url?: string, last_fetch?: CarbonInterface, tagIds?: list<int>}  $data
+     * @param  array{title?: string, url?: string, last_fetch?: CarbonInterface, tagIds?: list<int>}  $data
      */
     public function __invoke(Feed $feed, array $data): Feed
     {

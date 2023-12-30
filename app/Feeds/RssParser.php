@@ -10,6 +10,11 @@ use Saloon\XmlWrangler\XmlReader;
 
 class RssParser implements Parser
 {
+    public function supports(XmlReader $rawFeedData): bool
+    {
+        return $rawFeedData->value('rss')->get() !== [];
+    }
+
     /**
      * {@inheritDoc}
      */

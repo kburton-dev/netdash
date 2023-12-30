@@ -10,6 +10,11 @@ use Saloon\XmlWrangler\XmlReader;
 
 class AtomParser implements Parser
 {
+    public function supports(XmlReader $rawFeedData): bool
+    {
+        return $rawFeedData->value('feed.entry')->get() !== [];
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -23,7 +28,7 @@ class AtomParser implements Parser
                 return new FeedItem(
                     title: (string) $content['title']->getContent(),
                     url: (string) $content['link']->getAttribute('href'),
-                    description: (string) $content['summary']->getContent(),
+                    description: (string) ($content['summary'] ?? $content['content'])->getContent(),
                     publishedAt: Carbon::parse((string) $content['updated']->getContent()),
                 );
             });

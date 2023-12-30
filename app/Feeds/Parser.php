@@ -8,6 +8,8 @@ use Saloon\XmlWrangler\XmlReader;
 
 interface Parser
 {
+    public function supports(XmlReader $rawFeedData): bool;
+
     /**
      * @return \Illuminate\Support\Collection<array-key, FeedItem>
      */

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Feeds\FeedType;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,7 +14,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * App\Models\Feed
  *
  * @property int $id
- * @property FeedType $type
  * @property string $title
  * @property string $url
  * @property \Illuminate\Support\Carbon|null $last_fetch
@@ -39,7 +37,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|Feed whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Feed whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Feed whereUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Feed whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Feed onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Feed withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Feed withoutTrashed()
@@ -55,11 +52,9 @@ class Feed extends Model
         'title',
         'url',
         'last_fetch',
-        'type',
     ];
 
     protected $casts = [
-        'type' => FeedType::class,
         'last_fetch' => 'datetime',
         'deleted_at' => 'datetime',
     ];
@@ -68,7 +63,6 @@ class Feed extends Model
      * @var array<string, mixed>
      */
     protected $attributes = [
-        'type' => FeedType::RSS,
         'title' => '',
         'url' => '',
     ];

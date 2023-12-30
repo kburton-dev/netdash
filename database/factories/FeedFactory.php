@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Feeds\FeedType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,7 +18,6 @@ class FeedFactory extends Factory
             'title' => fake()->sentence(),
             'url' => fake()->url(),
             'last_fetch' => fake()->dateTimeBetween('-1 year'),
-            'type' => fake()->randomElement([FeedType::RSS, FeedType::ATOM]),
         ];
     }
 }

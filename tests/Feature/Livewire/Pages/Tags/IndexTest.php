@@ -13,7 +13,7 @@ it('can add update delete', function () {
         ->count(3)
         ->create();
 
-    $component = Volt::test('pages.tags.index')
+    Volt::test('pages.tags.index')
         ->set('tags.0.name', 'php')
         ->call('removeTag', 1)
         ->call('addTag')

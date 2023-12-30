@@ -29,62 +29,54 @@ class DatabaseSeeder extends Seeder
                 'id' => 1,
                 'title' => 'Laravel News',
                 'url' => 'https://feed.laravel-news.com/',
-                'type' => 'rss',
             ], [
                 'id' => 2,
                 'title' => 'Boot.dev',
                 'url' => 'https://blog.boot.dev/index.xml',
-                'type' => 'rss',
             ], [
                 'id' => 3,
                 'title' => 'PlanetScale',
                 'url' => 'https://planetscale.com/blog/rss.xml',
-                'type' => 'rss',
             ], [
                 'id' => 4,
                 'title' => 'Muhammed Sari',
                 'url' => 'https://muhammedsari.me/feed.atom',
-                'type' => 'atom',
             ], [
                 'id' => 5,
                 'title' => 'Frank de Jonge',
                 'url' => 'https://blog.frankdejonge.nl/rss/',
-                'type' => 'rss',
             ], [
                 'id' => 6,
                 'title' => 'Jake Archibald',
                 'url' => 'https://jakearchibald.com/posts.rss',
-                'type' => 'rss',
             ], [
                 'id' => 7,
                 'title' => 'Freek Van der Herten',
                 'url' => 'https://freek.dev/feed',
-                'type' => 'atom',
             ], [
                 'id' => 8,
                 'title' => 'Spatie',
                 'url' => 'https://spatie.be/feed',
-                'type' => 'atom',
             ], [
                 'id' => 9,
                 'title' => 'Mohammed Said',
                 'url' => 'https://themsaid.com/feed',
-                'type' => 'atom',
             ], [
                 'id' => 10,
                 'title' => 'Tailwind CSS',
                 'url' => 'https://tailwindcss.com/feeds/feed.xml',
-                'type' => 'atom',
             ], [
                 'id' => 11,
                 'title' => 'PHP Annotated',
                 'url' => 'https://blog.jetbrains.com/phpstorm/feed/',
-                'type' => 'rss',
             ], [
                 'id' => 12,
                 'title' => 'Stitcher.IO',
                 'url' => 'https://stitcher.io/rss',
-                'type' => 'rss',
+            ], [
+                'id' => 13,
+                'title' => 'Robb Knight',
+                'url' => 'https://rknight.me/feed.xml',
             ],
         ]);
 

@@ -4,13 +4,33 @@ declare(strict_types=1);
 
 namespace App\Feeds;
 
+use App\Exceptions\CompatibleFeedParserNotFoundException;
+use Saloon\XmlWrangler\XmlReader;
+
 class ParserFactory
 {
-    public static function create(FeedType $feedType): Parser
+    /**
+     * @throws CompatibleFeedParserNotFoundException
+     */
+    public static function create(XmlReader $reader): Parser
     {
-        return match ($feedType) {
-            FeedType::RSS => new RssParser,
-            FeedType::ATOM => new AtomParser,
-        };
+        /** @var \App\Feeds\Parser[] $parsers */
+        $parsers = app()->tagged('feedParsers');
+
+        foreach ($parsers as $parser) {
+            if ($parser->supports($reader)) {
+                return $parser;
+            }
+        }
+
+        throw new CompatibleFeedParserNotFoundException($reader);
+    }
+
+    /**
+     * @return \Illuminate\Support\Collection<array-key, FeedItem>
+     */
+    public static function parse(XmlReader $reader): \Illuminate\Support\Collection
+    {
+        return self::create($reader)->parse($reader);
     }
 }

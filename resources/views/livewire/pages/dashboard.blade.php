@@ -86,9 +86,7 @@ new #[Layout('layouts.app')] class extends Component
                         </div>
 
                         <div class="text-gray-500 text-sm mb-2 flex gap-2 items-center">
-                            @if ($article->feed->type->value === 'rss' || $article->feed->type->value === 'atom')
-                                <x-icons.rss class="w-4 h-4"/>
-                            @endif
+                            <x-icons.rss class="w-4 h-4"/>
 
                             {{ $article->published_at->diffForHumans() }}
                             |
