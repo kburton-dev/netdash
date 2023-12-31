@@ -56,7 +56,7 @@ new #[Layout('layouts.app')] class extends Component
 }; ?>
 
 <div class="py-6">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-4">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
         <div class="flex justify-between">
             <x-tags.link-filters :tags="$tags" :selectedTagIds="$selectedTagIds" />
 
