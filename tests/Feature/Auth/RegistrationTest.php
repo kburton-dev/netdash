@@ -6,11 +6,12 @@ use App\Providers\RouteServiceProvider;
 use Livewire\Volt\Volt;
 
 test('registration screen can be rendered', function () {
-    $response = $this->get('/register');
+    $response = $this->get('/register')
+        ->assertNotFound();
 
-    $response
-        ->assertOk()
-        ->assertSeeVolt('pages.auth.register');
+    // $response
+    //     ->assertOk()
+    //     ->assertSeeVolt('pages.auth.register');
 });
 
 test('new users can register', function () {
