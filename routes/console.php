@@ -36,16 +36,12 @@ Artisan::command('app:get-feeds {feedId?}', function () {
     $this->comment('Dispatching feed fetching... Done!');
 })->purpose('Fetch feeds');
 
-Artisan::command('app:add-feed {url} {type}', function (string $url, string $type) {
-    $this->comment("Adding feed with URL: {$url}, type: {$type}");
+Artisan::command('app:add-feed {url}', function (string $url, string $type) {
+    $this->comment("Adding feed with URL: {$url}");
 
     $title = $this->ask('What is the title of the feed?');
 
-    $feed = new Feed([
-        'url' => $url,
-        'title' => $title,
-        'type' => FeedType::from($type),
-    ]);
+    $feed = new Feed(compact('url', 'title'));
 
     save_model($feed);
 
