@@ -28,7 +28,7 @@ Artisan::command('app:get-feeds {feedId?}', function () {
     Feed::query()
         ->when($feedId = $this->argument('feedId'), fn (Builder $query) => $query->where('id', $feedId))
         ->each(function (Feed $feed) {
-            $this->comment("Fetching feed with ID {$feed->id}, URL: {$feed->url}, type: {$feed->type->value}");
+            $this->comment("Fetching feed with ID {$feed->id}, URL: {$feed->url}");
 
             FetchFeedItems::dispatch($feed);
         });
