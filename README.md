@@ -1,4 +1,4 @@
-# NetDash
+# interNETDASHboard
 Basic RSS/Atom aggregator using Laravel with Livewire/Volt
 
 ## Initial Setup with Laravel Sail
