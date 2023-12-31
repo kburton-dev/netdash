@@ -22,6 +22,6 @@ jobs:
 
       - name: Build and push the tagged docker image to Amazon ECR
         run: |
-          docker pull ${{ secrets.ECR_PATH }}:latest --quiet
+          docker pull ${{ secrets.ECR_PATH }}:latest --quiet || :
           docker build --cache-from ${{ secrets.ECR_PATH }}:latest -t ${{ secrets.ECR_PATH }}:latest . -f docker/prod/Dockerfile
           docker push ${{ secrets.ECR_PATH }}:latest
