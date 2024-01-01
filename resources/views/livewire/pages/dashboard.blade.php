@@ -92,9 +92,9 @@ new #[Layout('layouts.app')] class extends Component
 
                 <div class="flex-grow"></div>
 
-                <div class="flex gap-2 items-center">
+                <div class="flex gap-2 items-center w-full sm:w-auto">
                     <x-input-label for="search" class="text-gray-400" :value="__('Search')" />
-                    <x-text-input wire:model.live.debounce.500ms="search" id="search" name="search" type="text" class="mt-1 block w-full" autofocus />
+                    <x-text-input wire:model.live.debounce.500ms="search" id="search" name="search" type="search" class="mt-1 block w-full" autofocus autocomplete="off" />
                 </div>
             </div>
         </div>
