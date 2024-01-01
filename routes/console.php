@@ -1,6 +1,5 @@
 <?php
 
-use App\Feeds\FeedType;
 use App\Jobs\FetchFeedItems;
 use App\Models\Feed;
 use Illuminate\Database\Eloquent\Builder;
@@ -35,17 +34,3 @@ Artisan::command('app:get-feeds {feedId?}', function () {
 
     $this->comment('Dispatching feed fetching... Done!');
 })->purpose('Fetch feeds');
-
-Artisan::command('app:add-feed {url}', function (string $url, string $type) {
-    $this->comment("Adding feed with URL: {$url}");
-
-    $title = $this->ask('What is the title of the feed?');
-
-    $feed = new Feed(compact('url', 'title'));
-
-    save_model($feed);
-
-    $this->comment('Adding feed... Done! (Fetching feed items in background)');
-
-    dispatch(new FetchFeedItems($feed));
-})->purpose('Add feed');
