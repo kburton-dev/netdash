@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
 
-        \App\Models\User::factory()->create([
+        $user = \App\Models\User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
             'password' => 'password',
@@ -29,54 +29,67 @@ class DatabaseSeeder extends Seeder
                 'id' => 1,
                 'title' => 'Laravel News',
                 'url' => 'https://feed.laravel-news.com/',
+                'user_id' => $user->id,
             ], [
                 'id' => 2,
                 'title' => 'Boot.dev',
                 'url' => 'https://blog.boot.dev/index.xml',
+                'user_id' => $user->id,
             ], [
                 'id' => 3,
                 'title' => 'PlanetScale',
                 'url' => 'https://planetscale.com/blog/rss.xml',
+                'user_id' => $user->id,
             ], [
                 'id' => 4,
                 'title' => 'Muhammed Sari',
                 'url' => 'https://muhammedsari.me/feed.atom',
+                'user_id' => $user->id,
             ], [
                 'id' => 5,
                 'title' => 'Frank de Jonge',
                 'url' => 'https://blog.frankdejonge.nl/rss/',
+                'user_id' => $user->id,
             ], [
                 'id' => 6,
                 'title' => 'Jake Archibald',
                 'url' => 'https://jakearchibald.com/posts.rss',
+                'user_id' => $user->id,
             ], [
                 'id' => 7,
                 'title' => 'Freek Van der Herten',
                 'url' => 'https://freek.dev/feed',
+                'user_id' => $user->id,
             ], [
                 'id' => 8,
                 'title' => 'Spatie',
                 'url' => 'https://spatie.be/feed',
+                'user_id' => $user->id,
             ], [
                 'id' => 9,
                 'title' => 'Mohammed Said',
                 'url' => 'https://themsaid.com/feed',
+                'user_id' => $user->id,
             ], [
                 'id' => 10,
                 'title' => 'Tailwind CSS',
                 'url' => 'https://tailwindcss.com/feeds/feed.xml',
+                'user_id' => $user->id,
             ], [
                 'id' => 11,
                 'title' => 'PHP Annotated',
                 'url' => 'https://blog.jetbrains.com/phpstorm/feed/',
+                'user_id' => $user->id,
             ], [
                 'id' => 12,
                 'title' => 'Stitcher.IO',
                 'url' => 'https://stitcher.io/rss',
+                'user_id' => $user->id,
             ], [
                 'id' => 13,
                 'title' => 'Robb Knight',
                 'url' => 'https://rknight.me/feed.xml',
+                'user_id' => $user->id,
             ],
         ]);
 

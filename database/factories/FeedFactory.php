@@ -16,7 +16,7 @@ class FeedFactory extends Factory
     {
         return [
             'title' => fake()->sentence(),
-            'url' => fake()->url(),
+            'url' => fake()->unique()->url(),
             'last_fetch' => fake()->dateTimeBetween('-1 year'),
         ];
     }

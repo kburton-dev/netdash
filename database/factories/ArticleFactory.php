@@ -16,7 +16,7 @@ class ArticleFactory extends Factory
     {
         return [
             'title' => fake()->sentence(),
-            'url' => fake()->url(),
+            'url' => fake()->unique()->url(),
             'content' => fake()->paragraphs(3, true),
             'published_at' => fake()->dateTimeBetween('-1 year'),
         ];
