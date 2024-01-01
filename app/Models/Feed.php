@@ -132,9 +132,9 @@ class Feed extends Model
         );
     }
 
-    public static function newForUser(int $userId): static
+    public static function newForUser(int $userId): Feed
     {
-        $feed = new static;
+        $feed = new Feed;
 
         $feed->user_id = $userId;
 
