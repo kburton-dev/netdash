@@ -18,6 +18,12 @@ new #[Layout('layouts.app')] class extends Component
     #[Url]
     public bool $archived = false;
 
+    #[Url]
+    public bool $favourites = false;
+
+    #[Url]
+    public string $search = '';
+
     public int $limit = self::LIMIT;
 
     /**
@@ -27,6 +33,9 @@ new #[Layout('layouts.app')] class extends Component
     {
         $articleQuery = Article::query()
             ->forUserId(auth()->id())
+            ->when($this->archived, fn (Builder $query) => $query->withTrashed())
+            ->when($this->favourites, fn (Builder $query) => $query->whereNotNull('favourited_at'))
+            ->when($this->search, fn (Builder $query) => $query->where('title', 'like', "%{$this->search}%"))
             ->when($this->tagIds,
                 fn (Builder $query) => $query->whereHasTags($this->tagIds)
             );
@@ -37,9 +46,11 @@ new #[Layout('layouts.app')] class extends Component
                 ->orderBy('name')
                 ->get(),
             'articlesCount' => $articleQuery->count(),
-            'articles' => $articleQuery->limit($this->limit)
-                ->with('feed')
+            'articles' => $articleQuery->with('feed')
+                ->limit($this->limit)
                 ->orderByDesc('published_at')
+                ->when(blank($this->search), fn (Builder $query) => $query->useIndex('articles_published_at_index'))
+                ->when(filled($this->search), fn (Builder $query) => $query->useIndex('articles_feed_id_title_index'))
                 ->get(),
         ];
     }
@@ -61,11 +72,30 @@ new #[Layout('layouts.app')] class extends Component
 
 <div class="py-6">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
-        <div class="flex justify-between">
+        <div class="flex justify-between flex-wrap gap-2">
             <x-tags.link-filters :tags="$tags" :tagIds="$tagIds" />
 
             <div class="text-gray-400">
                 Showing {{ $articles->count() }} articles
+            </div>
+
+            <div class="w-full flex gap-2 flex-wrap">
+                <div class="flex gap-2 items-center">
+                    <x-input-label for="archived" class="text-gray-400" :value="__('Show Archived?')" />
+                    <input wire:model.change="archived" id="archived" type="checkbox" />
+                </div>
+    
+                <div class="flex gap-2 items-center">
+                    <x-input-label for="favourites" class="text-gray-400" :value="__('Only Favourites?')" />
+                    <input wire:model.change="favourites" id="favourites" type="checkbox" />
+                </div>
+
+                <div class="flex-grow"></div>
+
+                <div class="flex gap-2 items-center">
+                    <x-input-label for="search" class="text-gray-400" :value="__('Search')" />
+                    <x-text-input wire:model.live.debounce.500ms="search" id="search" name="search" type="text" class="mt-1 block w-full" autofocus />
+                </div>
             </div>
         </div>
 
@@ -77,33 +107,7 @@ new #[Layout('layouts.app')] class extends Component
             @endif
 
             @foreach ($articles as $article)
-                <a class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 grid md:grid-cols-4 gap-4" href="{{ $article->url }}">
-                    @if ($article->image)
-                        <div class="col-span-full md:col-span-1">
-                            <img src="{{ $article->image }}" alt="{{ $article->title }}" class="w-full rounded-lg" />
-                        </div>
-                    @endif
-
-                    <div class="col-span-full md:col-span-3">
-                        <div class="text-gray-900 text-lg mb-2 font-semibold">
-                            {{ $article->title }}
-                        </div>
-
-                        <div class="text-gray-500 text-sm mb-2 flex gap-2 items-center">
-                            <x-icons.rss class="w-4 h-4"/>
-
-                            {{ $article->published_at->diffForHumans() }}
-                            |
-                            {{ $article->feed->title }}
-                            |
-                            {{ $article->feed->hostname}}
-                        </div>
-
-                        <div class="[&>p]:mb-4 [&>hr]:my-4 line-clamp-4">
-                            {!! nl2br(trim(strip_tags($article->content, ['code', 'strong']))) !!}
-                        </div>
-                    </div>
-                </a>
+                <livewire:articles.card :$article :key="$article->id" @article-deleted="$refresh" />
             @endforeach
         </div>
 

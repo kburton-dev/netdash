@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string|null $deleted_at
  * @property int $feed_id
+ * @property string|null $favourited_at
  * @property-read \App\Models\Feed $feed
  *
  * @method static \Illuminate\Database\Eloquent\Builder|Article newModelQuery()
@@ -42,7 +43,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static Builder|Article withTrashed()
  * @method static Builder|Article withoutTrashed()
  * @method static Builder|Article forUserId(int $userId)
- * @method static \Database\Factories\ArticleFactory factory($count = null, $state = [])
+ * @method static Builder|Article whereFavouritedAt($value)
+ * @method static \Database\Factories\ArticleFactory factory($count = null, $state = [])*
  *
  * @mixin \Eloquent
  */
@@ -57,10 +59,13 @@ class Article extends Model
         'image',
         'published_at',
         'feed_id',
+        'favourited_at',
     ];
 
     protected $casts = [
         'published_at' => 'datetime',
+        'deleted_at' => 'datetime',
+        'favourited_at' => 'datetime',
     ];
 
     /**

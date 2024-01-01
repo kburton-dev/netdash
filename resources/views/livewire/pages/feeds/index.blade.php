@@ -52,7 +52,7 @@ new #[Layout('layouts.app')] class extends Component
 
 <div class="py-6">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
-        <div class="flex gap-4 items-center">
+        <div class="flex gap-4 items-center flex-wrap">
             <div class="flex-grow">
                 <x-tags.link-filters :tags="$tags" :tagIds="$tagIds" />
             </div>

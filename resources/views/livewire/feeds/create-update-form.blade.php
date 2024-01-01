@@ -76,7 +76,7 @@ new class extends Component
 
         <div>
             <x-input-label for="url" :value="__('URL')" />
-            <x-text-input wire:model="url" id="url" name="url" type="text" class="mt-1 block w-full" required autofocus autocomplete="url" />
+            <x-text-input wire:model="url" id="url" name="url" type="text" class="mt-1 block w-full" required autocomplete="url" />
             <x-input-error class="mt-2" :messages="$errors->get('url')" />
         </div>
 
