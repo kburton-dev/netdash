@@ -11,7 +11,7 @@ use Livewire\Volt\Component;
 new #[Layout('layouts.app')] class extends Component
 {
     #[Url]
-    public array $selectedTagIds = [];
+    public array $tagIds = [];
 
     /**
      * @return array<string, mixed>
@@ -24,9 +24,10 @@ new #[Layout('layouts.app')] class extends Component
                 ->orderBy('name')
                 ->get(),
             'feeds' => Feed::query()
-                ->when($this->selectedTagIds,
+                ->where('user_id', auth()->id())
+                ->when($this->tagIds,
                     fn (Builder $query) => $query->whereHas('tags',
-                        fn (Builder $query) => $query->whereIn('id', $this->selectedTagIds)
+                        fn (Builder $query) => $query->whereIn('id', $this->tagIds)
                     )
                 )
                 ->with('latestArticle')
@@ -38,9 +39,9 @@ new #[Layout('layouts.app')] class extends Component
     #[On('clickedTag')]
     public function clickedTag(int $id): void
     {
-        $this->selectedTagIds = in_array($id, $this->selectedTagIds)
-            ? array_filter($this->selectedTagIds, fn ($tagId) => $tagId != $id)
-            : [...$this->selectedTagIds, $id];
+        $this->tagIds = in_array($id, $this->tagIds)
+            ? array_filter($this->tagIds, fn ($tagId) => $tagId != $id)
+            : [...$this->tagIds, $id];
     }
 
     public function addNew(): void
@@ -53,7 +54,7 @@ new #[Layout('layouts.app')] class extends Component
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
         <div class="flex gap-4 items-center">
             <div class="flex-grow">
-                <x-tags.link-filters :tags="$tags" :selectedTagIds="$selectedTagIds" />
+                <x-tags.link-filters :tags="$tags" :tagIds="$tagIds" />
             </div>
 
             <div class="text-gray-400">

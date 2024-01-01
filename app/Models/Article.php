@@ -41,6 +41,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static Builder|Article onlyTrashed()
  * @method static Builder|Article withTrashed()
  * @method static Builder|Article withoutTrashed()
+ * @method static Builder|Article forUserId(int $userId)
  * @method static \Database\Factories\ArticleFactory factory($count = null, $state = [])
  *
  * @mixin \Eloquent
@@ -85,6 +86,16 @@ class Article extends Model
             fn (Builder $query) => $query->whereHas('tags',
                 fn (Builder $query) => $query->whereIn('id', $tagIds)
             )
+        );
+    }
+
+    /**
+     * @param  Builder<self>  $query
+     */
+    public function scopeForUserId(Builder $query, int $userId): void
+    {
+        $query->whereHas('feed',
+            fn (Builder $query) => $query->where('user_id', $userId)
         );
     }
 

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
@@ -20,12 +21,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property int|null $user_id
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Article> $articles
  * @property-read int|null $articles_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tag> $tags
  * @property-read int|null $tags_count
  * @property-read string|null $hostname
  * @property-read \App\Models\Article|null $latestArticle
+ * @property-read \App\Models\User|null $user
  *
  * @method static \Illuminate\Database\Eloquent\Builder|Feed newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Feed newQuery()
@@ -40,6 +43,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|Feed onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Feed withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Feed withoutTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Feed whereUserId($value)
  * @method static \Database\Factories\FeedFactory factory($count = null, $state = [])
  *
  * @mixin \Eloquent
@@ -74,6 +78,14 @@ class Feed extends Model
         static::deleting(function (Feed $feed): void {
             $feed->articles()->delete();
         });
+    }
+
+    /**
+     * @return BelongsTo<User, Feed>
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -118,5 +130,14 @@ class Feed extends Model
                     ->join('.');
             },
         );
+    }
+
+    public static function newForUser(int $userId): static
+    {
+        $feed = new static;
+
+        $feed->user_id = $userId;
+
+        return $feed;
     }
 }

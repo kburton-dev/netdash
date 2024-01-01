@@ -7,6 +7,13 @@ use Livewire\Volt\Component;
 new #[Layout('layouts.app')] class extends Component
 {
     public Feed $feed;
+
+    public function mount(Feed $feed): void
+    {
+        $this->authorize('view', $feed);
+
+        $this->feed = $feed;
+    }
 }; ?>
 
 <div class="py-12">

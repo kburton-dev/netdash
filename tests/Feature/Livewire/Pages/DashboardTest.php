@@ -3,11 +3,15 @@
 use App\Models\Article;
 use App\Models\Feed;
 use App\Models\Tag;
+use App\Models\User;
 use Livewire\Volt\Volt;
 
 it('can show articles', function () {
+    $user = User::factory()->create();
     $tag = Tag::factory()->create();
-    $feed = Feed::factory()->create();
+    $feed = Feed::factory()->create([
+        'user_id' => $user->id,
+    ]);
     $articleNames = Article::factory()
         ->count(3)
         ->create([
@@ -17,7 +21,8 @@ it('can show articles', function () {
         ->toArray();
     $feed->tags()->attach($tag);
 
-    Volt::test('pages.dashboard')
+    Volt::actingAs($user)
+        ->test('pages.dashboard')
         ->assertSee($articleNames)
         ->assertSee($tag->name);
 });

@@ -13,7 +13,10 @@ new #[Layout('layouts.app')] class extends Component
     private const LIMIT = 10;
 
     #[Url]
-    public array $selectedTagIds = [];
+    public array $tagIds = [];
+
+    #[Url]
+    public bool $archived = false;
 
     public int $limit = self::LIMIT;
 
@@ -23,8 +26,9 @@ new #[Layout('layouts.app')] class extends Component
     public function with(): array
     {
         $articleQuery = Article::query()
-            ->when($this->selectedTagIds,
-                fn (Builder $query) => $query->whereHasTags($this->selectedTagIds)
+            ->forUserId(auth()->id())
+            ->when($this->tagIds,
+                fn (Builder $query) => $query->whereHasTags($this->tagIds)
             );
 
         return [
@@ -44,9 +48,9 @@ new #[Layout('layouts.app')] class extends Component
     public function clickedTag(int $id): void
     {
         $this->limit = self::LIMIT;
-        $this->selectedTagIds = in_array($id, $this->selectedTagIds)
-            ? array_filter($this->selectedTagIds, fn ($tagId) => $tagId != $id)
-            : [...$this->selectedTagIds, $id];
+        $this->tagIds = in_array($id, $this->tagIds)
+            ? array_filter($this->tagIds, fn ($tagId) => $tagId != $id)
+            : [...$this->tagIds, $id];
     }
 
     public function loadMore(): void
@@ -58,7 +62,7 @@ new #[Layout('layouts.app')] class extends Component
 <div class="py-6">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
         <div class="flex justify-between">
-            <x-tags.link-filters :tags="$tags" :selectedTagIds="$selectedTagIds" />
+            <x-tags.link-filters :tags="$tags" :tagIds="$tagIds" />
 
             <div class="text-gray-400">
                 Showing {{ $articles->count() }} articles
