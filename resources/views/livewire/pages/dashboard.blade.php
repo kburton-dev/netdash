@@ -76,7 +76,7 @@ new #[Layout('layouts.app')] class extends Component
             <x-tags.link-filters :tags="$tags" :tagIds="$tagIds" />
 
             <div class="text-gray-400">
-                Showing {{ $articles->count() }} articles
+                Showing {{ $articlesCount }} articles
             </div>
 
             <div class="w-full flex gap-2 flex-wrap">
