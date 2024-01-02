@@ -61,7 +61,7 @@ new class extends Component
             {{ $article->feed->hostname}}
         </a>
 
-        <a href="{{ $article->url }}" class="[&>p]:mb-4 [&>hr]:my-4 line-clamp-4">
+        <a href="{{ $article->url }}" class="[&>p]:mb-4 [&>hr]:my-4 [&>code]:overflow-wrap-anywhere overflow-wrap-anywhere line-clamp-4">
             {!! nl2br(trim(strip_tags($article->content, ['code', 'strong']))) !!}
         </a>
     </div>
