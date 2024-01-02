@@ -134,10 +134,6 @@ class Feed extends Model
 
     public static function newForUser(int $userId): Feed
     {
-        $feed = new Feed;
-
-        $feed->user_id = $userId;
-
-        return $feed;
+        return tap(new Feed, fn (Feed $feed) => $feed->user_id = $userId);
     }
 }
