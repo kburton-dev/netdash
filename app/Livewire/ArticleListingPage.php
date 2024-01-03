@@ -37,18 +37,15 @@ class ArticleListingPage extends Component
 
     public function render()
     {
-        $articleQuery = Article::query()
-            ->forUserId(auth()->id())
+        $articleQuery = $this->getBaseArticleQuery()
             ->when($this->search, fn (Builder $query) => $query->where('title', 'like', "%{$this->search}%"))
             ->when($this->tagIds,
                 fn (Builder $query) => $query->whereHasTags($this->tagIds)
             );
 
-        $this->articleQueryModified($articleQuery);
-
         return view('livewire.article-listing-page', [
             'tags' => Tag::query()
-                ->has('feeds.articles')
+                ->has('feeds.articles', callback: fn (Builder $query) => $query->whereIn('id', $this->getBaseArticleQuery()->select('id')))
                 ->orderBy('name')
                 ->get(),
             'articlesCount' => $articleQuery->count(),
@@ -61,7 +58,12 @@ class ArticleListingPage extends Component
         ]);
     }
 
-    protected function articleQueryModified(Builder $builder): void
+    /**
+     * @return Builder<Article>
+     */
+    protected function getBaseArticleQuery(): Builder
     {
+        return Article::query()
+            ->forUserId(auth()->id());
     }
 }

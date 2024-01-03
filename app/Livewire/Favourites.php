@@ -6,8 +6,9 @@ use Illuminate\Database\Eloquent\Builder;
 
 class Favourites extends ArticleListingPage
 {
-    protected function articleQueryModified(Builder $builder): void
+    protected function getBaseArticleQuery(): Builder
     {
-        $builder->whereNotNull('favourited_at');
+        return parent::getBaseArticleQuery()
+            ->whereNotNull('favourited_at');
     }
 }

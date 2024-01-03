@@ -4,7 +4,7 @@
         <a
             href="#"
             wire:click.prevent="$dispatch('clickedTag', { id: {{ $tag->id }} })"
-            class="cursor-pointer hover:text-gray-900 hover:underline {{ in_array($tag->id, $tagIds) ? 'text-gray-900' : 'text-gray-400' }}"
+            class="cursor-pointer text-sm inline-block py-1 px-2 rounded-full text-pink-600 uppercase last:mr-0 mr-1 border {{ in_array($tag->id, $tagIds) ? 'bg-pink-200' : 'border-pink-200' }}"
         >
             {{ $tag->name }}
         </a>
