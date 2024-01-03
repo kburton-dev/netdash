@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Article;
 use App\Models\Tag;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
@@ -13,6 +14,9 @@ class ArticleListingPage extends Component
 {
     private const LIMIT = 10;
 
+    /**
+     * @var int[]
+     */
     #[Url]
     public array $tagIds = [];
 
@@ -35,7 +39,7 @@ class ArticleListingPage extends Component
         $this->limit += 10;
     }
 
-    public function render()
+    public function render(): View
     {
         $articleQuery = $this->getBaseArticleQuery()
             ->when($this->search, fn (Builder $query) => $query->where('title', 'like', "%{$this->search}%"))
@@ -63,7 +67,10 @@ class ArticleListingPage extends Component
      */
     protected function getBaseArticleQuery(): Builder
     {
+        /** @var int $userId */
+        $userId = auth()->id();
+
         return Article::query()
-            ->forUserId(auth()->id());
+            ->forUserId($userId);
     }
 }
