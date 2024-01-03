@@ -1,10 +1,11 @@
 <?php
 
+use App\Livewire\Dashboard;
 use App\Models\Article;
 use App\Models\Feed;
 use App\Models\Tag;
 use App\Models\User;
-use Livewire\Volt\Volt;
+use Livewire\Livewire;
 
 it('can show articles', function () {
     $user = User::factory()->create();
@@ -21,8 +22,8 @@ it('can show articles', function () {
         ->toArray();
     $feed->tags()->attach($tag);
 
-    Volt::actingAs($user)
-        ->test('pages.dashboard')
+    Livewire::actingAs($user)
+        ->test(Dashboard::class)
         ->assertSee($articleNames)
         ->assertSee($tag->name);
 });

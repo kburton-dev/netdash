@@ -1,5 +1,8 @@
 <?php
 
+use App\Livewire\Dashboard;
+use App\Livewire\Favourites;
+use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
@@ -20,8 +23,9 @@ Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Volt::route('dashboard', 'pages.dashboard')->name('dashboard');
+Route::middleware(['auth', 'verified'])->group(function (Router $router) {
+    $router->get('dashboard', Dashboard::class)->name('dashboard');
+    $router->get('favourites', Favourites::class)->name('favourites');
 
     Volt::route('feeds', 'pages.feeds.index')->name('feeds');
     Volt::route('feeds/add', 'pages.feeds.add')->name('feeds.add');

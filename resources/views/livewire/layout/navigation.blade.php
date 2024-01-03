@@ -41,6 +41,10 @@ new class extends Component
                     <x-nav-link :href="route('tags')" :active="request()->routeIs('tags')" wire:navigate>
                         {{ __('Tags') }}
                     </x-nav-link>
+
+                    <x-nav-link :href="route('favourites')" :active="request()->routeIs('favourites')" wire:navigate>
+                        {{ __('Favourites') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -99,6 +103,10 @@ new class extends Component
 
             <x-responsive-nav-link :href="route('tags')" :active="request()->routeIs('tags')" wire:navigate>
                 {{ __('Tags') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('favourites')" :active="request()->routeIs('favourites')" wire:navigate>
+                {{ __('Favourites') }}
             </x-responsive-nav-link>
         </div>
 
