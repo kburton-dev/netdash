@@ -49,7 +49,7 @@ new class extends Component
     {
         return [
             'title' => ['required', 'string'],
-            'url' => ['required', 'string', 'url', Rule::unique(Feed::class)->ignore($this->feed->id)->whereNull('deleted_at')],
+            'url' => ['required', 'string', 'url', Rule::unique(Feed::class)->ignore($this->feed->id)->whereNull('deleted_at')->where('user_id', auth()->id())],
             'tagIds' => ['array'],
             'tagIds.*' => ['required', 'int', Rule::exists(Tag::class, 'id')],
         ];
