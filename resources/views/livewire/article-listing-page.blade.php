@@ -5,7 +5,7 @@
 
             <div class="flex gap-2 items-center w-full sm:w-auto">
                 <x-input-label for="search" class="text-gray-400" :value="__('Search')" />
-                <x-text-input wire:model.live.debounce.500ms="search" id="search" name="search" type="search" class="mt-1 block w-full" autofocus autocomplete="off" />
+                <x-text-input wire:model.live.debounce.500ms="search" id="search" name="search" type="search" class="mt-1 block w-full" autocomplete="off" />
             </div>
         </div>
 

@@ -26,10 +26,12 @@ Artisan::command('app:get-feeds {feedId?}', function () {
 
     Feed::query()
         ->when($feedId = $this->argument('feedId'), fn (Builder $query) => $query->where('id', $feedId))
-        ->each(function (Feed $feed) {
+        ->each(function (Feed $feed) use ($feedId) {
             $this->comment("Fetching feed with ID {$feed->id}, URL: {$feed->url}");
 
-            FetchFeedItems::dispatch($feed);
+            $feedId
+                ? FetchFeedItems::dispatchSync($feed)
+                : FetchFeedItems::dispatch($feed);
         });
 
     $this->comment('Dispatching feed fetching... Done!');
