@@ -35,6 +35,13 @@ new class extends Component
         ];
     }
 
+    public function hydrate(): void
+    {
+        if (! $this->feed->exists) {
+            $this->feed->user_id = auth()->id();
+        }
+    }
+
     /**
      * @return array<string, mixed>
      */

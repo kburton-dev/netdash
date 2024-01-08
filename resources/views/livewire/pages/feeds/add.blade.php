@@ -11,7 +11,7 @@ new #[Layout('layouts.app')] class extends Component
 
     public function mount(): void
     {
-        $this->feed = Feed::newForUser(auth()->id());
+        $this->feed = new Feed;
     }
 
     #[On('feed-saved')]

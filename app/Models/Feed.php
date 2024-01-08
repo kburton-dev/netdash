@@ -101,7 +101,7 @@ class Feed extends Model
      */
     public function latestArticle(): HasOne
     {
-        return $this->hasOne(Article::class)->latestOfMany('published_at');
+        return $this->articles()->one()->ofMany('published_at');
     }
 
     /**
