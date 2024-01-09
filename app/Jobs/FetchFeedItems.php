@@ -43,12 +43,13 @@ class FetchFeedItems implements ShouldQueue
         $article = Article::query()->firstOrNew([
             'feed_id' => $feedId,
             'url' => $item->url,
+        ], [
+            'published_at' => $item->publishedAt,
         ]);
 
         DB::transaction(function () use ($article, $item): void {
             save_model($article, [
                 'title' => $item->title,
-                'published_at' => $item->publishedAt,
                 'image' => $this->determineImageUrl($article, $item),
                 'content' => $this->removeImagesFromDescription($item->description),
             ]);
