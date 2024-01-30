@@ -59,7 +59,7 @@ new class extends Component
     {
         $saveWithTags($this->feed, $this->validate());
 
-        $this->dispatch('feed-saved', name: $this->feed->name);
+        $this->dispatch('feed-saved', name: $this->feed->title);
     }
 }; ?>
 

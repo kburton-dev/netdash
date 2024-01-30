@@ -1,4 +1,4 @@
-<ul class="flex gap-2">
+<ul class="flex gap-2 flex-wrap">
     @foreach ($tags as $tag)
     <li>
         <a

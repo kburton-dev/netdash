@@ -1,6 +1,6 @@
 <div class="py-4">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between flex-wrap gap-2 items-center">
+        <div class="flex justify-between flex-wrap gap-2 items-center mb-2">
             <x-tags.link-filters :tags="$tags" :tagIds="$tagIds" />
 
             <div class="flex gap-2 items-center w-full sm:w-auto">
@@ -13,7 +13,7 @@
             Showing {{ $articlesCount }} articles
         </div>
 
-        <div class="space-y-4">
+        <div class="space-y-4 mb-4">
             @if ($articles->isEmpty())
                 <div class="my-12 text-center">
                     Oops, no results. Try selecting different tags to see articles.

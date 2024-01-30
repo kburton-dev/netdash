@@ -40,12 +40,14 @@ class FetchFeedItems implements ShouldQueue
 
     private function saveItem(int $feedId, FeedItem $item): void
     {
-        $article = Article::query()->firstOrNew([
-            'feed_id' => $feedId,
-            'url' => $item->url,
-        ], [
-            'published_at' => $item->publishedAt,
-        ]);
+        $article = Article::query()
+            ->withTrashed()
+            ->firstOrNew([
+                'feed_id' => $feedId,
+                'url' => $item->url,
+            ], [
+                'published_at' => $item->publishedAt,
+            ]);
 
         DB::transaction(function () use ($article, $item): void {
             save_model($article, [
@@ -55,7 +57,7 @@ class FetchFeedItems implements ShouldQueue
             ]);
         });
 
-        logger()->info("Saved article ({$article->id}): ".$article->title);
+        // logger()->info("Saved article ({$article->id}): ".$article->title);
     }
 
     private function removeImagesFromDescription(string $description): string
