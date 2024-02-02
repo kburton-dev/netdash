@@ -30,6 +30,7 @@ class FetchFeedItems implements ShouldQueue
         );
 
         $parserFactory->parse($dataReader)
+            ->sortByDesc('publishedAt')
             ->take(10)
             ->each(fn (FeedItem $item) => $this->saveItem($this->feed->id, $item));
 
@@ -49,6 +50,10 @@ class FetchFeedItems implements ShouldQueue
                 'published_at' => $item->publishedAt,
             ]);
 
+        if ($article->exists && $article->created_at->lessThan(now()->subDays(3))) {
+            return; // We don't want to update articles older than 3 days
+        }
+
         DB::transaction(function () use ($article, $item): void {
             save_model($article, [
                 'title' => $item->title,
@@ -67,7 +72,7 @@ class FetchFeedItems implements ShouldQueue
 
     private function determineImageUrl(Article $article, FeedItem $item): ?string
     {
-        if ($article->image !== null) {
+        if ($article->exists) {
             return $article->image;
         }
 
