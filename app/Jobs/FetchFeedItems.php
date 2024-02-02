@@ -50,7 +50,7 @@ class FetchFeedItems implements ShouldQueue
                 'published_at' => $item->publishedAt,
             ]);
 
-        if ($article->exists && $article->created_at->lessThan(now()->subDays(3))) {
+        if ($article->exists && $article->created_at?->lessThan(now()->subDays(3))) {
             return; // We don't want to update articles older than 3 days
         }
 
