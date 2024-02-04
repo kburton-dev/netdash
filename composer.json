@@ -13,7 +13,8 @@
         "laravel/tinker": "^2.9.0",
         "livewire/livewire": "^3.4.4",
         "livewire/volt": "^1.6.1",
-        "saloonphp/xml-wrangler": "^1.2.1"
+        "saloonphp/xml-wrangler": "^1.2.1",
+        "spatie/flysystem-dropbox": "^3.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.9.2",

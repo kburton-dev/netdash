@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Jobs\SqliteBackupJob;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -14,6 +15,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('app:get-feeds')->hourly();
+        $schedule->job(SqliteBackupJob::class)->dailyAt('02:00');
     }
 
     /**
