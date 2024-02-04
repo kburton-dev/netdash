@@ -21,8 +21,7 @@ class SqliteBackupJob implements ShouldQueue
         $filePath = config('database.connections.sqlite.database');
 
         if ($stream = fopen($filePath, 'r')) {
-            Storage::disk('dropbox')
-                ->put("/netdash/backup/{$day}-laravel.sql", $stream);
+            Storage::disk('dropbox')->put("/netdash/backup/{$day}-laravel.sqlite", $stream);
         }
     }
 }
