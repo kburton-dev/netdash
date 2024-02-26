@@ -19,6 +19,11 @@ new #[Layout('layouts.app')] class extends Component
 
     public function mount(): void
     {
+        $this->setTags();
+    }
+
+    public function setTags(): void
+    {
         $this->tags = Tag::query()
             ->orderBy('name')
             ->get()
@@ -49,7 +54,7 @@ new #[Layout('layouts.app')] class extends Component
     public function rules()
     {
         return [
-            'tags.*.name' => ['required', 'string', 'max:255'],
+            'tags.*.name' => ['required', 'string', 'max:255', 'distinct'],
         ];
     }
 
@@ -65,6 +70,9 @@ new #[Layout('layouts.app')] class extends Component
 
         DB::table('tags')->whereIn('id', $this->deleteTagIds)->delete();
 
+        $this->reset();
+        $this->setTags();
+
         $this->dispatch('tags-saved');
     }
 }; ?>
@@ -79,7 +87,7 @@ new #[Layout('layouts.app')] class extends Component
                     <div class="mb-4 flex gap-2 items-center">
                         <div class="flex-grow">
                             <x-text-input wire:model="tags.{{ $i }}.name" name="tags[{{$i}}][name]" type="text" class="mt-1 block w-full" required autofocus autocomplete="off" />
-                            <x-input-error class="mt-2" :messages="$errors->get('tags[{{$i}}][name]')" />
+                            <x-input-error class="mt-2" :messages="$errors->get('tags.' . $i . '.name')" />
                         </div>
 
                         <button wire:click="removeTag({{ $i }})" type="button">
