@@ -54,7 +54,7 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 RUN composer install --prefer-dist --no-scripts --optimize-autoloader --no-dev
 RUN chown -R abc:abc .
 RUN chmod +x artisan
-RUN gosu abc php artisan octane:install --server=frankenphp
+RUN gosu abc php artisan octane:install --server=frankenphp --no-interaction
 
 COPY /docker/prod/services.d /custom-services.d
 COPY /docker/prod/custom-cont-init.d /custom-cont-init.d
