@@ -1,6 +1,7 @@
 <?php
 
 use App\Jobs\FetchFeedItems;
+use App\Jobs\SqliteBackupJob;
 use App\Models\Feed;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Inspiring;
@@ -36,3 +37,6 @@ Artisan::command('app:get-feeds {feedId?}', function () {
 
     $this->comment('Dispatching feed fetching... Done!');
 })->purpose('Fetch feeds');
+
+Schedule::command('app:get-feeds')->hourly();
+Schedule::job(SqliteBackupJob::class)->dailyAt('02:00');
