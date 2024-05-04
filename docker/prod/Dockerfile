@@ -5,10 +5,10 @@ WORKDIR /home/node/app
 
 COPY /resources /home/node/app/resources
 COPY /package.json /home/node/app/package.json
+COPY /vite.config.js /home/node/app/vite.config.js
 COPY /package-lock.json /home/node/app/package-lock.json
 COPY /postcss.config.js /home/node/app/postcss.config.js
 COPY /tailwind.config.js /home/node/app/tailwind.config.js
-COPY /vite.config.js /home/node/app/vite.config.js
 
 RUN npm install && npm run build
 
@@ -48,11 +48,13 @@ RUN apt-get update && \
 
 WORKDIR /app
 
-COPY . .
-COPY --from=node /home/node/app/public/build /app/public/build
-COPY --from=composer /usr/bin/composer /usr/bin/composer
-RUN composer install --prefer-dist --no-scripts --optimize-autoloader --no-dev
-RUN chown -R abc:abc .
+COPY --chown=abc:abc . .
+COPY --chown=abc:abc --from=node /home/node/app/public/build /app/public/build
+COPY --chown=abc:abc --from=composer /usr/bin/composer /usr/bin/composer
+
+RUN gosu abc touch /app/storage/logs/cron.log
+RUN gosu abc touch /app/storage/logs/laravel.log
+RUN gosu abc composer install --prefer-dist --no-scripts --optimize-autoloader --no-dev
 RUN chmod +x artisan
 RUN gosu abc php artisan octane:install --server=frankenphp --no-interaction
 
