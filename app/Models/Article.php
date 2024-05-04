@@ -62,11 +62,17 @@ class Article extends Model
         'favourited_at',
     ];
 
-    protected $casts = [
-        'published_at' => 'datetime',
-        'deleted_at' => 'datetime',
-        'favourited_at' => 'datetime',
-    ];
+    /**
+     * @return array<string, mixed>
+     */
+    protected function casts(): array
+    {
+        return [
+            'published_at' => 'datetime',
+            'deleted_at' => 'datetime',
+            'favourited_at' => 'datetime',
+        ];
+    }
 
     /**
      * @return BelongsTo<Feed, self>

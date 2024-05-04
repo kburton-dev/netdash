@@ -58,10 +58,16 @@ class Feed extends Model
         'last_fetch',
     ];
 
-    protected $casts = [
-        'last_fetch' => 'datetime',
-        'deleted_at' => 'datetime',
-    ];
+    /**
+     * @return array<string, mixed>
+     */
+    protected function casts(): array
+    {
+        return [
+            'last_fetch' => 'datetime',
+            'deleted_at' => 'datetime',
+        ];
+    }
 
     /**
      * @var array<string, mixed>
