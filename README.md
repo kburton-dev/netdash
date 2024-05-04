@@ -39,12 +39,17 @@ sail test
 ## Type checking with PHPStan
 Run the static analysis
 ```
-sail composer check-types
+sail composer sa
 ```
 
 Generate updated baseline
 ```
-sail composer generate-baseline
+sail composer gb
+```
+
+## Run full quality assurance (pint, static analysis, testing)
+```
+sail composer qa
 ```
 
 ## IDE Setup (VSCode)
