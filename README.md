@@ -1,26 +1,29 @@
 # interNETDASHboard
 Basic RSS/Atom aggregator using Laravel with Livewire/Volt
 
-## Initial Setup with Laravel Sail
+![Dashboard Screenshot](/docs/netdash-home.png?raw=true)
+
+## Initial Setup
+Make sure you have PHP 8.1 or greater installed. You can also use Laravel Sail.
+
 Install composer dependencies
 ```
-env WWWUSER=${UID} WWWGROUP=${id -g} docker compose run laravel.test composer install
+composer install
 ```
-The above command will build the Docker image, so it may take some time
 
-Starting the application and services
+Use the built-in PHP server
 ```
-vendor/bin/sail up
+php artisan serve
 ```
 
 There is some basic data seeding to get you going
 ```
-vendor/bin/sail artisan migrate:fresh --seed
+php artisan migrate:fresh --seed
 ```
 
 After which you can fetch the articles with
 ```
-vendor/bin/sail artisan app:get-feeds
+php artisan app:get-feeds
 ```
 
 Run the frontend dev server (Requires node >18 on your local)
@@ -33,23 +36,23 @@ Visit `http://localhost` in your browser, and log in with `test@example.com` and
 ## Testing with PEST
 To run the test suite
 ```
-sail test
+php artisan test
 ```
 
 ## Type checking with PHPStan
 Run the static analysis
 ```
-sail composer sa
+php artisan composer sa
 ```
 
 Generate updated baseline
 ```
-sail composer gb
+php artisan composer gb
 ```
 
 ## Run full quality assurance (pint, static analysis, testing)
 ```
-sail composer qa
+php artisan composer qa
 ```
 
 ## IDE Setup (VSCode)
