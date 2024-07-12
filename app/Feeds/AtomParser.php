@@ -22,15 +22,35 @@ class AtomParser implements Parser
     {
         return $rawFeedData->element('feed.entry')->collect()
             ->map(function (Element $item): FeedItem {
-                /** @var array<string, \Saloon\XmlWrangler\Data\Element> $content */
+                /** @var array<string, Element> $content */
                 $content = $item->getContent();
 
                 return new FeedItem(
                     title: (string) $content['title']->getContent(),
                     url: (string) $content['link']->getAttribute('href'),
-                    description: (string) ($content['summary'] ?? $content['content'])->getContent(),
+                    description: $this->parseContentOrSummary(($content['summary'] ?? $content['content'])),
                     publishedAt: Carbon::parse((string) $content['updated']->getContent()),
                 );
             });
+    }
+
+    /**
+     * Sometimes the feed author includes valid HTML in the content or summary field, instead of
+     * being wrapped in CDATA, we need to parse these actual elements in that case so we get
+     * all the actual content.
+     */
+    private function parseContentOrSummary(Element $element): string
+    {
+        $content = $element->getContent();
+        if (is_string($content)) {
+            return $content;
+        }
+
+        $stringParts = array_map(
+            array: $content,
+            callback: fn (Element $itemElement) => $this->parseContentOrSummary($itemElement),
+        );
+
+        return implode(' ', $stringParts);
     }
 }
