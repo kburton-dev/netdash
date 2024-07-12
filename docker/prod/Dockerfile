@@ -52,11 +52,12 @@ COPY --chown=abc:abc . .
 COPY --chown=abc:abc --from=node /home/node/app/public/build /app/public/build
 COPY --chown=abc:abc --from=composer /usr/bin/composer /usr/bin/composer
 
-RUN gosu abc touch /app/storage/logs/cron.log
-RUN gosu abc touch /app/storage/logs/laravel.log
-RUN gosu abc composer install --prefer-dist --no-scripts --optimize-autoloader --no-dev
-RUN chmod +x artisan
-RUN gosu abc php artisan octane:install --server=frankenphp --no-interaction
+RUN chown abc:abc /app \
+    && gosu abc touch /app/storage/logs/cron.log \
+    && gosu abc touch /app/storage/logs/laravel.log \
+    && gosu abc composer install --prefer-dist --no-scripts --optimize-autoloader --no-dev \
+    && chmod +x artisan \
+    && gosu abc php artisan octane:install --server=frankenphp --no-interaction
 
 COPY /docker/prod/services.d /custom-services.d
 COPY /docker/prod/custom-cont-init.d /custom-cont-init.d
@@ -66,6 +67,6 @@ COPY /docker/prod/cron /config/crontabs/abc
 # 1: Continue but warn with an annoying error message.
 # 2: Stop by sending a termination signal to the supervision tree.
 # Check s6-overlay documentation for more info.
-ENV S6_BEHAVIOUR_IF_STAGE2_FAILS 2
+ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2
 
-ENV DOCKER_MODS linuxserver/mods:universal-cron
+ENV DOCKER_MODS=linuxserver/mods:universal-cron
