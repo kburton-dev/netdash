@@ -1,3 +1,0 @@
-#!/usr/bin/with-contenv bash
-
-tail -F /app/storage/logs/cron.log

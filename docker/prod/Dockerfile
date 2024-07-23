@@ -2,71 +2,58 @@ FROM composer AS composer
 
 FROM node:18-alpine AS node
 WORKDIR /home/node/app
-
-COPY /resources /home/node/app/resources
-COPY /package.json /home/node/app/package.json
-COPY /vite.config.js /home/node/app/vite.config.js
-COPY /package-lock.json /home/node/app/package-lock.json
-COPY /postcss.config.js /home/node/app/postcss.config.js
-COPY /tailwind.config.js /home/node/app/tailwind.config.js
-
+COPY / /home/node/app
 RUN npm install && npm run build
 
-FROM lsiobase/ubuntu:jammy
+FROM dunglas/frankenphp:latest-php8-bookworm
 
-ENV TZ=UTC
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+ARG USER=app
+ENV SERVER_NAME=:80
 
-RUN apt-get update && \
-    apt-get install -y \
-        gosu \
-        ca-certificates \
-        apt-transport-https \
-        software-properties-common && \
-    add-apt-repository ppa:ondrej/php
+RUN \
+    useradd ${USER}; -d /app \
+    setcap -r /usr/local/bin/frankenphp; \
+    chown -R ${USER}:${USER} /data/caddy && chown -R ${USER}:${USER} /config/caddy
 
-RUN apt-get update && \
-    apt-get install -y \
-        cron \
-        mysql-client \
-        gettext \
-        php8.3 \
-        php8.3-gd \
-        php8.3-xml \
-        php8.3-zip \
-        php8.3-curl \
-        php8.3-intl \
-        php8.3-soap \
-        php8.3-mysql \
-        php8.3-redis \
-        php8.3-oauth \
-        php8.3-mysqli \
-        php8.3-sqlite \
-        php8.3-opcache \
-        php8.3-mbstring \
-        php8.3-bcmath
+RUN install-php-extensions \
+    gd \
+    xml \
+    xsl \
+    zip \
+    curl \
+    intl \
+    soap \
+    redis \
+    oauth \
+    bcmath \
+    mysqli \
+    sqlite3 \
+    opcache \
+    mbstring \
+    pdo_mysql
 
-WORKDIR /app
+RUN \
+    mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"; \
+    mkdir /app/vendor && chown app:app /app/vendor; \
+    mkdir /app_database && chown app:app /app_database;
 
-COPY --chown=abc:abc . .
-COPY --chown=abc:abc --from=node /home/node/app/public/build /app/public/build
-COPY --chown=abc:abc --from=composer /usr/bin/composer /usr/bin/composer
+USER ${USER}
 
-RUN chown abc:abc /app \
-    && gosu abc touch /app/storage/logs/cron.log \
-    && gosu abc touch /app/storage/logs/laravel.log \
-    && gosu abc composer install --prefer-dist --no-scripts --optimize-autoloader --no-dev \
-    && chmod +x artisan \
-    && gosu abc php artisan octane:install --server=frankenphp --no-interaction
+COPY --chown=app:app --link app /app/app
+COPY --chown=app:app --link bootstrap /app/bootstrap
+COPY --chown=app:app --link config /app/config
+COPY --chown=app:app --link database /app/database
+COPY --chown=app:app --link public /app/public
+COPY --chown=app:app --link resources /app/resources
+COPY --chown=app:app --link routes /app/routes
+COPY --chown=app:app --link storage /app/storage
+COPY --chown=app:app --link artisan /app/artisan
+COPY --chown=app:app --link composer.* /app
 
-COPY /docker/prod/services.d /custom-services.d
-COPY /docker/prod/custom-cont-init.d /custom-cont-init.d
-COPY /docker/prod/cron /config/crontabs/abc
+COPY --chown=app:app --link docker/prod/Caddyfile /app
+COPY --chown=app:app --link --from=node /home/node/app/public /app/public
+COPY --chown=app:app --link --from=composer /usr/bin/composer /usr/bin/composer
 
-# 0: Continue silently even if any script (fix-attrs or cont-init) has failed.
-# 1: Continue but warn with an annoying error message.
-# 2: Stop by sending a termination signal to the supervision tree.
-# Check s6-overlay documentation for more info.
-ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2
-
-ENV DOCKER_MODS=linuxserver/mods:universal-cron
+RUN \
+    composer install --prefer-dist --no-scripts --optimize-autoloader --no-dev; \
+    chmod +x artisan;

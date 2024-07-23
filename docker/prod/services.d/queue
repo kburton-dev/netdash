@@ -1,3 +1,0 @@
-#!/usr/bin/with-contenv bash
-
-gosu abc php /app/artisan queue:work --queue=default --sleep=3 --tries=3 --max-time=900
