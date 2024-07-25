@@ -5,15 +5,17 @@ WORKDIR /home/node/app
 COPY / /home/node/app
 RUN npm install && npm run build
 
-FROM dunglas/frankenphp:latest-php8-bookworm
+FROM dunglas/frankenphp:latest-php8.3-bookworm
 
 ARG USER=app
 ENV SERVER_NAME=:80
 
 RUN \
-    useradd ${USER}; -d /app \
+    useradd ${USER}; \
     setcap -r /usr/local/bin/frankenphp; \
-    chown -R ${USER}:${USER} /data/caddy && chown -R ${USER}:${USER} /config/caddy
+    chown -R ${USER}:${USER} /data/caddy; \
+    chown -R ${USER}:${USER} /config/caddy; \
+    chown -R ${USER}:${USER} /app;
 
 RUN install-php-extensions \
     gd \
@@ -47,13 +49,10 @@ COPY --chown=app:app --link public /app/public
 COPY --chown=app:app --link resources /app/resources
 COPY --chown=app:app --link routes /app/routes
 COPY --chown=app:app --link storage /app/storage
-COPY --chown=app:app --link artisan /app/artisan
+COPY --chown=app:app --chmod=+x --link artisan /app/artisan
 COPY --chown=app:app --link composer.* /app
-
 COPY --chown=app:app --link docker/prod/Caddyfile /app
 COPY --chown=app:app --link --from=node /home/node/app/public /app/public
 COPY --chown=app:app --link --from=composer /usr/bin/composer /usr/bin/composer
 
-RUN \
-    composer install --prefer-dist --no-scripts --optimize-autoloader --no-dev; \
-    chmod +x artisan;
+RUN composer install --prefer-dist --no-scripts --optimize-autoloader --no-dev
