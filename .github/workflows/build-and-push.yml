@@ -34,6 +34,7 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           source: "docker/prod/compose.yml"
           target: "~/netdash"
+          strip_components: 2
 
       - name: SSH into VPS to restart
         uses: appleboy/ssh-action@master
