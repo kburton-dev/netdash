@@ -1,4 +1,4 @@
-name: Docker Build And Push
+name: Docker Build, Push, Deploy
 
 on:
   workflow_dispatch:
@@ -25,3 +25,31 @@ jobs:
           docker pull ${{ secrets.ECR_PATH }}:latest --quiet || :
           docker build --cache-from ${{ secrets.ECR_PATH }}:latest -t ${{ secrets.ECR_PATH }}:latest . -f docker/prod/Dockerfile
           docker push ${{ secrets.ECR_PATH }}:latest
+
+      - name: Copy compose via ssh
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          source: "compose.yml"
+          target: "~/netdash"
+
+      - name: SSH into VPS to restart
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          port: 22
+          script: |
+            cd netdash
+            echo "Logging in to ECR"
+            aws ecr get-login-password --region eu-central-1 | \
+            docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.eu-central-1.amazonaws.com
+            echo "Pulling images..."
+            docker compose pull
+            echo "Restarting containers..."
+            docker compose up -d --remove-orphans
+            echo "Pruning dangling images..."
+            docker image prune -f

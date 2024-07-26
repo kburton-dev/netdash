@@ -11,11 +11,11 @@ ARG USER=app
 ENV SERVER_NAME=:80
 
 RUN \
-    useradd ${USER}; \
+    useradd app; \
     setcap -r /usr/local/bin/frankenphp; \
-    chown -R ${USER}:${USER} /data/caddy; \
-    chown -R ${USER}:${USER} /config/caddy; \
-    chown -R ${USER}:${USER} /app;
+    chown -R app:app /data/caddy; \
+    chown -R app:app /config/caddy; \
+    chown -R app:app /app;
 
 RUN install-php-extensions \
     gd \
@@ -25,8 +25,9 @@ RUN install-php-extensions \
     curl \
     intl \
     soap \
-    redis \
     oauth \
+    pcntl \
+    redis \
     bcmath \
     mysqli \
     sqlite3 \
@@ -39,7 +40,7 @@ RUN \
     mkdir /app/vendor && chown app:app /app/vendor; \
     mkdir /app_database && chown app:app /app_database;
 
-USER ${USER}
+USER app
 
 COPY --chown=app:app --link app /app/app
 COPY --chown=app:app --link bootstrap /app/bootstrap

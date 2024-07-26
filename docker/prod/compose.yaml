@@ -18,6 +18,7 @@ services:
     hostname: netdash-web
     networks:
       - ingress_tunnel
+    command: "php artisan octane:frankenphp"
 
   app-worker:
     image: 756127310626.dkr.ecr.eu-central-1.amazonaws.com/netdash:latest
