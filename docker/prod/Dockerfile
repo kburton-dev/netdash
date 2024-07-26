@@ -5,17 +5,16 @@ WORKDIR /home/node/app
 COPY / /home/node/app
 RUN npm install && npm run build
 
-FROM dunglas/frankenphp:latest-php8.3-bookworm
-
-ARG USER=app
-ENV SERVER_NAME=:80
+FROM php:8.3-bookworm
 
 RUN \
-    useradd ${USER}; \
-    setcap -r /usr/local/bin/frankenphp; \
-    chown -R ${USER}:${USER} /data/caddy; \
-    chown -R ${USER}:${USER} /config/caddy; \
-    chown -R ${USER}:${USER} /app;
+    mkdir /app; \
+    useradd app; \
+    chown app:app /app; \
+    chmod 700 /app; \
+    mkdir /app_database; \
+    chown app:app /app_database; \
+    mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
 RUN install-php-extensions \
     gd \
@@ -34,25 +33,22 @@ RUN install-php-extensions \
     mbstring \
     pdo_mysql
 
+USER app
+
+COPY --chown=app:app app /app/app
+COPY --chown=app:app bootstrap /app/bootstrap
+COPY --chown=app:app config /app/config
+COPY --chown=app:app database /app/database
+COPY --chown=app:app public /app/public
+COPY --chown=app:app resources /app/resources
+COPY --chown=app:app routes /app/routes
+COPY --chown=app:app storage /app/storage
+COPY --chown=app:app --chmod=+x artisan /app/artisan
+COPY --chown=app:app composer.* /app
+COPY --chown=app:app docker/prod/Caddyfile /app
+COPY --chown=app:app --from=node /home/node/app/public /app/public
+COPY --chown=app:app --from=composer /usr/bin/composer /usr/bin/composer
+
 RUN \
-    mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"; \
-    mkdir /app/vendor && chown app:app /app/vendor; \
-    mkdir /app_database && chown app:app /app_database;
-
-USER ${USER}
-
-COPY --chown=app:app --link app /app/app
-COPY --chown=app:app --link bootstrap /app/bootstrap
-COPY --chown=app:app --link config /app/config
-COPY --chown=app:app --link database /app/database
-COPY --chown=app:app --link public /app/public
-COPY --chown=app:app --link resources /app/resources
-COPY --chown=app:app --link routes /app/routes
-COPY --chown=app:app --link storage /app/storage
-COPY --chown=app:app --chmod=+x --link artisan /app/artisan
-COPY --chown=app:app --link composer.* /app
-COPY --chown=app:app --link docker/prod/Caddyfile /app
-COPY --chown=app:app --link --from=node /home/node/app/public /app/public
-COPY --chown=app:app --link --from=composer /usr/bin/composer /usr/bin/composer
-
-RUN composer install --prefer-dist --no-scripts --optimize-autoloader --no-dev
+    composer install --prefer-dist --no-scripts --optimize-autoloader --no-dev; \
+    php artisan octane:install --server=frankenphp --no-interaction;
