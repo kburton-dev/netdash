@@ -32,7 +32,7 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
           password: ${{ secrets.VPS_PASSWORD }}
-          source: "compose.yml"
+          source: "docker/prod/compose.yml"
           target: "~/netdash"
 
       - name: SSH into VPS to restart
