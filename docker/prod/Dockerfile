@@ -52,7 +52,6 @@ COPY --chown=app:app --link routes /app/routes
 COPY --chown=app:app --link storage /app/storage
 COPY --chown=app:app --chmod=+x --link artisan /app/artisan
 COPY --chown=app:app --link composer.* /app
-COPY --chown=app:app --link docker/prod/Caddyfile /app
 COPY --chown=app:app --link --from=node /home/node/app/public /app/public
 COPY --chown=app:app --link --from=composer /usr/bin/composer /usr/bin/composer
 
