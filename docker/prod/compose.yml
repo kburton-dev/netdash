@@ -1,18 +1,13 @@
-x-db-variables: &db-variables
-  - DB_CONNECTION=sqlite
-  - DB_DATABASE=/app_database/netdash.sqlite
-
 x-app-volumes: &app-volumes
   - caddy_data:/data
   - caddy_config:/config
   - app_database:/app_database
   - app_stroage:/app/storage
-  - .env:/app/.env
 
 services:
   app-web:
     image: 756127310626.dkr.ecr.eu-central-1.amazonaws.com/netdash:latest
-    environment: *db-variables
+    env_file: .env
     volumes: *app-volumes
     restart: unless-stopped
     hostname: netdash-web
@@ -22,21 +17,21 @@ services:
 
   app-worker:
     image: 756127310626.dkr.ecr.eu-central-1.amazonaws.com/netdash:latest
-    environment: *db-variables
+    env_file: .env
     volumes: *app-volumes
     restart: unless-stopped
     command: "php artisan queue:work --tries=3 --timeout=90"
 
   app-scheduler:
     image: 756127310626.dkr.ecr.eu-central-1.amazonaws.com/netdash:latest
-    environment: *db-variables
+    env_file: .env
     volumes: *app-volumes
     restart: unless-stopped
     command: "php artisan schedule:work"
 
   app-migrate-db:
     image: 756127310626.dkr.ecr.eu-central-1.amazonaws.com/netdash:latest
-    environment: *db-variables
+    env_file: .env
     volumes: *app-volumes
     command: "php artisan migrate --force"
 
@@ -49,4 +44,4 @@ volumes:
 networks:
   ingress_tunnel:
     external: true
-    name: ingress_tunnel_2
+    name: ingress_tunnel_1
