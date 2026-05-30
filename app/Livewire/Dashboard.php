@@ -2,6 +2,4 @@
 
 namespace App\Livewire;
 
-class Dashboard extends ArticleListingPage
-{
-}
+class Dashboard extends ArticleListingPage {}

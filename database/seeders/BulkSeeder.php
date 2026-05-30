@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Article;
+use App\Models\Feed;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class BulkSeeder extends Seeder
@@ -12,13 +14,13 @@ class BulkSeeder extends Seeder
      */
     public function run(): void
     {
-        $user = \App\Models\User::factory()->create([
+        $user = User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
             'password' => 'password',
         ]);
 
-        \App\Models\Feed::factory()
+        Feed::factory()
             ->count(100)
             ->has(Article::factory()->count(1500))
             ->create([

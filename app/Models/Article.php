@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\Article
@@ -17,13 +18,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $url
  * @property string $content
  * @property string|null $image
- * @property \Illuminate\Support\Carbon $published_at
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon $published_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property string|null $deleted_at
  * @property int $feed_id
  * @property string|null $favourited_at
- * @property-read \App\Models\Feed $feed
+ * @property-read Feed $feed
  *
  * @method static \Illuminate\Database\Eloquent\Builder|Article newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Article newQuery()

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Feeds;
 
 use App\Exceptions\CompatibleFeedParserNotFoundException;
+use Illuminate\Support\Collection;
 use Saloon\XmlWrangler\XmlReader;
 
 class ParserFactory
@@ -14,7 +15,7 @@ class ParserFactory
      */
     public static function create(XmlReader $reader): Parser
     {
-        /** @var \App\Feeds\Parser[] $parsers */
+        /** @var Parser[] $parsers */
         $parsers = app()->tagged('feedParsers');
 
         foreach ($parsers as $parser) {
@@ -27,9 +28,9 @@ class ParserFactory
     }
 
     /**
-     * @return \Illuminate\Support\Collection<array-key, FeedItem>
+     * @return Collection<array-key, FeedItem>
      */
-    public static function parse(XmlReader $reader): \Illuminate\Support\Collection
+    public static function parse(XmlReader $reader): Collection
     {
         return self::create($reader)->parse($reader);
     }

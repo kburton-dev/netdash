@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Feeds;
 
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Saloon\XmlWrangler\Data\Element;
 use Saloon\XmlWrangler\XmlReader;
 
@@ -18,7 +19,7 @@ class AtomParser implements Parser
     /**
      * {@inheritDoc}
      */
-    public function parse(XmlReader $rawFeedData): \Illuminate\Support\Collection
+    public function parse(XmlReader $rawFeedData): Collection
     {
         return $rawFeedData->element('feed.entry')->collect()
             ->map(function (Element $item): FeedItem {
