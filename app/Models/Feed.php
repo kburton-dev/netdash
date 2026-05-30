@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\FeedFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -52,7 +53,10 @@ use Illuminate\Support\Carbon;
  */
 class Feed extends Model
 {
-    use HasFactory, SoftDeletes;
+    /** @use HasFactory<FeedFactory> */
+    use HasFactory;
+
+    use SoftDeletes;
 
     protected $fillable = [
         'title',
@@ -89,7 +93,7 @@ class Feed extends Model
     }
 
     /**
-     * @return BelongsTo<User, Feed>
+     * @return BelongsTo<User, $this>
      */
     public function user(): BelongsTo
     {
@@ -97,7 +101,7 @@ class Feed extends Model
     }
 
     /**
-     * @return HasMany<Article>
+     * @return HasMany<Article, $this>
      */
     public function articles(): HasMany
     {
@@ -105,7 +109,7 @@ class Feed extends Model
     }
 
     /**
-     * @return HasOne<Article>
+     * @return HasOne<Article, $this>
      */
     public function latestArticle(): HasOne
     {
@@ -113,7 +117,7 @@ class Feed extends Model
     }
 
     /**
-     * @return MorphToMany<Tag>
+     * @return MorphToMany<Tag, $this>
      */
     public function tags(): MorphToMany
     {

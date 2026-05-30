@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\ArticleFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -51,7 +52,10 @@ use Illuminate\Support\Carbon;
  */
 class Article extends Model
 {
-    use HasFactory, SoftDeletes;
+    /** @use HasFactory<ArticleFactory> */
+    use HasFactory;
+
+    use SoftDeletes;
 
     protected $fillable = [
         'title',
@@ -76,7 +80,7 @@ class Article extends Model
     }
 
     /**
-     * @return BelongsTo<Feed, self>
+     * @return BelongsTo<Feed, $this>
      */
     public function feed(): BelongsTo
     {
