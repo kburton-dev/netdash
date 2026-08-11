@@ -2,7 +2,7 @@ x-app-volumes: &app-volumes
   - caddy_data:/data
   - caddy_config:/config
   - app_database:/app_database
-  - app_stroage:/app/storage
+  - app_storage:/app/storage
 
 services:
   app-web:
